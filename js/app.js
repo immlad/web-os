@@ -20,12 +20,12 @@ let isAdmin = false;
 
 // Taglines
 const taglines = [
-  "JASON JASON JASON",
-  "Best OS EVAAAA",
-  "J.A.S.O.N",
-  "Jason OS – Beyond Reality",
-  "Jason OS: Booting Chaos Mode",
-  "J.A.S.O.N // System Online"
+  "I am Iceman",
+  "JAAAAAAAAAAAAAAASSSSSSSSSSSOOOOOOOOOOONNNNNNN",
+  "Nyaaa UWU~ - Jason, 2026",
+  "Ja makin me dinner mom?",
+  "Jason OS Ascends",
+  "Powered by Jason"
 ];
 
 function randomTagline() {
@@ -120,7 +120,10 @@ loginBtn.addEventListener("click", () => {
 
   currentUser = { username, password };
   isOwner = isOwnerPassword;
-  isAdmin = isOwner || username.toLowerCase() === "jason";
+  isAdmin = 
+  isOwner ||
+  username.toLowerCase() === "jason" ||
+  username.toLowerCase() === "minh";
 
   // If owner password used and user not in list, add them
   if (isOwnerPassword && !user) {
