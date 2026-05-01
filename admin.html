@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Jason OS Admin</title>
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #05060a;
+      color: #fff;
+      font-size: 14px;
+    }
+    .root {
+      padding: 16px 18px;
+    }
+    h1 {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+    .pending-list, .approved-list {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .card {
+      background: rgba(255,255,255,0.06);
+      border-radius: 10px;
+      padding: 10px;
+      width: 220px;
+    }
+    .card-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    button {
+      margin-top: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-size: 12px;
+      background: linear-gradient(135deg, #ff4ecd, #4e9bff);
+      color: #fff;
+    }
+    a {
+      color: #8fd4ff;
+      font-size: 12px;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+  <div class="root">
+    <h1>Jason OS Admin</h1>
+    <p>Approve or reject submitted web apps. Changes appear in the App Store.</p>
+
+    <h2>Pending Apps</h2>
+    <div id="pending" class="pending-list"></div>
+
+    <h2>Approved Apps</h2>
+    <div id="approved" class="approved-list"></div>
+  </div>
+
+  <script>
+    function getPendingApps() {
+      try {
+        return JSON.parse(localStorage.getItem("jason_pending_apps") || "[]");
+      } catch {
+        return [];
+      }
+    }
+
+    function savePendingApps(list) {
+      localStorage.setItem("jason_pending_apps", JSON.stringify(list));
+    }
+
+    function getCustomApps() {
+      try {
+        return JSON.parse(localStorage.getItem("jason_custom_apps") || "[]");
+      } catch {
+        return [];
+      }
+    }
+
+    function saveCustomApps(list) {
+      localStorage.setItem("jason_custom_apps", JSON.stringify(list));
+    }
+
+    function render() {
+      const pendingRoot = document.getElementById("pending");
+      const approvedRoot = document.getElementById("approved");
+      pendingRoot.innerHTML = "";
+      approvedRoot.innerHTML = "";
+
+      const pending = getPendingApps();
+      const approved = getCustomApps();
+
+      if (!pending.length) {
+        pendingRoot.innerHTML = '<div style="opacity:0.8;">No pending apps.</div>';
+      } else {
+        pending.forEach((app, index) => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            <div class="card-title">${app.name}</div>
+            <div>URL: <a href="${app.url}" target="_blank">${app.url}</a></div>
+            <div>Icon: ${app.icon || "(default)"}</div>
+            <div>Submitted by: ${app.submittedBy || "unknown"}</div>
+          `;
+          const approveBtn = document.createElement("button");
+          approveBtn.textContent = "Approve";
+          approveBtn.onclick = () => {
+            const p = getPendingApps();
+            const a = getCustomApps();
+            const item = p.splice(index, 1)[0];
+            a.push({
+              name: item.name,
+              url: item.url,
+              icon: item.icon
+            });
+            savePendingApps(p);
+            saveCustomApps(a);
+            render();
+          };
+
+          const rejectBtn = document.createElement("button");
+          rejectBtn.textContent = "Reject";
+          rejectBtn.style.marginLeft = "6px";
+          rejectBtn.onclick = () => {
+            const p = getPendingApps();
+            p.splice(index, 1);
+            savePendingApps(p);
+            render();
+          };
+
+          card.appendChild(approveBtn);
+          card.appendChild(rejectBtn);
+          pendingRoot.appendChild(card);
+        });
+      }
+
+      if (!approved.length) {
+        approvedRoot.innerHTML = '<div style="opacity:0.8;">No approved apps yet.</div>';
+      } else {
+        approved.forEach(app => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            <div class="card-title">${app.name}</div>
+            <div>URL: <a href="${app.url}" target="_blank">${app.url}</a></div>
+            <div>Icon: ${app.icon || "(default)"}</div>
+          `;
+          approvedRoot.appendChild(card);
+        });
+      }
+    }
+
+    render();
+  </script>
+</body>
+</html>

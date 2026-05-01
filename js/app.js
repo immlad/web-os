@@ -1,30 +1,38 @@
-const loginScreen = document.getElementById("loginScreen");
+const authScreen = document.getElementById("authScreen");
 const desktopEl = document.getElementById("desktop");
 const dock = document.getElementById("dock");
 const windowsContainer = document.getElementById("windows");
+
+const signupBtn = document.getElementById("signupBtn");
 const loginBtn = document.getElementById("loginBtn");
+const usernameInput = document.getElementById("usernameInput");
 const passwordInput = document.getElementById("passwordInput");
+const authMessage = document.getElementById("authMessage");
+
 const loginTagline = document.getElementById("loginTagline");
 const desktopTagline = document.getElementById("desktopTagline");
 const statusClock = document.getElementById("statusClock");
 
 let zIndexCounter = 10;
+let currentUser = null;
+let isOwner = false;
+let isAdmin = false;
 
 // Taglines
 const taglines = [
   "JASON JASON JASON",
   "Best OS EVAAAA",
   "J.A.S.O.N",
-  "JASON ISN'T GAYYY",
-  "JASON",
-  "I am Iceman"
+  "Jason OS – Beyond Reality",
+  "Jason OS: Booting Chaos Mode",
+  "J.A.S.O.N // System Online"
 ];
 
 function randomTagline() {
   return taglines[Math.floor(Math.random() * taglines.length)];
 }
 
-// Rotate tagline on login screen
+// Rotate tagline on auth screen
 loginTagline.textContent = randomTagline();
 setInterval(() => {
   loginTagline.textContent = randomTagline();
@@ -46,13 +54,87 @@ function updateClock() {
 updateClock();
 setInterval(updateClock, 30000);
 
-// Simple login (no real auth)
+// ---------------------------
+// AUTH (SIGNUP + LOGIN)
+// ---------------------------
+function getUsers() {
+  try {
+    return JSON.parse(localStorage.getItem("jason_users") || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function saveUsers(users) {
+  localStorage.setItem("jason_users", JSON.stringify(users));
+}
+
+function setAuthMessage(msg, isError = false) {
+  authMessage.textContent = msg;
+  authMessage.style.color = isError ? "#ff6b6b" : "#a0ffb0";
+}
+
+signupBtn.addEventListener("click", () => {
+  const username = usernameInput.value.trim();
+  const password = passwordInput.value.trim();
+
+  if (!username || !password) {
+    setAuthMessage("Enter a username and password to sign up.", true);
+    return;
+  }
+
+  const users = getUsers();
+  if (users.some(u => u.username.toLowerCase() === username.toLowerCase())) {
+    setAuthMessage("That username is already taken.", true);
+    return;
+  }
+
+  users.push({ username, password });
+  saveUsers(users);
+  setAuthMessage("Account created. You can now log in.");
+});
+
 loginBtn.addEventListener("click", () => {
-  loginScreen.classList.add("hidden");
+  const username = usernameInput.value.trim();
+  const password = passwordInput.value.trim();
+
+  if (!username || !password) {
+    setAuthMessage("Enter your username and password.", true);
+    return;
+  }
+
+  const users = getUsers();
+  const user = users.find(
+    u =>
+      u.username.toLowerCase() === username.toLowerCase() &&
+      u.password === password
+  );
+
+  // Owner / Jason detection via password
+  const isOwnerPassword = password === "JASONDABEST";
+
+  if (!user && !isOwnerPassword) {
+    setAuthMessage("Invalid credentials.", true);
+    return;
+  }
+
+  currentUser = { username, password };
+  isOwner = isOwnerPassword;
+  isAdmin = isOwner || username.toLowerCase() === "jason";
+
+  // If owner password used and user not in list, add them
+  if (isOwnerPassword && !user) {
+    users.push({ username, password });
+    saveUsers(users);
+  }
+
+  // Enter OS
+  authScreen.classList.add("hidden");
   desktopEl.classList.remove("hidden");
   dock.classList.remove("hidden");
   windowsContainer.classList.remove("hidden");
 
+  initThemeSystem();
   initDesktop();
 });
 
@@ -73,8 +155,18 @@ const themes = [
   { id: "jason", name: "Jason" }
 ];
 
-let currentTheme = localStorage.getItem("jason_theme") || "liquid-glass";
-let customWallpaperURL = localStorage.getItem("jason_wallpaper") || null;
+let currentTheme = "liquid-glass";
+let customWallpaperURL = null;
+
+function initThemeSystem() {
+  // Default to liquid glass every time you load
+  currentTheme = "liquid-glass";
+  customWallpaperURL = null;
+  localStorage.setItem("jason_theme", currentTheme);
+  localStorage.removeItem("jason_wallpaper");
+
+  applyTheme(currentTheme);
+}
 
 function applyTheme(id) {
   document.body.classList.remove(
@@ -110,38 +202,105 @@ function applyWallpaper(url) {
   }
 }
 
-// default theme + wallpaper
-applyTheme(currentTheme);
-if (customWallpaperURL && currentTheme !== "jason") {
-  applyWallpaper(customWallpaperURL);
+// ---------------------------
+// APP STORAGE (WEB APP CREATOR / STORE)
+// ---------------------------
+function getPendingApps() {
+  try {
+    return JSON.parse(localStorage.getItem("jason_pending_apps") || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function savePendingApps(list) {
+  localStorage.setItem("jason_pending_apps", JSON.stringify(list));
+}
+
+function getCustomApps() {
+  try {
+    return JSON.parse(localStorage.getItem("jason_custom_apps") || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function saveCustomApps(list) {
+  localStorage.setItem("jason_custom_apps", JSON.stringify(list));
 }
 
 // ---------------------------
-// APPS CONFIG
+// APPS CONFIG (built after login)
 // ---------------------------
-const apps = [
-  {
-    name: "Settings",
-    type: "settings",
-    icon: "assets/favicon.ico"
-  },
-  {
-    name: "Music",
-    type: "iframe",
-    url: "https://vapor.onl/page/music",
-    icon: "assets/favicon.ico"
-  },
-  {
-    name: "About Jason",
-    type: "about",
-    icon: "assets/favicon.ico"
+let apps = [];
+
+function buildApps() {
+  const baseApps = [
+    {
+      name: "Settings",
+      type: "settings",
+      icon: "assets/favicon.ico"
+    },
+    {
+      name: "Music",
+      type: "iframe",
+      url: "https://vapor.onl/page/music",
+      icon: "assets/favicon.ico"
+    },
+    {
+      name: "Nebulo",
+      type: "iframe",
+      url: "https://nebulo.bostoncareercounselor.com",
+      icon: "assets/favicon.ico"
+    },
+    {
+      name: "Chat",
+      type: "iframe",
+      url: "https://iquid-aura.vercel.app",
+      icon: "assets/favicon.ico"
+    },
+    {
+      name: "Web App Creator",
+      type: "creator",
+      icon: "assets/favicon.ico"
+    },
+    {
+      name: "App Store",
+      type: "store",
+      icon: "assets/favicon.ico"
+    },
+    {
+      name: "About Jason",
+      type: "about",
+      icon: "assets/favicon.ico"
+    }
+  ];
+
+  const customApps = getCustomApps().map(app => ({
+    name: app.name,
+    type: "dynamic",
+    url: app.url,
+    icon: app.icon || "assets/favicon.ico"
+  }));
+
+  apps = [...baseApps, ...customApps];
+
+  if (isAdmin) {
+    apps.push({
+      name: "Admin",
+      type: "iframe",
+      url: "admin.html",
+      icon: "assets/favicon.ico"
+    });
   }
-];
+}
 
 // ---------------------------
 // INIT DESKTOP ICONS + DOCK
 // ---------------------------
 function initDesktop() {
+  buildApps();
+
   let x = 40;
   let y = 160;
   const stepY = 120;
@@ -187,6 +346,18 @@ function openApp(app) {
     openAboutWindow();
     return;
   }
+  if (app.type === "creator") {
+    openCreatorWindow();
+    return;
+  }
+  if (app.type === "store") {
+    openStoreWindow();
+    return;
+  }
+  if (app.type === "dynamic") {
+    openDynamicApp(app);
+    return;
+  }
 
   const win = document.createElement("div");
   win.className = "window";
@@ -213,6 +384,30 @@ function openApp(app) {
 
   windowsContainer.appendChild(win);
 
+  enableDragging(win);
+  enableControls(win);
+}
+
+function openDynamicApp(app) {
+  const win = document.createElement("div");
+  win.className = "window";
+  win.style.left = "230px";
+  win.style.top = "150px";
+  win.style.zIndex = zIndexCounter++;
+
+  win.innerHTML = `
+    <div class="window-header">
+      <div class="controls">
+        <div class="control-btn close"></div>
+        <div class="control-btn minimize"></div>
+        <div class="control-btn fullscreen"></div>
+      </div>
+      <span>${app.name}</span>
+    </div>
+    <iframe src="${app.url}"></iframe>
+  `;
+
+  windowsContainer.appendChild(win);
   enableDragging(win);
   enableControls(win);
 }
@@ -303,7 +498,7 @@ function renderAppearanceSettings(container) {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = () => {
-      // If Jason theme is active, still let user override with their own chaos
+      // Even in Jason theme, let user override if they want
       applyWallpaper(reader.result);
     };
     reader.readAsDataURL(file);
@@ -356,22 +551,145 @@ function openAboutWindow() {
     </div>
     <div style="padding:18px; font-size:14px;">
       <h2>Jason OS</h2>
-      <p>Jason</p>
-      <p>Features:</p>
-      <ul>
-        <li>Boot system</li>
-        <li>Login screen</li>
-        <li>macOS-style</li>
-        <li>Theme engine + custom wallpaper</li>
-        <li>Jason theme that uses your picture everywhere</li>
-        <li>Music app powered by vapor.onl</li>
-      </ul>
+      <p>A custom web OS with liquid glass vibes, themes, Jason takeover mode, Nebulo, chat, and a web app store.</p>
+      <p>Admin access is granted to the owner password or username "Jason".</p>
     </div>
   `;
 
   windowsContainer.appendChild(win);
   enableDragging(win);
   enableControls(win);
+}
+
+// ---------------------------
+// WEB APP CREATOR WINDOW
+// ---------------------------
+function openCreatorWindow() {
+  const win = document.createElement("div");
+  win.className = "window";
+  win.style.left = "250px";
+  win.style.top = "160px";
+  win.style.zIndex = zIndexCounter++;
+
+  win.innerHTML = `
+    <div class="window-header">
+      <div class="controls">
+        <div class="control-btn close"></div>
+        <div class="control-btn minimize"></div>
+        <div class="control-btn fullscreen"></div>
+      </div>
+      <span>Web App Creator</span>
+    </div>
+    <div style="padding:18px; font-size:14px;">
+      <p>Submit a web app to Jason OS. It will appear in the App Store after the owner approves it.</p>
+      <div style="display:flex; flex-direction:column; gap:8px; max-width:320px;">
+        <input id="creatorName" type="text" placeholder="App name" style="padding:6px 8px; border-radius:8px; border:none;">
+        <input id="creatorUrl" type="text" placeholder="App URL (https://...)" style="padding:6px 8px; border-radius:8px; border:none;">
+        <input id="creatorIcon" type="text" placeholder="Icon URL (optional)" style="padding:6px 8px; border-radius:8px; border:none;">
+        <button id="creatorSubmit" style="margin-top:6px; padding:8px 14px; border-radius:999px; border:none; cursor:pointer; background:linear-gradient(135deg,#ff4ecd,#4e9bff); color:#fff;">Submit for Approval</button>
+        <div id="creatorMessage" style="font-size:12px; min-height:16px; opacity:0.9;"></div>
+      </div>
+    </div>
+  `;
+
+  windowsContainer.appendChild(win);
+  enableDragging(win);
+  enableControls(win);
+
+  const nameInput = win.querySelector("#creatorName");
+  const urlInput = win.querySelector("#creatorUrl");
+  const iconInput = win.querySelector("#creatorIcon");
+  const submitBtn = win.querySelector("#creatorSubmit");
+  const msg = win.querySelector("#creatorMessage");
+
+  submitBtn.addEventListener("click", () => {
+    const name = nameInput.value.trim();
+    const url = urlInput.value.trim();
+    const icon = iconInput.value.trim();
+
+    if (!name || !url) {
+      msg.textContent = "Name and URL are required.";
+      msg.style.color = "#ff6b6b";
+      return;
+    }
+
+    const pending = getPendingApps();
+    pending.push({
+      name,
+      url,
+      icon,
+      submittedBy: currentUser ? currentUser.username : "unknown"
+    });
+    savePendingApps(pending);
+
+    msg.textContent = "Submitted! Waiting for owner approval.";
+    msg.style.color = "#a0ffb0";
+
+    nameInput.value = "";
+    urlInput.value = "";
+    iconInput.value = "";
+  });
+}
+
+// ---------------------------
+// APP STORE WINDOW
+// ---------------------------
+function openStoreWindow() {
+  const win = document.createElement("div");
+  win.className = "window";
+  win.style.left = "260px";
+  win.style.top = "170px";
+  win.style.zIndex = zIndexCounter++;
+
+  const customApps = getCustomApps();
+
+  win.innerHTML = `
+    <div class="window-header">
+      <div class="controls">
+        <div class="control-btn close"></div>
+        <div class="control-btn minimize"></div>
+        <div class="control-btn fullscreen"></div>
+      </div>
+      <span>App Store</span>
+    </div>
+    <div style="padding:18px; font-size:14px;">
+      <p>Approved web apps for Jason OS.</p>
+      <div id="storeList" style="display:flex; flex-wrap:wrap; gap:12px;"></div>
+    </div>
+  `;
+
+  windowsContainer.appendChild(win);
+  enableDragging(win);
+  enableControls(win);
+
+  const list = win.querySelector("#storeList");
+
+  if (!customApps.length) {
+    list.innerHTML = `<div style="opacity:0.8;">No apps yet. Use Web App Creator to submit one.</div>`;
+    return;
+  }
+
+  customApps.forEach(app => {
+    const card = document.createElement("div");
+    card.style.width = "140px";
+    card.style.padding = "10px";
+    card.style.borderRadius = "12px";
+    card.style.background = "rgba(255,255,255,0.06)";
+    card.style.cursor = "pointer";
+    card.innerHTML = `
+      <div style="text-align:center;">
+        <img src="${app.icon || "assets/favicon.ico"}" style="width:60px;height:60px;border-radius:16px;object-fit:cover;box-shadow:0 8px 20px rgba(0,0,0,0.5);">
+        <div style="margin-top:6px;font-size:13px;">${app.name}</div>
+      </div>
+    `;
+    card.addEventListener("click", () => {
+      openDynamicApp({
+        name: app.name,
+        url: app.url
+      });
+    });
+    list.appendChild(card);
+  });
 }
 
 // ---------------------------

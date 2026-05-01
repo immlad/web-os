@@ -12,15 +12,22 @@
 </head>
 <body>
 
-  <!-- LOGIN SCREEN -->
-  <div id="loginScreen" class="login-screen">
+  <!-- AUTH SCREEN (SIGN UP + LOGIN) -->
+  <div id="authScreen" class="login-screen">
     <div class="login-card">
       <img src="assets/favicon.ico" class="login-logo" alt="Jason OS Logo">
       <h1 class="login-title">Jason OS</h1>
       <div id="loginTagline" class="login-tagline"></div>
 
-      <input id="passwordInput" type="password" placeholder="Enter password">
-      <button id="loginBtn">Login</button>
+      <input id="usernameInput" type="text" placeholder="Username">
+      <input id="passwordInput" type="password" placeholder="Password">
+
+      <div class="auth-buttons">
+        <button id="signupBtn">Sign Up</button>
+        <button id="loginBtn">Login</button>
+      </div>
+
+      <div id="authMessage" class="auth-message"></div>
     </div>
   </div>
 

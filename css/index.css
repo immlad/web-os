@@ -72,7 +72,7 @@ body {
   text-align: left;
 }
 
-/* LOGIN */
+/* LOGIN / AUTH */
 
 .login-screen {
   position: absolute;
@@ -114,25 +114,37 @@ body {
   min-height: 18px;
 }
 
+#usernameInput,
 #passwordInput {
   width: 260px;
   padding: 10px 12px;
   border-radius: 999px;
   border: none;
   outline: none;
-  margin-top: 10px;
   font-size: 14px;
 }
 
-#loginBtn {
-  margin-top: 10px;
-  padding: 10px 26px;
+.auth-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.auth-buttons button {
+  padding: 8px 20px;
   border-radius: 999px;
   border: none;
   cursor: pointer;
   font-weight: 600;
   background: linear-gradient(135deg, #ff4ecd, #4e9bff);
   color: #fff;
+  font-size: 13px;
+}
+
+.auth-message {
+  font-size: 12px;
+  min-height: 16px;
+  opacity: 0.85;
 }
 
 /* DESKTOP */
