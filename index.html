@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Jason OS</title>
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- LOGIN SCREEN -->
+  <div id="loginScreen" class="login-screen">
+    <div class="login-card">
+      <img src="assets/favicon.ico" class="login-logo" alt="Jason OS Logo">
+      <h1 class="login-title">Jason OS</h1>
+      <div id="loginTagline" class="login-tagline"></div>
+
+      <input id="passwordInput" type="password" placeholder="Enter password">
+      <button id="loginBtn">Login</button>
+    </div>
+  </div>
+
+  <!-- DESKTOP -->
+  <div id="desktop" class="desktop hidden">
+    <div class="desktop-overlay">
+      <div class="desktop-title">Jason OS</div>
+      <div id="desktopTagline" class="desktop-tagline"></div>
+    </div>
+
+    <div class="status-bar">
+      <div class="status-left">JASON OS</div>
+      <div class="status-right">
+        <span id="statusClock"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dock -->
+  <div id="dock" class="dock hidden"></div>
+
+  <!-- Window Container -->
+  <div id="windows" class="windows hidden"></div>
+
+  <script src="js/animations.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
