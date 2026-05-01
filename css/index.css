@@ -12,14 +12,16 @@ body {
   margin: 0;
   overflow: hidden;
   font-family: 'Montserrat', system-ui, sans-serif;
-  background: #000; /* blank base */
+  background:
+    radial-gradient(circle at top left, #2b2f4f 0, #05060a 45%, #000 100%);
   color: #fff;
 }
 
 /* BOOT */
 
 .boot-body {
-  background: radial-gradient(circle at top, #1b1f3b, #05060a);
+  background:
+    radial-gradient(circle at top, #2b2f4f 0, #05060a 45%, #000 100%);
 }
 
 .boot-screen {
@@ -30,6 +32,20 @@ body {
   align-items: center;
   justify-content: center;
   gap: 20px;
+  overflow: hidden;
+}
+
+.boot-glow {
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,78,205,0.35), transparent 60%);
+  filter: blur(10px);
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
 }
 
 .boot-logo {
@@ -43,6 +59,8 @@ body {
 .boot-title {
   font-size: 40px;
   font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .boot-subtitle {
@@ -72,28 +90,43 @@ body {
   text-align: left;
 }
 
-/* LOGIN / AUTH */
+/* LOGIN */
 
 .login-screen {
   position: absolute;
   inset: 0;
-  background: #000; /* blank */
+  background:
+    radial-gradient(circle at top left, #2b2f4f 0, #05060a 45%, #000 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(18px);
 }
 
 .login-card {
-  background: rgba(5, 6, 10, 0.78);
-  border-radius: 24px;
+  position: relative;
+  background: rgba(5, 6, 10, 0.82);
+  border-radius: 28px;
   padding: 40px 50px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 18px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  box-shadow: 0 26px 80px rgba(0,0,0,0.85);
   border: 1px solid rgba(255,255,255,0.18);
+  overflow: hidden;
+}
+
+.login-glow {
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(78,155,255,0.4), transparent 60%);
+  top: -80px;
+  right: -60px;
+  pointer-events: none;
+  filter: blur(6px);
 }
 
 .login-logo {
@@ -101,11 +134,14 @@ body {
   height: 90px;
   border-radius: 24px;
   object-fit: cover;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.7);
 }
 
 .login-title {
   font-size: 36px;
   font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
 .login-tagline {
@@ -119,9 +155,19 @@ body {
   width: 260px;
   padding: 10px 12px;
   border-radius: 999px;
-  border: none;
+  border: 1px solid rgba(255,255,255,0.16);
   outline: none;
   font-size: 14px;
+  background: rgba(10, 12, 20, 0.9);
+  color: #fff;
+  transition: border-color 0.15s ease-out, box-shadow 0.15s ease-out, background 0.15s;
+}
+
+#usernameInput:focus,
+#passwordInput:focus {
+  border-color: rgba(78,155,255,0.9);
+  box-shadow: 0 0 0 1px rgba(78,155,255,0.7);
+  background: rgba(10, 12, 20, 0.98);
 }
 
 .auth-buttons {
@@ -139,12 +185,20 @@ body {
   background: linear-gradient(135deg, #ff4ecd, #4e9bff);
   color: #fff;
   font-size: 13px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  transition: transform 0.12s ease-out, box-shadow 0.12s ease-out, filter 0.12s;
+}
+
+.auth-buttons button:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+  box-shadow: 0 14px 40px rgba(0,0,0,0.8);
 }
 
 .auth-message {
   font-size: 12px;
   min-height: 16px;
-  opacity: 0.85;
+  opacity: 0.9;
 }
 
 /* DESKTOP */
@@ -156,7 +210,7 @@ body {
 .desktop {
   position: absolute;
   inset: 0;
-  background: transparent; /* blank by default */
+  background: transparent;
 }
 
 .desktop-overlay {
@@ -189,19 +243,20 @@ body {
   width: min(900px, 90%);
   height: 30px;
   border-radius: 999px;
-  background: rgba(10, 12, 20, 0.65);
-  backdrop-filter: blur(24px);
+  background: rgba(10, 12, 20, 0.7);
+  backdrop-filter: blur(26px);
   border: 1px solid rgba(255,255,255,0.18);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 14px;
   font-size: 12px;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.7);
 }
 
 .status-left {
   opacity: 0.8;
+  letter-spacing: 0.16em;
 }
 
 .status-right {
@@ -220,6 +275,12 @@ body {
   font-weight: 600;
   background: rgba(255,255,255,0.12);
   color: #fff;
+  transition: background 0.12s ease-out, transform 0.12s ease-out;
+}
+
+.logout-btn:hover {
+  background: rgba(255,255,255,0.2);
+  transform: translateY(-1px);
 }
 
 /* DESKTOP ICONS */
@@ -231,12 +292,13 @@ body {
   user-select: none;
   color: #fff;
   position: absolute;
+  transition: transform 0.12s ease-out, filter 0.12s ease-out;
 }
 
 .desktop-icon img {
-  width: 72px;
-  height: 72px;
-  border-radius: 20px;
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
   object-fit: cover;
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
@@ -244,6 +306,12 @@ body {
 .desktop-icon div {
   margin-top: 6px;
   font-size: 12px;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.7);
+}
+
+.desktop-icon:hover {
+  transform: translateY(-4px);
+  filter: brightness(1.05);
 }
 
 /* DOCK */
@@ -257,11 +325,12 @@ body {
   padding: 12px 24px;
   display: flex;
   gap: 22px;
-  background: rgba(10, 12, 20, 0.7);
-  backdrop-filter: blur(26px);
+  background: rgba(10, 12, 20, 0.78);
+  backdrop-filter: blur(30px);
   border-radius: 26px;
-  box-shadow: 0 18px 50px rgba(0,0,0,0.7);
-  border: 1px solid rgba(255,255,255,0.18);
+  box-shadow:
+    0 18px 50px rgba(0,0,0,0.8),
+    0 0 0 1px rgba(255,255,255,0.12);
 }
 
 .dock-icon {
@@ -278,12 +347,19 @@ body {
   border-radius: 18px;
   object-fit: cover;
   transition: transform .16s ease-out, filter .16s ease-out;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+}
+
+.dock-icon img:hover {
+  transform: translateY(-6px) scale(1.08);
+  filter: brightness(1.1);
 }
 
 .dock-label {
   margin-top: 4px;
   font-size: 11px;
   color: #fff;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.7);
 }
 
 /* WINDOWS CONTAINER */
@@ -297,7 +373,7 @@ body {
 /* THEMES */
 
 body.theme-liquid-glass .desktop {
-  /* still blank, but you can add subtle tint if you want */
+  /* blank, subtle tint via body background */
 }
 
 body.theme-amoled .desktop {
@@ -331,12 +407,12 @@ body.theme-sebastian .desktop {
   background: url('../assets/sebastian.png') center/cover no-repeat fixed;
 }
 
-/* Custom wallpaper overrides theme background (except Jason/Sebastian which we force via JS) */
+/* Custom wallpaper override */
 body.has-custom-wallpaper .desktop {
   background: var(--wallpaper-url) center/cover no-repeat fixed;
 }
 
-/* SETTINGS WINDOW */
+/* SETTINGS */
 
 .settings-root {
   display: flex;
@@ -349,6 +425,7 @@ body.has-custom-wallpaper .desktop {
   width: 180px;
   border-right: 1px solid rgba(255,255,255,0.08);
   padding: 14px;
+  background: radial-gradient(circle at top, rgba(255,255,255,0.06), transparent 60%);
 }
 
 .settings-sidebar h2 {
@@ -368,9 +445,11 @@ body.has-custom-wallpaper .desktop {
   color: inherit;
   text-align: left;
   cursor: pointer;
+  transition: background 0.12s ease-out;
 }
 
-.settings-sidebar button.active {
+.settings-sidebar button.active,
+.settings-sidebar button:hover {
   background: rgba(255,255,255,0.12);
 }
 
@@ -398,10 +477,13 @@ body.has-custom-wallpaper .desktop {
   background: rgba(255,255,255,0.06);
   cursor: pointer;
   border: 1px solid transparent;
+  transition: border-color 0.12s ease-out, transform 0.12s ease-out, box-shadow 0.12s;
 }
 
 .theme-card:hover {
   border-color: rgba(255,255,255,0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
 }
 
 .theme-name {
@@ -422,12 +504,4 @@ body.has-custom-wallpaper .desktop {
 
 .wallpaper-upload input[type="file"] {
   font-size: 13px;
-}
-
-/* MUSIC APP EMBED */
-
-.music-info {
-  font-size: 13px;
-  opacity: 0.8;
-  margin-bottom: 8px;
 }

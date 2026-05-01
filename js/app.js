@@ -36,13 +36,12 @@ function randomTagline() {
   return taglines[Math.floor(Math.random() * taglines.length)];
 }
 
-// Rotate tagline on auth screen
+// Taglines
 loginTagline.textContent = randomTagline();
 setInterval(() => {
   loginTagline.textContent = randomTagline();
 }, 2500);
 
-// Desktop tagline
 desktopTagline.textContent = randomTagline();
 setInterval(() => {
   desktopTagline.textContent = randomTagline();
@@ -66,7 +65,7 @@ if (logoutBtn) {
 }
 
 // ---------------------------
-// AUTH (SIGNUP + LOGIN)
+// AUTH
 // ---------------------------
 function getUsers() {
   try {
@@ -164,7 +163,7 @@ const themes = [
   { id: "ocean", name: "Ocean" },
   { id: "night", name: "Night" },
   { id: "jason", name: "Jason" }
-  // sebastian is secret
+  // sebastian added dynamically after unlock
 ];
 
 let currentTheme = "liquid-glass";
@@ -226,6 +225,7 @@ function applyWallpaper(url) {
 
 function getThemeIcon() {
   if (currentTheme === "sebastian") return "assets/sebastian.png";
+  if (currentTheme === "jason") return "assets/favicon.ico";
   return "assets/favicon.ico";
 }
 
@@ -240,7 +240,7 @@ function refreshAllIconsForTheme() {
 }
 
 // ---------------------------
-// APP STORAGE (WEB APP CREATOR / STORE)
+// APP STORAGE
 // ---------------------------
 function getPendingApps() {
   try {
@@ -335,18 +335,25 @@ function buildApps() {
 }
 
 // ---------------------------
-// INIT DESKTOP ICONS + DOCK
+// DESKTOP GRID (7 columns)
 // ---------------------------
 function initDesktop() {
   buildApps();
 
-  let x = 40;
-  let y = 160;
+  const columns = 7;
+  const startX = 40;
+  const startY = 160;
+  const stepX = 110;
   const stepY = 120;
 
-  apps.forEach(app => {
+  apps.forEach((app, index) => {
+    const col = index % columns;
+    const row = Math.floor(index / columns);
+
+    const x = startX + col * stepX;
+    const y = startY + row * stepY;
+
     addDesktopApp(app, x, y);
-    y += stepY;
   });
 }
 
@@ -381,17 +388,22 @@ function addDockIcon(app) {
 }
 
 // ---------------------------
-// SECRET SEBASTIAN THEME UNLOCK
+// SEBASTIAN UNLOCK
 // ---------------------------
 function unlockSebastianTheme() {
   if (sebastianUnlocked) return;
   sebastianUnlocked = true;
+
+  if (!themes.find(t => t.id === "sebastian")) {
+    themes.push({ id: "sebastian", name: "Sebastian" });
+  }
+
   applyTheme("sebastian");
-  alert("Sebastian theme unlocked.");
+  alert("Sebastian theme unlocked and added to Settings.");
 }
 
 // ---------------------------
-// CREATE WINDOW
+// OPEN APP
 // ---------------------------
 function openApp(app) {
   if (app.type === "settings") {
@@ -439,9 +451,9 @@ function openApp(app) {
   `;
 
   windowsContainer.appendChild(win);
-
   enableDragging(win);
   enableControls(win);
+  showWindow(win);
 }
 
 function openDynamicApp(app) {
@@ -466,10 +478,11 @@ function openDynamicApp(app) {
   windowsContainer.appendChild(win);
   enableDragging(win);
   enableControls(win);
+  showWindow(win);
 }
 
 // ---------------------------
-// SETTINGS WINDOW
+// SETTINGS
 // ---------------------------
 function openSettingsWindow() {
   const win = document.createElement("div");
@@ -499,6 +512,7 @@ function openSettingsWindow() {
   windowsContainer.appendChild(win);
   enableDragging(win);
   enableControls(win);
+  showWindow(win);
 
   initSettingsContent(win);
 }
@@ -580,13 +594,15 @@ function themePreviewStyle(id) {
       return "background:radial-gradient(circle at top,#1b1f3b,#05060a);";
     case "jason":
       return "background:url('assets/wallpaper.png') center/cover no-repeat;";
+    case "sebastian":
+      return "background:url('assets/sebastian.png') center/cover no-repeat;";
     default:
       return "";
   }
 }
 
 // ---------------------------
-// ABOUT WINDOW (Sebastian unlock)
+// ABOUT (Sebastian unlock, no admin hint)
 // ---------------------------
 function openAboutWindow() {
   aboutClickCount++;
@@ -611,18 +627,19 @@ function openAboutWindow() {
     </div>
     <div style="padding:18px; font-size:14px;">
       <h2>Jason OS</h2>
-      <p>A custom web OS with liquid glass vibes, Jason & Sebastian secret themes, Nebulo, chat, and a web app store.</p>
-      <p>Admin access is granted to the owner password, username "Jason", or username "Minh".</p>
+      <p>A custom web OS with liquid glass visuals, themes, animations, a web app store, and a customizable desktop.</p>
+      <p>Includes hidden features, secret themes, and advanced UI effects.</p>
     </div>
   `;
 
   windowsContainer.appendChild(win);
   enableDragging(win);
   enableControls(win);
+  showWindow(win);
 }
 
 // ---------------------------
-// WEB APP CREATOR WINDOW
+// WEB APP CREATOR
 // ---------------------------
 function openCreatorWindow() {
   const win = document.createElement("div");
@@ -655,6 +672,7 @@ function openCreatorWindow() {
   windowsContainer.appendChild(win);
   enableDragging(win);
   enableControls(win);
+  showWindow(win);
 
   const nameInput = win.querySelector("#creatorName");
   const urlInput = win.querySelector("#creatorUrl");
@@ -692,7 +710,7 @@ function openCreatorWindow() {
 }
 
 // ---------------------------
-// APP STORE WINDOW
+// APP STORE
 // ---------------------------
 function openStoreWindow() {
   const win = document.createElement("div");
@@ -721,6 +739,7 @@ function openStoreWindow() {
   windowsContainer.appendChild(win);
   enableDragging(win);
   enableControls(win);
+  showWindow(win);
 
   const list = win.querySelector("#storeList");
 
@@ -743,7 +762,6 @@ function openStoreWindow() {
       </div>
     `;
     card.addEventListener("click", () => {
-      // opens the website the user uploaded (in a window iframe)
       openDynamicApp({
         name: app.name,
         url: app.url
@@ -859,6 +877,7 @@ function enableControls(win) {
     setTimeout(() => {
       win.style.display = "block";
       win.style.zIndex = zIndexCounter++;
+      showWindow(win);
     }, 0);
   };
   win.querySelector(".fullscreen").onclick = () =>
