@@ -12,20 +12,24 @@ const authMessage = document.getElementById("authMessage");
 const loginTagline = document.getElementById("loginTagline");
 const desktopTagline = document.getElementById("desktopTagline");
 const statusClock = document.getElementById("statusClock");
+const logoutBtn = document.getElementById("logoutBtn");
 
 let zIndexCounter = 10;
 let currentUser = null;
 let isOwner = false;
 let isAdmin = false;
 
+let aboutClickCount = 0;
+let sebastianUnlocked = false;
+
 // Taglines
 const taglines = [
   "I am Iceman",
   "JAAAAAAAAAAAAAAASSSSSSSSSSSOOOOOOOOOOONNNNNNN",
-  "Nyaaa UWU~ - Jason, 2026",
-  "Ja makin me dinner mom?",
+  "Nyaaa UWU - Jason",
+  "2026",
   "Jason OS Ascends",
-  "Powered by Jason"
+  "Powered by Pure Chaos"
 ];
 
 function randomTagline() {
@@ -53,6 +57,13 @@ function updateClock() {
 }
 updateClock();
 setInterval(updateClock, 30000);
+
+// Logout
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", () => {
+    window.location.reload();
+  });
+}
 
 // ---------------------------
 // AUTH (SIGNUP + LOGIN)
@@ -110,7 +121,6 @@ loginBtn.addEventListener("click", () => {
       u.password === password
   );
 
-  // Owner / Jason detection via password
   const isOwnerPassword = password === "JASONDABEST";
 
   if (!user && !isOwnerPassword) {
@@ -120,18 +130,16 @@ loginBtn.addEventListener("click", () => {
 
   currentUser = { username, password };
   isOwner = isOwnerPassword;
-  isAdmin = 
-  isOwner ||
-  username.toLowerCase() === "jason" ||
-  username.toLowerCase() === "minh";
+  isAdmin =
+    isOwner ||
+    username.toLowerCase() === "jason" ||
+    username.toLowerCase() === "minh";
 
-  // If owner password used and user not in list, add them
   if (isOwnerPassword && !user) {
     users.push({ username, password });
     saveUsers(users);
   }
 
-  // Enter OS
   authScreen.classList.add("hidden");
   desktopEl.classList.remove("hidden");
   dock.classList.remove("hidden");
@@ -146,7 +154,7 @@ passwordInput.addEventListener("keydown", e => {
 });
 
 // ---------------------------
-// THEMES + WALLPAPER (with persistence)
+// THEMES + WALLPAPER
 // ---------------------------
 const themes = [
   { id: "liquid-glass", name: "Liquid Glass" },
@@ -156,18 +164,27 @@ const themes = [
   { id: "ocean", name: "Ocean" },
   { id: "night", name: "Night" },
   { id: "jason", name: "Jason" }
+  // sebastian is secret
 ];
 
 let currentTheme = "liquid-glass";
 let customWallpaperURL = null;
 
 function initThemeSystem() {
-  // Default to liquid glass every time you load
   currentTheme = "liquid-glass";
   customWallpaperURL = null;
-  localStorage.setItem("jason_theme", currentTheme);
-  localStorage.removeItem("jason_wallpaper");
-
+  document.body.classList.remove(
+    "theme-liquid-glass",
+    "theme-amoled",
+    "theme-light",
+    "theme-forest",
+    "theme-ocean",
+    "theme-night",
+    "theme-jason",
+    "theme-sebastian",
+    "has-custom-wallpaper"
+  );
+  document.body.style.removeProperty("--wallpaper-url");
   applyTheme(currentTheme);
 }
 
@@ -179,30 +196,47 @@ function applyTheme(id) {
     "theme-forest",
     "theme-ocean",
     "theme-night",
-    "theme-jason"
+    "theme-jason",
+    "theme-sebastian"
   );
   document.body.classList.add("theme-" + id);
   currentTheme = id;
-  localStorage.setItem("jason_theme", id);
 
-  // Jason theme: force everything to the person picture
   if (id === "jason") {
-    applyWallpaper("assets/favicon.ico");
+    applyWallpaper("assets/wallpaper.png");
+  } else if (id === "sebastian") {
+    applyWallpaper("assets/sebastian.png");
+    refreshAllIconsForTheme();
+  } else {
+    refreshAllIconsForTheme();
   }
 }
 
 function applyWallpaper(url) {
-  if (url) {
-    customWallpaperURL = url;
-    document.body.classList.add("has-custom-wallpaper");
-    document.body.style.setProperty("--wallpaper-url", `url('${url}')`);
-    localStorage.setItem("jason_wallpaper", url);
-  } else {
+  if (!url) {
     customWallpaperURL = null;
     document.body.classList.remove("has-custom-wallpaper");
     document.body.style.removeProperty("--wallpaper-url");
-    localStorage.removeItem("jason_wallpaper");
+    return;
   }
+  customWallpaperURL = url;
+  document.body.classList.add("has-custom-wallpaper");
+  document.body.style.setProperty("--wallpaper-url", `url('${url}')`);
+}
+
+function getThemeIcon() {
+  if (currentTheme === "sebastian") return "assets/sebastian.png";
+  return "assets/favicon.ico";
+}
+
+function refreshAllIconsForTheme() {
+  const iconSrc = getThemeIcon();
+  document.querySelectorAll(".desktop-icon img").forEach(img => {
+    img.src = iconSrc;
+  });
+  document.querySelectorAll(".dock-icon img").forEach(img => {
+    img.src = iconSrc;
+  });
 }
 
 // ---------------------------
@@ -233,49 +267,51 @@ function saveCustomApps(list) {
 }
 
 // ---------------------------
-// APPS CONFIG (built after login)
+// APPS CONFIG
 // ---------------------------
 let apps = [];
 
 function buildApps() {
+  const baseIcon = getThemeIcon();
+
   const baseApps = [
     {
       name: "Settings",
       type: "settings",
-      icon: "assets/favicon.ico"
+      icon: baseIcon
     },
     {
       name: "Music",
       type: "iframe",
       url: "https://vapor.onl/page/music",
-      icon: "assets/favicon.ico"
+      icon: baseIcon
     },
     {
       name: "Nebulo",
       type: "iframe",
       url: "https://nebulo.bostoncareercounselor.com",
-      icon: "assets/favicon.ico"
+      icon: baseIcon
     },
     {
       name: "Chat",
       type: "iframe",
       url: "https://iquid-aura.vercel.app",
-      icon: "assets/favicon.ico"
+      icon: baseIcon
     },
     {
       name: "Web App Creator",
       type: "creator",
-      icon: "assets/favicon.ico"
+      icon: baseIcon
     },
     {
       name: "App Store",
       type: "store",
-      icon: "assets/favicon.ico"
+      icon: baseIcon
     },
     {
       name: "About Jason",
       type: "about",
-      icon: "assets/favicon.ico"
+      icon: baseIcon
     }
   ];
 
@@ -283,7 +319,7 @@ function buildApps() {
     name: app.name,
     type: "dynamic",
     url: app.url,
-    icon: app.icon || "assets/favicon.ico"
+    icon: currentTheme === "sebastian" ? "assets/sebastian.png" : (app.icon || baseIcon)
   }));
 
   apps = [...baseApps, ...customApps];
@@ -293,7 +329,7 @@ function buildApps() {
       name: "Admin",
       type: "iframe",
       url: "admin.html",
-      icon: "assets/favicon.ico"
+      icon: baseIcon
     });
   }
 }
@@ -323,8 +359,10 @@ function addDesktopApp(app, x, y) {
     <img src="${app.icon}">
     <div>${app.name}</div>
   `;
-  icon.onclick = () => openApp(app);
+  icon.addEventListener("click", () => openApp(app));
   desktopEl.appendChild(icon);
+
+  makeDesktopIconDraggable(icon);
 
   addDockIcon(app);
 }
@@ -332,9 +370,24 @@ function addDesktopApp(app, x, y) {
 function addDockIcon(app) {
   const icon = document.createElement("div");
   icon.className = "dock-icon";
-  icon.innerHTML = `<img src="${app.icon}" alt="${app.name}">`;
-  icon.onclick = () => openApp(app);
+  icon.innerHTML = `
+    <img src="${app.icon}" alt="${app.name}">
+    <div class="dock-label">${app.name}</div>
+  `;
+  icon.addEventListener("click", () => openApp(app));
   dock.appendChild(icon);
+
+  makeDockIconDraggable(icon);
+}
+
+// ---------------------------
+// SECRET SEBASTIAN THEME UNLOCK
+// ---------------------------
+function unlockSebastianTheme() {
+  if (sebastianUnlocked) return;
+  sebastianUnlocked = true;
+  applyTheme("sebastian");
+  alert("Sebastian theme unlocked.");
 }
 
 // ---------------------------
@@ -501,7 +554,6 @@ function renderAppearanceSettings(container) {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = () => {
-      // Even in Jason theme, let user override if they want
       applyWallpaper(reader.result);
     };
     reader.readAsDataURL(file);
@@ -527,16 +579,21 @@ function themePreviewStyle(id) {
     case "night":
       return "background:radial-gradient(circle at top,#1b1f3b,#05060a);";
     case "jason":
-      return "background:url('assets/favicon.ico') center/cover no-repeat;";
+      return "background:url('assets/wallpaper.png') center/cover no-repeat;";
     default:
       return "";
   }
 }
 
 // ---------------------------
-// ABOUT WINDOW
+// ABOUT WINDOW (Sebastian unlock)
 // ---------------------------
 function openAboutWindow() {
+  aboutClickCount++;
+  if (aboutClickCount >= 20) {
+    unlockSebastianTheme();
+  }
+
   const win = document.createElement("div");
   win.className = "window";
   win.style.left = "260px";
@@ -554,8 +611,8 @@ function openAboutWindow() {
     </div>
     <div style="padding:18px; font-size:14px;">
       <h2>Jason OS</h2>
-      <p>A custom web OS with liquid glass vibes, themes, Jason takeover mode, Nebulo, chat, and a web app store.</p>
-      <p>Admin access is granted to the owner password or username "Jason".</p>
+      <p>A custom web OS with liquid glass vibes, Jason & Sebastian secret themes, Nebulo, chat, and a web app store.</p>
+      <p>Admin access is granted to the owner password, username "Jason", or username "Minh".</p>
     </div>
   `;
 
@@ -681,11 +738,12 @@ function openStoreWindow() {
     card.style.cursor = "pointer";
     card.innerHTML = `
       <div style="text-align:center;">
-        <img src="${app.icon || "assets/favicon.ico"}" style="width:60px;height:60px;border-radius:16px;object-fit:cover;box-shadow:0 8px 20px rgba(0,0,0,0.5);">
+        <img src="${currentTheme === "sebastian" ? "assets/sebastian.png" : (app.icon || "assets/favicon.ico")}" style="width:60px;height:60px;border-radius:16px;object-fit:cover;box-shadow:0 8px 20px rgba(0,0,0,0.5);">
         <div style="margin-top:6px;font-size:13px;">${app.name}</div>
       </div>
     `;
     card.addEventListener("click", () => {
+      // opens the website the user uploaded (in a window iframe)
       openDynamicApp({
         name: app.name,
         url: app.url
@@ -696,7 +754,7 @@ function openStoreWindow() {
 }
 
 // ---------------------------
-// DRAGGING (instant)
+// DRAGGING WINDOWS
 // ---------------------------
 function enableDragging(win) {
   const header = win.querySelector(".window-header");
@@ -718,6 +776,70 @@ function enableDragging(win) {
 
     const up = () => {
       dragging = false;
+      document.removeEventListener("mousemove", move);
+      document.removeEventListener("mouseup", up);
+    };
+
+    document.addEventListener("mousemove", move);
+    document.addEventListener("mouseup", up);
+  });
+}
+
+// ---------------------------
+// DRAGGING DESKTOP ICONS
+// ---------------------------
+function makeDesktopIconDraggable(icon) {
+  let dragging = false;
+  let offsetX = 0;
+  let offsetY = 0;
+
+  icon.addEventListener("mousedown", e => {
+    if (e.button !== 0) return;
+    dragging = true;
+    icon.style.zIndex = zIndexCounter++;
+    offsetX = e.clientX - icon.offsetLeft;
+    offsetY = e.clientY - icon.offsetTop;
+
+    const move = ev => {
+      if (!dragging) return;
+      icon.style.left = ev.clientX - offsetX + "px";
+      icon.style.top = ev.clientY - offsetY + "px";
+    };
+
+    const up = () => {
+      dragging = false;
+      document.removeEventListener("mousemove", move);
+      document.removeEventListener("mouseup", up);
+    };
+
+    document.addEventListener("mousemove", move);
+    document.addEventListener("mouseup", up);
+  });
+}
+
+// ---------------------------
+// DRAGGING DOCK ICONS (visual only)
+// ---------------------------
+function makeDockIconDraggable(icon) {
+  let dragging = false;
+  let startX = 0;
+
+  icon.style.position = "relative";
+
+  icon.addEventListener("mousedown", e => {
+    if (e.button !== 0) return;
+    dragging = true;
+    startX = e.clientX;
+
+    const move = ev => {
+      if (!dragging) return;
+      const dx = ev.clientX - startX;
+      icon.style.transform = `translateX(${dx}px)`;
+    };
+
+    const up = () => {
+      dragging = false;
+      icon.style.transform = "";
       document.removeEventListener("mousemove", move);
       document.removeEventListener("mouseup", up);
     };
