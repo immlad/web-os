@@ -172,43 +172,31 @@
   border: none;
   padding: 0;
   cursor: pointer;
-  width: 48px;
-  height: 48px;
-  border-radius: 16px;
+  width: 70px;
+  height: 40px;
+  border-radius: 999px;
   display: flex;
   align-items: center;
   justify-content: center;
   transform-origin: center;
-  transition: transform 0.16s ease, background 0.16s ease;
+  transition: transform 0.16s ease, background 0.16s ease, color 0.16s ease;
 }
 
 .dock-item:hover {
-  transform: scale(1.12);
+  transform: scale(1.08);
   background: rgba(255, 255, 255, 0.12);
 }
 
-/* Emoji icons by default */
-.dock-emoji {
-  font-size: 26px;
-  line-height: 1;
+.dock-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
 }
 
-/* Jason override icons */
-.dock-jason-icon {
-  display: none;
-  width: 32px;
-  height: 32px;
-  border-radius: 10px;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.6);
-}
-
-/* When JASON theme is active, hide emoji and show jason.png */
-body.theme-jason .dock-emoji {
-  display: none;
-}
-
-body.theme-jason .dock-jason-icon {
-  display: block;
+/* JASON theme overrides dock labels */
+body.theme-jason .dock-label {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
 }
 
 /* Windows */
@@ -391,6 +379,34 @@ body.theme-jason .dock-jason-icon {
   font-size: 13px;
   font-weight: 600;
   padding: 8px 16px;
+  cursor: pointer;
+}
+
+#admin-target-name {
+  width: 100%;
+  margin-top: 8px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--color-fg);
+  font-size: 13px;
+}
+
+.admin-actions-row {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.admin-actions-row button {
+  border-radius: 999px;
+  border: none;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font-size: 12px;
+  padding: 6px 10px;
   cursor: pointer;
 }
 

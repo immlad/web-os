@@ -37,7 +37,6 @@
 
   <!-- Desktop layout -->
   <main class="desktop">
-    <!-- Center hero -->
     <section class="desktop-hero">
       <h1 class="desktop-title">JASON OS</h1>
       <p class="desktop-subtitle" id="desktop-phrase"></p>
@@ -131,7 +130,7 @@
     </div>
     <div class="window-body admin-body">
       <div id="admin-locked" class="admin-locked hidden">
-        <p>You are not an admin. Only Minh or Jason can use this.</p>
+        <p>You are not an admin. Only Minh or Jason or promoted admins can use this.</p>
       </div>
 
       <div id="admin-panel" class="admin-panel hidden">
@@ -141,6 +140,24 @@
         </p>
         <textarea id="admin-message-input" placeholder="Type your message here"></textarea>
         <button id="admin-broadcast-btn">Send Global Message</button>
+
+        <hr style="margin: 16px 0; border: none; border-top: 1px solid rgba(255,255,255,0.12);" />
+
+        <h2>User Control</h2>
+        <p class="admin-caption">
+          Manage names that are banned or promoted to admin. This is local to this browser.
+        </p>
+        <input
+          type="text"
+          id="admin-target-name"
+          placeholder="Name to manage (case-insensitive)"
+        />
+        <div class="admin-actions-row">
+          <button id="admin-ban-btn">Ban</button>
+          <button id="admin-unban-btn">Unban</button>
+          <button id="admin-make-admin-btn">Make Admin</button>
+          <button id="admin-remove-admin-btn">Remove Admin</button>
+        </div>
       </div>
     </div>
   </div>
@@ -149,24 +166,22 @@
   <nav class="dock glass">
     <div class="dock-inner">
       <button class="dock-item" data-app="nebulo">
-        <span class="dock-emoji" data-emoji="🌐">🌐</span>
-        <img src="assets/jason.png" alt="" class="dock-jason-icon" />
+        <span class="dock-label" data-label="Nebulo">Nebulo</span>
       </button>
       <button class="dock-item" data-app="chat">
-        <span class="dock-emoji" data-emoji="💬">💬</span>
-        <img src="assets/jason.png" alt="" class="dock-jason-icon" />
+        <span class="dock-label" data-label="Liquid Aura">Liquid Aura</span>
       </button>
       <button class="dock-item" data-app="ideas">
-        <span class="dock-emoji" data-emoji="💡">💡</span>
-        <img src="assets/jason.png" alt="" class="dock-jason-icon" />
+        <span class="dock-label" data-label="Ideas">Ideas</span>
       </button>
       <button class="dock-item" data-app="settings">
-        <span class="dock-emoji" data-emoji="⚙️">⚙️</span>
-        <img src="assets/jason.png" alt="" class="dock-jason-icon" />
+        <span class="dock-label" data-label="Settings">Settings</span>
       </button>
       <button class="dock-item" data-app="admin">
-        <span class="dock-emoji" data-emoji="🛡️">🛡️</span>
-        <img src="assets/jason.png" alt="" class="dock-jason-icon" />
+        <span class="dock-label" data-label="Admin">Admin</span>
+      </button>
+      <button class="dock-item dock-logout" data-app="logout">
+        <span class="dock-label" data-label="⏻️">⏻️</span>
       </button>
     </div>
   </nav>

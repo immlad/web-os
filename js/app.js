@@ -56,10 +56,23 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // --- Theme switching + localStorage (from Settings) ---
+  const dockLabels = document.querySelectorAll(".dock-label");
+
   function applyTheme(theme) {
     body.classList.remove("theme-cloud", "theme-night", "theme-forest", "theme-jason");
     body.classList.add(`theme-${theme}`);
     localStorage.setItem("jasonos_theme", theme);
+
+    // JASON theme overrides dock labels visually
+    dockLabels.forEach((label) => {
+      const original = label.dataset.label || label.textContent;
+      label.dataset.label = original;
+      if (theme === "jason" && label.closest(".dock-logout") == null) {
+        label.textContent = "JASON";
+      } else if (theme !== "jason") {
+        label.textContent = original;
+      }
+    });
   }
 
   const savedTheme = localStorage.getItem("jasonos_theme") || "cloud";
@@ -231,6 +244,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- App launcher (dock) ---
   function handleLaunch(appId) {
+    if (appId === "logout") {
+      // Logout: clear current user and go back to boot
+      localStorage.removeItem("jasonos_user");
+      window.location.href = "boot/boot.html";
+      return;
+    }
     openWindowById(appId);
   }
 
@@ -247,6 +266,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const adminInput = document.getElementById("admin-message-input");
   const adminBtn = document.getElementById("admin-broadcast-btn");
 
+  const targetNameInput = document.getElementById("admin-target-name");
+  const banBtn = document.getElementById("admin-ban-btn");
+  const unbanBtn = document.getElementById("admin-unban-btn");
+  const makeAdminBtn = document.getElementById("admin-make-admin-btn");
+  const removeAdminBtn = document.getElementById("admin-remove-admin-btn");
+
   if (adminPanel && adminLocked) {
     if (isAdmin) {
       adminPanel.classList.remove("hidden");
@@ -262,6 +287,67 @@ document.addEventListener("DOMContentLoaded", () => {
       const msg = adminInput.value.trim();
       localStorage.setItem("jasonos_global_message", msg);
       renderGlobalMessage();
+    });
+  }
+
+  function getBannedNames() {
+    const raw = localStorage.getItem("jasonos_banned_names");
+    return raw ? JSON.parse(raw) : [];
+  }
+
+  function setBannedNames(list) {
+    localStorage.setItem("jasonos_banned_names", JSON.stringify(list));
+  }
+
+  function getAdminNames() {
+    const raw = localStorage.getItem("jasonos_admin_names");
+    return raw ? JSON.parse(raw) : [];
+  }
+
+  function setAdminNames(list) {
+    localStorage.setItem("jasonos_admin_names", JSON.stringify(list));
+  }
+
+  function normalizeNameInput() {
+    const val = targetNameInput.value.trim();
+    return val.toLowerCase();
+  }
+
+  if (isAdmin && targetNameInput && banBtn && unbanBtn && makeAdminBtn && removeAdminBtn) {
+    banBtn.addEventListener("click", () => {
+      const n = normalizeNameInput();
+      if (!n) return;
+      const list = getBannedNames();
+      if (!list.includes(n)) list.push(n);
+      setBannedNames(list);
+      alert(`Banned: ${n}`);
+    });
+
+    unbanBtn.addEventListener("click", () => {
+      const n = normalizeNameInput();
+      if (!n) return;
+      let list = getBannedNames();
+      list = list.filter((x) => x !== n);
+      setBannedNames(list);
+      alert(`Unbanned: ${n}`);
+    });
+
+    makeAdminBtn.addEventListener("click", () => {
+      const n = normalizeNameInput();
+      if (!n) return;
+      const list = getAdminNames();
+      if (!list.includes(n)) list.push(n);
+      setAdminNames(list);
+      alert(`Made admin: ${n}`);
+    });
+
+    removeAdminBtn.addEventListener("click", () => {
+      const n = normalizeNameInput();
+      if (!n) return;
+      let list = getAdminNames();
+      list = list.filter((x) => x !== n);
+      setAdminNames(list);
+      alert(`Removed admin: ${n}`);
     });
   }
 });
