@@ -25,16 +25,6 @@ const themes = {
   },
 };
 
-// per-app icons (normal mode)
-const appIcons = {
-  home: "assets/icon-home.png",
-  profile: "assets/icon-profile.png",
-  settings: "assets/icon-settings.png",
-  nebulo: "assets/icon-nebulo.png",
-  chat: "assets/icon-chat.png",
-  admin: "assets/icon-admin.png",
-};
-
 function applyTheme(key) {
   const theme = themes[key];
   const root = document.documentElement;
@@ -44,7 +34,6 @@ function applyTheme(key) {
     root.style.setProperty("--accent", theme.accent);
     root.style.setProperty("--accent-strong", theme.accentStrong);
   } else {
-    // no theme = default CSS (app-default.png)
     root.style.setProperty("--bg-wallpaper", `url("assets/app-default.png")`);
   }
 
@@ -53,22 +42,6 @@ function applyTheme(key) {
   const name = theme ? theme.name : "Default";
   if (label) label.textContent = `Theme: ${name}`;
   if (labelSmall) labelSmall.textContent = name;
-
-  const dockIcons = document.querySelectorAll(".dock-item img");
-
-  if (key === "jason") {
-    dockIcons.forEach((img) => {
-      img.src = "assets/jason.png";
-    });
-  } else {
-    dockIcons.forEach((img) => {
-      const parent = img.closest(".dock-item");
-      const app = parent?.getAttribute("data-app");
-      if (app && appIcons[app]) {
-        img.src = appIcons[app];
-      }
-    });
-  }
 
   if (key) {
     localStorage.setItem("jason_theme", key);
@@ -106,7 +79,7 @@ window.addEventListener("load", () => {
       phrases[Math.floor(Math.random() * phrases.length)];
   }
 
-  // Theme init (default = CSS app-default.png)
+  // Theme init
   const savedTheme = localStorage.getItem("jason_theme");
   if (savedTheme) {
     applyTheme(savedTheme);
@@ -128,7 +101,7 @@ window.addEventListener("load", () => {
     adminBtn.setAttribute("data-app", "admin");
     adminBtn.setAttribute("draggable", "true");
     adminBtn.innerHTML = `
-      <img src="${appIcons.admin}" alt="Admin" />
+      <div class="dock-emoji">🛡️</div>
       <span>Admin</span>
     `;
     dock.appendChild(adminBtn);
@@ -193,7 +166,7 @@ window.addEventListener("load", () => {
   document.querySelectorAll(".dock-item").forEach((item) => {
     item.addEventListener("click", () => {
       const app = item.getAttribute("data-app");
-      if (bounceIcon) bounceIcon(item);
+      if (bounceIcon) bounceIcon(item.querySelector(".dock-emoji") || item);
       openWindowForApp(app);
     });
   });

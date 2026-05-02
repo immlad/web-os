@@ -22,7 +22,7 @@
   }
 
   function enableDockHover() {
-    document.querySelectorAll(".dock-item img").forEach((icon) => {
+    document.querySelectorAll(".dock-item .dock-emoji").forEach((icon) => {
       icon.addEventListener("mouseenter", () => {
         icon.classList.add("dock-hover");
       });
