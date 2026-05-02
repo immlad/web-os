@@ -1,5 +1,5 @@
 // ======================================================
-// Jason OS – Windows 11 Gaming Edition Animations
+// Jason OS – Animation Engine (A3 Dock Version)
 // ======================================================
 
 (function () {
@@ -36,23 +36,6 @@
       win.classList.remove("window-minimize");
     }, 220);
   }
-
-  // ------------------------------------------------------
-  // Dock Hover Lift Effect
-  // ------------------------------------------------------
-  function enableDockHover() {
-    document.querySelectorAll(".dock-icon").forEach(icon => {
-      icon.addEventListener("mouseenter", () => {
-        icon.classList.add("dock-hover");
-      });
-      icon.addEventListener("mouseleave", () => {
-        icon.classList.remove("dock-hover");
-      });
-    });
-  }
-
-  // Enable hover on load
-  window.addEventListener("load", enableDockHover);
 
   // ------------------------------------------------------
   // Export Animations

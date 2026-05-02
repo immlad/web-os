@@ -1,29 +1,25 @@
 // ======================================================
-// Jason OS – Windows 11 Gaming Edition (Purple Neon)
+// Jason OS – Windows 11 Gaming Edition (A3 Dock Version)
 // ======================================================
 
 // THEMES
 const themes = {
   forest: {
-    name: "Forest",
     wallpaper: "assets/wallpaper-forest.png",
     accent: "#22c55e",
     glow: "#22c55e55"
   },
   night: {
-    name: "Night",
     wallpaper: "assets/wallpaper-night.png",
     accent: "#4f46e5",
     glow: "#4f46e555"
   },
   cloud: {
-    name: "Cloud",
     wallpaper: "assets/wallpaper-cloud.png",
     accent: "#38bdf8",
     glow: "#38bdf855"
   },
   jason: {
-    name: "JASON",
     wallpaper: "assets/jason.png",
     accent: "#d946ef",
     glow: "#d946ef55"
@@ -39,64 +35,6 @@ function applyTheme(key) {
     root.style.setProperty("--accent", theme.accent);
     root.style.setProperty("--glow", theme.glow);
     root.style.setProperty("--bg-wallpaper", `url("${theme.wallpaper}")`);
-  }
-
-  // JASON THEME OVERRIDE
-  if (key === "jason") {
-    document.querySelectorAll(".desktop-icon-img").forEach(el => {
-      el.style.backgroundImage = "url('assets/jason.png')";
-      el.style.backgroundSize = "cover";
-      el.textContent = "";
-    });
-
-    document.querySelectorAll(".dock-icon").forEach(el => {
-      el.style.backgroundImage = "url('assets/jason.png')";
-      el.style.backgroundSize = "cover";
-      el.textContent = "";
-    });
-
-    document.querySelectorAll(".window-title").forEach(el => {
-      el.textContent = "Jason App";
-    });
-  } else {
-    const defaults = {
-      home: "🏠",
-      profile: "👤",
-      settings: "⚙️",
-      chat: "💬"
-    };
-
-    // Desktop icons
-    document.querySelectorAll(".desktop-icon").forEach(btn => {
-      const app = btn.getAttribute("data-app");
-      const img = btn.querySelector(".desktop-icon-img");
-
-      if (app === "nebulo") {
-        img.style.backgroundImage =
-          "url('https://nebulo.bostoncareercounselor.com/assets/img/nebulo-logo.png')";
-        img.style.backgroundSize = "cover";
-        img.textContent = "";
-      } else {
-        img.style.backgroundImage = "";
-        img.textContent = defaults[app];
-      }
-    });
-
-    // Dock icons
-    document.querySelectorAll(".dock-item").forEach(btn => {
-      const app = btn.getAttribute("data-app");
-      const img = btn.querySelector(".dock-icon");
-
-      if (app === "nebulo") {
-        img.style.backgroundImage =
-          "url('https://nebulo.bostoncareercounselor.com/assets/img/nebulo-logo.png')";
-        img.style.backgroundSize = "cover";
-        img.textContent = "";
-      } else {
-        img.style.backgroundImage = "";
-        img.textContent = defaults[app];
-      }
-    });
   }
 
   localStorage.setItem("jason_theme", key);
@@ -165,18 +103,22 @@ window.addEventListener("load", () => {
     if (maxBtn) maxBtn.addEventListener("click", () => maximizeWindow(win));
   });
 
-  // DESKTOP ICONS — SINGLE CLICK
-  document.querySelectorAll(".desktop-icon").forEach(btn => {
-    btn.addEventListener("click", () => {
-      openWindow(btn.getAttribute("data-app"));
-    });
-  });
-
-  // DOCK ICONS — SINGLE CLICK + BOUNCE
+  // DOCK ICONS — MAGNIFY + BOUNCE + OPEN APP
   document.querySelectorAll(".dock-item").forEach(btn => {
+    const icon = btn.querySelector(".dock-icon");
+
+    // Hover magnification
+    btn.addEventListener("mousemove", () => {
+      icon.classList.add("dock-magnify");
+    });
+
+    btn.addEventListener("mouseleave", () => {
+      icon.classList.remove("dock-magnify");
+    });
+
+    // Click bounce + open
     btn.addEventListener("click", () => {
       const app = btn.getAttribute("data-app");
-      const icon = btn.querySelector(".dock-icon");
 
       if (window.JasonAnimations?.bounceIcon) {
         window.JasonAnimations.bounceIcon(icon);
