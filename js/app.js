@@ -56,23 +56,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // --- Theme switching + localStorage (from Settings) ---
-  const dockLabels = document.querySelectorAll(".dock-label");
-
   function applyTheme(theme) {
     body.classList.remove("theme-cloud", "theme-night", "theme-forest", "theme-jason");
     body.classList.add(`theme-${theme}`);
     localStorage.setItem("jasonos_theme", theme);
-
-    // JASON theme overrides dock labels visually
-    dockLabels.forEach((label) => {
-      const original = label.dataset.label || label.textContent;
-      label.dataset.label = original;
-      if (theme === "jason" && label.closest(".dock-logout") == null) {
-        label.textContent = "JASON";
-      } else if (theme !== "jason") {
-        label.textContent = original;
-      }
-    });
   }
 
   const savedTheme = localStorage.getItem("jasonos_theme") || "cloud";
@@ -174,8 +161,34 @@ document.addEventListener("DOMContentLoaded", () => {
     win.classList.add("minimized");
   }
 
+  // Fullscreen with restore
   function toggleFullscreen(win) {
-    win.classList.toggle("fullscreen");
+    const isFs = win.classList.contains("fullscreen");
+
+    if (!isFs) {
+      // Save current bounds
+      const rect = win.getBoundingClientRect();
+      win.dataset.prevLeft = rect.left;
+      win.dataset.prevTop = rect.top;
+      win.dataset.prevWidth = rect.width;
+      win.dataset.prevHeight = rect.height;
+
+      win.classList.add("fullscreen");
+      win.dataset.fullscreen = "true";
+    } else {
+      win.classList.remove("fullscreen");
+      win.dataset.fullscreen = "false";
+
+      const prevLeft = parseFloat(win.dataset.prevLeft || "100");
+      const prevTop = parseFloat(win.dataset.prevTop || "100");
+      const prevWidth = parseFloat(win.dataset.prevWidth || "800");
+      const prevHeight = parseFloat(win.dataset.prevHeight || "500");
+
+      win.style.left = `${prevLeft}px`;
+      win.style.top = `${prevTop}px`;
+      win.style.width = `${prevWidth}px`;
+      win.style.height = `${prevHeight}px`;
+    }
   }
 
   // Dragging
@@ -245,11 +258,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- App launcher (dock) ---
   function handleLaunch(appId) {
     if (appId === "logout") {
-      // Logout: clear current user and go back to boot
       localStorage.removeItem("jasonos_user");
       window.location.href = "boot/boot.html";
       return;
     }
+
     openWindowById(appId);
   }
 

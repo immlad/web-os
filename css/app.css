@@ -146,25 +146,29 @@
   color: var(--color-fg-soft);
 }
 
-/* Vertical dock (left) */
+/* Floating vertical dock (left) */
 .dock {
   position: fixed;
-  left: 12px;
+  left: 24px;
   top: 50%;
   transform: translateY(-50%);
-  width: var(--dock-width);
-  padding: 10px 8px;
+  width: 110px;
+  padding: 14px 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 30;
-  border-radius: 999px;
+  border-radius: 40px;
+}
+
+.dock-rect {
+  border-radius: 40px;
 }
 
 .dock-inner {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;
 }
 
 .dock-item {
@@ -173,30 +177,39 @@
   padding: 0;
   cursor: pointer;
   width: 70px;
-  height: 40px;
-  border-radius: 999px;
+  height: 50px;
+  border-radius: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transform-origin: center;
-  transition: transform 0.16s ease, background 0.16s ease, color 0.16s ease;
+  transition: transform 0.16s ease, background 0.16s ease;
 }
 
 .dock-item:hover {
-  transform: scale(1.08);
+  transform: scale(1.12);
   background: rgba(255, 255, 255, 0.12);
 }
 
-.dock-label {
-  font-size: 12px;
-  font-weight: 600;
-  text-align: center;
+.dock-emoji {
+  font-size: 28px;
+  line-height: 1;
 }
 
-/* JASON theme overrides dock labels */
-body.theme-jason .dock-label {
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
+.dock-jason-icon {
+  display: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.6);
+}
+
+/* JASON theme overrides emojis */
+body.theme-jason .dock-emoji {
+  display: none;
+}
+
+body.theme-jason .dock-jason-icon {
+  display: block;
 }
 
 /* Windows */
@@ -230,11 +243,11 @@ body.theme-jason .dock-label {
 }
 
 .window.fullscreen {
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  transform: none;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  transform: none !important;
   border-radius: 0;
 }
 

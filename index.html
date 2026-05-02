@@ -96,6 +96,25 @@
     </div>
   </div>
 
+  <!-- Music -->
+  <div class="window glass hidden" id="window-music" data-app-window data-app-id="music">
+    <div class="window-titlebar" data-drag-handle>
+      <div class="window-controls">
+        <button class="win-btn win-close">&nbsp;</button>
+        <button class="win-btn win-minimize">&nbsp;</button>
+        <button class="win-btn win-fullscreen">&nbsp;</button>
+      </div>
+      <span class="window-title">Music</span>
+    </div>
+    <div class="window-body">
+      <iframe
+        src="https://vapor.onl/page/music"
+        title="Music"
+        class="window-iframe"
+      ></iframe>
+    </div>
+  </div>
+
   <!-- Settings -->
   <div class="window glass hidden" id="window-settings" data-app-window data-app-id="settings">
     <div class="window-titlebar" data-drag-handle>
@@ -162,26 +181,42 @@
     </div>
   </div>
 
-  <!-- Vertical dock (left) -->
-  <nav class="dock glass">
+  <!-- Floating vertical dock (left) -->
+  <nav class="dock glass dock-rect">
     <div class="dock-inner">
       <button class="dock-item" data-app="nebulo">
-        <span class="dock-label" data-label="Nebulo">Nebulo</span>
+        <span class="dock-emoji" data-emoji="🌐">🌐</span>
+        <img src="assets/jason.png" class="dock-jason-icon" />
       </button>
+
       <button class="dock-item" data-app="chat">
-        <span class="dock-label" data-label="Liquid Aura">Liquid Aura</span>
+        <span class="dock-emoji" data-emoji="💬">💬</span>
+        <img src="assets/jason.png" class="dock-jason-icon" />
       </button>
+
       <button class="dock-item" data-app="ideas">
-        <span class="dock-label" data-label="Ideas">Ideas</span>
+        <span class="dock-emoji" data-emoji="💡">💡</span>
+        <img src="assets/jason.png" class="dock-jason-icon" />
       </button>
+
+      <button class="dock-item" data-app="music">
+        <span class="dock-emoji" data-emoji="🎵">🎵</span>
+        <img src="assets/jason.png" class="dock-jason-icon" />
+      </button>
+
       <button class="dock-item" data-app="settings">
-        <span class="dock-label" data-label="Settings">Settings</span>
+        <span class="dock-emoji" data-emoji="⚙️">⚙️</span>
+        <img src="assets/jason.png" class="dock-jason-icon" />
       </button>
+
       <button class="dock-item" data-app="admin">
-        <span class="dock-label" data-label="Admin">Admin</span>
+        <span class="dock-emoji" data-emoji="🛡️">🛡️</span>
+        <img src="assets/jason.png" class="dock-jason-icon" />
       </button>
+
       <button class="dock-item dock-logout" data-app="logout">
-        <span class="dock-label" data-label="⏻️">⏻️</span>
+        <span class="dock-emoji" data-emoji="⏻️">⏻️</span>
+        <img src="assets/jason.png" class="dock-jason-icon" />
       </button>
     </div>
   </nav>
