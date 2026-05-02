@@ -1,6 +1,5 @@
 :root {
-  --bg-wallpaper-light: url("../assets/wallpaper.png");
-  --bg-wallpaper-dark: url("../assets/wallpaper-dark.png");
+  --bg-wallpaper: url("../assets/wallpaper-jason.png");
   --glass-bg: rgba(18, 22, 35, 0.55);
   --glass-bg-soft: rgba(18, 22, 35, 0.35);
   --glass-border: rgba(255, 255, 255, 0.18);
@@ -44,17 +43,11 @@ body {
 .os-wallpaper {
   position: fixed;
   inset: 0;
-  background-image: var(--bg-wallpaper-light);
+  background-image: var(--bg-wallpaper);
   background-size: cover;
   background-position: center;
   filter: saturate(1.2) contrast(1.05) brightness(0.9);
   z-index: -2;
-}
-
-@media (prefers-color-scheme: dark) {
-  .os-wallpaper {
-    background-image: var(--bg-wallpaper-dark);
-  }
 }
 
 .glass {
@@ -96,6 +89,14 @@ body {
 }
 
 /* Boot */
+
+.boot-center {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .boot-container {
   width: 360px;

@@ -32,7 +32,6 @@ window.addEventListener("load", () => {
     if (progress >= 100) {
       clearInterval(interval);
 
-      // Auto-login if session exists
       const session = localStorage.getItem("jason_session");
       if (session) {
         window.location.href = "../index.html";
@@ -92,7 +91,8 @@ window.addEventListener("load", () => {
     // Admin shortcut
     if (pass === ADMIN_PASSWORD) {
       sessionStorage.setItem("jason_admin", "true");
-      window.location.href = "../admin.html";
+      localStorage.setItem("jason_session", user || "Admin");
+      window.location.href = "../index.html";
       return;
     }
 
@@ -104,6 +104,14 @@ window.addEventListener("load", () => {
     }
 
     localStorage.setItem("jason_session", user);
+
+    // Username-based admin
+    if (user.toLowerCase() === "minh" || user.toLowerCase() === "jason") {
+      sessionStorage.setItem("jason_admin", "true");
+    } else {
+      sessionStorage.removeItem("jason_admin");
+    }
+
     window.location.href = "../index.html";
   });
 });

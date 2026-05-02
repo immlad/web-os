@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="css/app.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script>
-    // Redirect to boot if no session and not admin
     window.addEventListener("load", () => {
       const session = localStorage.getItem("jason_session");
       const isAdmin = sessionStorage.getItem("jason_admin") === "true";
@@ -24,7 +23,6 @@
 <body class="os-body">
   <div class="os-wallpaper"></div>
 
-  <!-- Desktop -->
   <div id="desktop" class="desktop">
     <!-- Top bar -->
     <div class="top-bar glass">
@@ -35,7 +33,7 @@
         <span class="logo-text">Jason OS</span>
       </div>
       <div class="top-center">
-        <span class="top-pill glass-soft">Liquid Glass Mode</span>
+        <span class="top-pill glass-soft" id="theme-label">Theme: JASON</span>
       </div>
       <div class="top-right">
         <span class="status-indicator"></span>
@@ -73,13 +71,14 @@
             <ul class="feature-list">
               <li><span class="bullet"></span> Liquid glass windows and dock</li>
               <li><span class="bullet"></span> macOS‑style animations</li>
-              <li><span class="bullet"></span> Admin mode with secret password</li>
+              <li><span class="bullet"></span> Themeable environment with Settings</li>
+              <li><span class="bullet"></span> Nebulo & Chat apps docked</li>
             </ul>
           </div>
           <div class="window-col glass-soft">
             <h3>Session Info</h3>
-            <p class="muted-small">Mode: <strong>Standard User</strong></p>
-            <p class="muted-small">Theme: <strong>Jason Liquid Glass</strong></p>
+            <p class="muted-small">Mode: <strong id="mode-label">Standard User</strong></p>
+            <p class="muted-small">Theme: <strong id="theme-label-small">JASON</strong></p>
             <p class="muted-small">Status: <strong>Stable</strong></p>
           </div>
         </div>
@@ -110,16 +109,90 @@
       </div>
     </div>
 
+    <!-- Settings window -->
+    <div class="window glass hidden" id="settings-window">
+      <div class="window-header">
+        <div class="window-left">
+          <span class="win-dot close"></span>
+          <span class="win-dot min"></span>
+          <span class="win-dot max"></span>
+          <span class="window-title">Settings</span>
+        </div>
+      </div>
+      <div class="window-body">
+        <h2>Appearance</h2>
+        <p class="muted-small">Choose your Jason OS theme.</p>
+
+        <div class="theme-grid">
+          <button class="theme-btn" data-theme="forest">Forest</button>
+          <button class="theme-btn" data-theme="night">Night</button>
+          <button class="theme-btn" data-theme="cloud">Cloud</button>
+          <button class="theme-btn" data-theme="jason">JASON</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nebulo app -->
+    <div class="window glass hidden" id="nebulo-window">
+      <div class="window-header">
+        <div class="window-left">
+          <span class="win-dot close"></span>
+          <span class="win-dot min"></span>
+          <span class="win-dot max"></span>
+          <span class="window-title">Nebulo</span>
+        </div>
+      </div>
+      <div class="window-body iframe-body">
+        <iframe
+          src="https://nebulo.bostoncareercounselor.com"
+          class="app-iframe"
+          title="Nebulo"
+        ></iframe>
+      </div>
+    </div>
+
+    <!-- Chat app -->
+    <div class="window glass hidden" id="chat-window">
+      <div class="window-header">
+        <div class="window-left">
+          <span class="win-dot close"></span>
+          <span class="win-dot min"></span>
+          <span class="win-dot max"></span>
+          <span class="window-title">Chat</span>
+        </div>
+      </div>
+      <div class="window-body iframe-body">
+        <iframe
+          src="https://immlad.github.io/liquid-aura/#/app"
+          class="app-iframe"
+          title="Chat"
+        ></iframe>
+      </div>
+    </div>
+
     <!-- Dock -->
-    <div class="dock glass">
-      <button class="dock-item" data-app="home">
-        <img src="assets/jason.png" alt="Home" />
+    <div class="dock glass" id="dock">
+      <button class="dock-item" data-app="home" draggable="true">
+        <img src="assets/app-default.png" alt="Home" />
         <span>Home</span>
       </button>
-      <button class="dock-item" data-app="profile">
+      <button class="dock-item" data-app="profile" draggable="true">
         <img src="assets/jason.png" alt="Profile" />
         <span>Profile</span>
       </button>
+      <button class="dock-item" data-app="settings" draggable="true">
+        <img src="assets/app-default.png" alt="Settings" />
+        <span>Settings</span>
+      </button>
+      <button class="dock-item" data-app="nebulo" draggable="true">
+        <img src="assets/app-default.png" alt="Nebulo" />
+        <span>Nebulo</span>
+      </button>
+      <button class="dock-item" data-app="chat" draggable="true">
+        <img src="assets/app-default.png" alt="Chat" />
+        <span>Chat</span>
+      </button>
+      <!-- Admin app will be injected by JS if admin -->
     </div>
   </div>
 </body>
