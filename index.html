@@ -26,52 +26,37 @@
   <!-- Wallpaper -->
   <div class="os-wallpaper"></div>
 
-  <!-- START BUTTON (Windows 11 style) -->
-  <button id="start-btn" class="start-btn glass-soft">
-    <img src="assets/start.png" class="start-icon" />
-  </button>
-
-  <!-- START MENU -->
-  <div id="start-menu" class="start-menu glass hidden">
-    <h2 class="start-title">Jason OS</h2>
-    <div class="start-grid">
-      <button class="start-item" data-app="home">🏠 Home</button>
-      <button class="start-item" data-app="profile">👤 Profile</button>
-      <button class="start-item" data-app="settings">⚙️ Settings</button>
-      <button class="start-item" data-app="nebulo">🌙 Nebulo</button>
-      <button class="start-item" data-app="chat">💬 Chat</button>
-    </div>
-  </div>
-
-  <!-- DESKTOP ICONS (Windows 11 style) -->
+  <!-- DESKTOP ICONS (Liquid Glass) -->
   <div id="desktop-icons" class="desktop-icons">
-    <button class="desktop-icon" data-app="home">
+
+    <button class="desktop-icon glass-soft" data-app="home">
       <div class="desktop-icon-img">🏠</div>
       <span>Home</span>
     </button>
 
-    <button class="desktop-icon" data-app="profile">
+    <button class="desktop-icon glass-soft" data-app="profile">
       <div class="desktop-icon-img">👤</div>
       <span>Profile</span>
     </button>
 
-    <button class="desktop-icon" data-app="settings">
+    <button class="desktop-icon glass-soft" data-app="settings">
       <div class="desktop-icon-img">⚙️</div>
       <span>Settings</span>
     </button>
 
-    <button class="desktop-icon" data-app="nebulo">
-      <div class="desktop-icon-img">🌙</div>
+    <button class="desktop-icon glass-soft" data-app="nebulo">
+      <div class="desktop-icon-img nebulo-icon"></div>
       <span>Nebulo</span>
     </button>
 
-    <button class="desktop-icon" data-app="chat">
+    <button class="desktop-icon glass-soft" data-app="chat">
       <div class="desktop-icon-img">💬</div>
       <span>Chat</span>
     </button>
+
   </div>
 
-  <!-- WINDOWS (Windows 11 Fluent style) -->
+  <!-- WINDOWS -->
 
   <!-- HOME -->
   <div id="home-window" class="window glass hidden">
@@ -167,11 +152,27 @@
 
   <!-- macOS Dock -->
   <div id="dock" class="dock glass">
-    <button class="dock-item" data-app="home"><div class="dock-icon">🏠</div></button>
-    <button class="dock-item" data-app="profile"><div class="dock-icon">👤</div></button>
-    <button class="dock-item" data-app="settings"><div class="dock-icon">⚙️</div></button>
-    <button class="dock-item" data-app="nebulo"><div class="dock-icon">🌙</div></button>
-    <button class="dock-item" data-app="chat"><div class="dock-icon">💬</div></button>
+
+    <button class="dock-item" data-app="home">
+      <div class="dock-icon">🏠</div>
+    </button>
+
+    <button class="dock-item" data-app="profile">
+      <div class="dock-icon">👤</div>
+    </button>
+
+    <button class="dock-item" data-app="settings">
+      <div class="dock-icon">⚙️</div>
+    </button>
+
+    <button class="dock-item" data-app="nebulo">
+      <div class="dock-icon nebulo-icon"></div>
+    </button>
+
+    <button class="dock-item" data-app="chat">
+      <div class="dock-icon">💬</div>
+    </button>
+
   </div>
 
 </body>

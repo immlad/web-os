@@ -60,8 +60,7 @@
   window.JasonAnimations = {
     bounceIcon,
     zoomOpen,
-    minimizeWindow,
-    enableDockHover
+    minimizeWindow
   };
 
 })();

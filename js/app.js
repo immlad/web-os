@@ -63,22 +63,39 @@ function applyTheme(key) {
       home: "🏠",
       profile: "👤",
       settings: "⚙️",
-      nebulo: "🌙",
       chat: "💬"
     };
 
+    // Desktop icons
     document.querySelectorAll(".desktop-icon").forEach(btn => {
       const app = btn.getAttribute("data-app");
       const img = btn.querySelector(".desktop-icon-img");
-      img.style.backgroundImage = "";
-      img.textContent = defaults[app];
+
+      if (app === "nebulo") {
+        img.style.backgroundImage =
+          "url('https://nebulo.bostoncareercounselor.com/assets/img/nebulo-logo.png')";
+        img.style.backgroundSize = "cover";
+        img.textContent = "";
+      } else {
+        img.style.backgroundImage = "";
+        img.textContent = defaults[app];
+      }
     });
 
+    // Dock icons
     document.querySelectorAll(".dock-item").forEach(btn => {
       const app = btn.getAttribute("data-app");
       const img = btn.querySelector(".dock-icon");
-      img.style.backgroundImage = "";
-      img.textContent = defaults[app];
+
+      if (app === "nebulo") {
+        img.style.backgroundImage =
+          "url('https://nebulo.bostoncareercounselor.com/assets/img/nebulo-logo.png')";
+        img.style.backgroundSize = "cover";
+        img.textContent = "";
+      } else {
+        img.style.backgroundImage = "";
+        img.textContent = defaults[app];
+      }
     });
   }
 
@@ -119,6 +136,7 @@ window.addEventListener("load", () => {
 
   // CLOSE WINDOW
   function closeWindow(win) {
+    win.classList.add("hidden");
     win.style.display = "none";
   }
 
@@ -126,6 +144,8 @@ window.addEventListener("load", () => {
   function minimizeWindow(win) {
     if (window.JasonAnimations?.minimizeWindow) {
       window.JasonAnimations.minimizeWindow(win);
+    } else {
+      closeWindow(win);
     }
   }
 
@@ -136,19 +156,23 @@ window.addEventListener("load", () => {
 
   // WINDOW CONTROLS
   document.querySelectorAll(".window").forEach(win => {
-    win.querySelector(".win-btn.close").addEventListener("click", () => closeWindow(win));
-    win.querySelector(".win-btn.min").addEventListener("click", () => minimizeWindow(win));
-    win.querySelector(".win-btn.max").addEventListener("click", () => maximizeWindow(win));
+    const closeBtn = win.querySelector(".win-btn.close");
+    const minBtn = win.querySelector(".win-btn.min");
+    const maxBtn = win.querySelector(".win-btn.max");
+
+    if (closeBtn) closeBtn.addEventListener("click", () => closeWindow(win));
+    if (minBtn) minBtn.addEventListener("click", () => minimizeWindow(win));
+    if (maxBtn) maxBtn.addEventListener("click", () => maximizeWindow(win));
   });
 
-  // DESKTOP ICONS
+  // DESKTOP ICONS — SINGLE CLICK
   document.querySelectorAll(".desktop-icon").forEach(btn => {
-    btn.addEventListener("dblclick", () => {
+    btn.addEventListener("click", () => {
       openWindow(btn.getAttribute("data-app"));
     });
   });
 
-  // DOCK ICONS
+  // DOCK ICONS — SINGLE CLICK + BOUNCE
   document.querySelectorAll(".dock-item").forEach(btn => {
     btn.addEventListener("click", () => {
       const app = btn.getAttribute("data-app");
@@ -159,22 +183,6 @@ window.addEventListener("load", () => {
       }
 
       openWindow(app);
-    });
-  });
-
-  // START BUTTON
-  const startBtn = document.getElementById("start-btn");
-  const startMenu = document.getElementById("start-menu");
-
-  startBtn.addEventListener("click", () => {
-    startMenu.classList.toggle("hidden");
-  });
-
-  // START MENU ITEMS
-  document.querySelectorAll(".start-item").forEach(btn => {
-    btn.addEventListener("click", () => {
-      startMenu.classList.add("hidden");
-      openWindow(btn.getAttribute("data-app"));
     });
   });
 
@@ -189,25 +197,27 @@ window.addEventListener("load", () => {
   const saveProfile = document.getElementById("save-profile");
   const profileStatus = document.getElementById("profile-status");
 
-  saveProfile.addEventListener("click", () => {
-    const user = document.getElementById("edit-username").value.trim();
-    const pass = document.getElementById("edit-password").value.trim();
+  if (saveProfile) {
+    saveProfile.addEventListener("click", () => {
+      const user = document.getElementById("edit-username").value.trim();
+      const pass = document.getElementById("edit-password").value.trim();
 
-    if (!user || !pass) {
-      profileStatus.textContent = "All fields required.";
-      return;
-    }
+      if (!user || !pass) {
+        profileStatus.textContent = "All fields required.";
+        return;
+      }
 
-    let accounts = JSON.parse(localStorage.getItem("jason_accounts") || "{}");
-    const oldUser = localStorage.getItem("jason_session");
+      let accounts = JSON.parse(localStorage.getItem("jason_accounts") || "{}");
+      const oldUser = localStorage.getItem("jason_session");
 
-    if (oldUser && accounts[oldUser]) delete accounts[oldUser];
+      if (oldUser && accounts[oldUser]) delete accounts[oldUser];
 
-    accounts[user] = pass;
-    localStorage.setItem("jason_accounts", JSON.stringify(accounts));
-    localStorage.setItem("jason_session", user);
+      accounts[user] = pass;
+      localStorage.setItem("jason_accounts", JSON.stringify(accounts));
+      localStorage.setItem("jason_session", user);
 
-    profileStatus.textContent = "Profile saved.";
-  });
+      profileStatus.textContent = "Profile saved.";
+    });
+  }
 
 });

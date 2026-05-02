@@ -43,6 +43,10 @@ html, body {
   overflow: hidden;
 }
 
+.hidden {
+  display: none !important;
+}
+
 /* ==========================================================
    WALLPAPER
    ========================================================== */
@@ -79,77 +83,7 @@ html, body {
 }
 
 /* ==========================================================
-   WINDOWS 11 START BUTTON
-   ========================================================== */
-
-.start-btn {
-  position: fixed;
-  bottom: 18px;
-  left: 22px;
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: 0.18s ease;
-}
-
-.start-btn:hover {
-  background: rgba(255, 255, 255, 0.12);
-}
-
-.start-icon {
-  width: 26px;
-  height: 26px;
-  opacity: 0.9;
-}
-
-/* ==========================================================
-   START MENU
-   ========================================================== */
-
-.start-menu {
-  position: fixed;
-  bottom: 80px;
-  left: 22px;
-  width: 260px;
-  padding: 16px;
-  border-radius: var(--radius-lg);
-  animation: fadeIn 0.2s ease;
-}
-
-.start-title {
-  margin: 0 0 12px;
-  font-size: 1.2rem;
-  font-weight: 700;
-}
-
-.start-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 8px;
-}
-
-.start-item {
-  padding: 10px 12px;
-  border-radius: var(--radius-md);
-  border: none;
-  cursor: pointer;
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--text-main);
-  text-align: left;
-  font-size: 0.9rem;
-}
-
-.start-item:hover {
-  background: rgba(255, 255, 255, 0.18);
-}
-
-/* ==========================================================
-   DESKTOP ICONS — Windows 11 Style
+   DESKTOP ICONS — Liquid Glass Tiles
    ========================================================== */
 
 .desktop-icons {
@@ -158,35 +92,52 @@ html, body {
   left: 28px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 }
 
 .desktop-icon {
-  width: 90px;
-  padding: 8px 6px;
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  width: 110px;
+  padding: 10px 8px;
+  border-radius: 18px;
+  background: rgba(20, 20, 30, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   text-align: center;
   cursor: pointer;
   transition: 0.18s ease;
+  backdrop-filter: blur(18px) saturate(1.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
 }
 
 .desktop-icon:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.14);
 }
 
 .desktop-icon-img {
-  width: 42px;
-  height: 42px;
-  margin: 0 auto 4px;
-  font-size: 24px;
+  width: 46px;
+  height: 46px;
+  margin: 0 auto 6px;
+  font-size: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
-  background: rgba(0, 0, 0, 0.35);
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.45);
   background-size: cover;
+  background-position: center;
+  transition: 0.18s ease;
+}
+
+/* Nebulo icon override */
+.nebulo-icon {
+  background-image: url("https://nebulo.bostoncareercounselor.com/assets/img/nebulo-logo.png");
+  background-size: cover;
+  background-position: center;
+}
+
+/* Glow on hover */
+.desktop-icon:hover .desktop-icon-img {
+  box-shadow: 0 0 12px var(--glow);
 }
 
 /* ==========================================================
@@ -250,66 +201,4 @@ html, body {
    IFRAME APPS
    ========================================================== */
 
-.iframe-body {
-  padding: 0;
-}
-
-.app-iframe {
-  width: 100%;
-  height: 420px;
-  border: none;
-  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-}
-
-/* ==========================================================
-   macOS DOCK — Gaming Edition
-   ========================================================== */
-
-.dock {
-  position: fixed;
-  bottom: 18px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 18px;
-  padding: 10px 18px;
-  border-radius: 999px;
-  backdrop-filter: blur(22px) saturate(1.4);
-  -webkit-backdrop-filter: blur(22px) saturate(1.4);
-  background: rgba(20, 20, 30, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-.dock-item {
-  border: none;
-  background: transparent;
-  cursor: pointer;
-}
-
-.dock-icon {
-  width: 52px;
-  height: 52px;
-  border-radius: 16px;
-  background: rgba(0, 0, 0, 0.35);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
-  transition: 0.18s ease;
-  background-size: cover;
-}
-
-.dock-hover {
-  transform: scale(1.22) translateY(-6px);
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.6),
-              0 0 18px var(--glow);
-}
-
-/* ==========================================================
-   ANIMATIONS
-   ========================================================== */
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+.iframe

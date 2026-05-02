@@ -4,8 +4,11 @@
   <meta charset="UTF-8" />
   <title>Jason OS – Admin Panel</title>
 
+  <!-- Styles -->
   <link rel="stylesheet" href="../css/index.css" />
   <link rel="stylesheet" href="../css/app.css" />
+
+  <!-- Script -->
   <script defer src="admin.js"></script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -16,22 +19,25 @@
   <!-- Wallpaper -->
   <div class="os-wallpaper"></div>
 
-  <!-- Admin Container -->
+  <!-- Admin Panel Container -->
   <div class="admin-shell">
     <div class="admin-panel glass centered">
 
       <h1>Admin Panel</h1>
       <p class="muted">Manage users and system settings.</p>
 
+      <!-- USERS LIST -->
       <h3>Registered Users</h3>
       <ul id="users-list" class="users-list"></ul>
 
+      <!-- GLOBAL MESSAGE -->
       <h3>Global Message</h3>
       <input id="global-text" class="auth-input" placeholder="Enter announcement..." />
       <button id="send-global" class="btn-primary">Send Announcement</button>
 
       <p id="admin-status" class="muted-small"></p>
 
+      <!-- LOGOUT -->
       <button id="logout-admin" class="btn-primary" style="margin-top: 20px;">
         Logout
       </button>
