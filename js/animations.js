@@ -1,4 +1,3 @@
-// Expose helpers on window so app.js can use them
 (function () {
   function bounceIcon(el) {
     el.classList.remove("dock-bounce");

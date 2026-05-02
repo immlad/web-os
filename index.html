@@ -2,43 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Jason OS – Login</title>
+  <title>Jason OS – Desktop</title>
   <link rel="icon" href="assets/favicon.ico" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" />
   <link rel="stylesheet" href="css/index.css" />
   <link rel="stylesheet" href="css/app.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script>
+    // Redirect to boot if no session and not admin
+    window.addEventListener("load", () => {
+      const session = localStorage.getItem("jason_session");
+      const isAdmin = sessionStorage.getItem("jason_admin") === "true";
+      if (!session && !isAdmin) {
+        window.location.href = "boot/boot.html";
+      }
+    });
+  </script>
   <script defer src="js/animations.js"></script>
   <script defer src="js/app.js"></script>
 </head>
 <body class="os-body">
   <div class="os-wallpaper"></div>
 
-  <!-- Login Screen -->
-  <div id="login-screen" class="centered glass login-card">
-    <div class="login-avatar-wrap">
-      <img src="assets/jason.png" alt="User Avatar" class="login-avatar" />
-    </div>
-    <h2 class="login-title">Jason OS</h2>
-    <p class="login-subtitle">Sign in to your liquid glass workspace</p>
-
-    <div class="login-field-group">
-      <label class="login-label">Password</label>
-      <input
-        type="password"
-        id="password-input"
-        class="login-input"
-        placeholder="Enter password"
-      />
-    </div>
-
-    <button id="login-btn" class="btn-primary">Login</button>
-    <p id="login-error" class="login-error"></p>
-
-    <p class="login-footnote">Hint: normal users can use any password.</p>
-  </div>
-
   <!-- Desktop -->
-  <div id="desktop" class="desktop hidden">
+  <div id="desktop" class="desktop">
     <!-- Top bar -->
     <div class="top-bar glass">
       <div class="top-left">
@@ -53,19 +40,14 @@
       <div class="top-right">
         <span class="status-indicator"></span>
         <span class="status-text">Online</span>
+        <button id="logout-btn" class="logout-btn glass-soft">Logout</button>
       </div>
     </div>
 
-    <!-- Dock -->
-    <div class="dock glass">
-      <button class="dock-item" data-app="home">
-        <img src="assets/app-default.png" alt="Home" />
-        <span>Home</span>
-      </button>
-      <button class="dock-item" data-app="profile">
-        <img src="assets/sebastian.png" alt="Profile" />
-        <span>Profile</span>
-      </button>
+    <!-- Big title + phrase -->
+    <div class="desktop-title">
+      <h1 class="jason-title">JASON OS</h1>
+      <p class="jason-subtitle" id="jason-phrase"></p>
     </div>
 
     <!-- Main window -->
@@ -94,7 +76,7 @@
               <li><span class="bullet"></span> Admin mode with secret password</li>
             </ul>
           </div>
-          <div class="window-col window-card glass-soft">
+          <div class="window-col glass-soft">
             <h3>Session Info</h3>
             <p class="muted-small">Mode: <strong>Standard User</strong></p>
             <p class="muted-small">Theme: <strong>Jason Liquid Glass</strong></p>
@@ -102,6 +84,42 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- Profile window -->
+    <div class="window glass hidden" id="profile-window">
+      <div class="window-header">
+        <div class="window-left">
+          <span class="win-dot close"></span>
+          <span class="win-dot min"></span>
+          <span class="win-dot max"></span>
+          <span class="window-title">Profile</span>
+        </div>
+      </div>
+      <div class="window-body">
+        <h2>Edit Profile</h2>
+
+        <label>Username</label>
+        <input id="edit-username" class="auth-input" />
+
+        <label>Password</label>
+        <input id="edit-password" type="password" class="auth-input" />
+
+        <button id="save-profile" class="btn-primary">Save</button>
+        <p id="profile-status" class="muted-small"></p>
+      </div>
+    </div>
+
+    <!-- Dock -->
+    <div class="dock glass">
+      <button class="dock-item" data-app="home">
+        <img src="assets/jason.png" alt="Home" />
+        <span>Home</span>
+      </button>
+      <button class="dock-item" data-app="profile">
+        <img src="assets/jason.png" alt="Profile" />
+        <span>Profile</span>
+      </button>
     </div>
   </div>
 </body>

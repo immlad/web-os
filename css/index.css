@@ -1,5 +1,6 @@
 :root {
-  --bg-wallpaper: url("../assets/wallpaper.png");
+  --bg-wallpaper-light: url("../assets/wallpaper.png");
+  --bg-wallpaper-dark: url("../assets/wallpaper-dark.png");
   --glass-bg: rgba(18, 22, 35, 0.55);
   --glass-bg-soft: rgba(18, 22, 35, 0.35);
   --glass-border: rgba(255, 255, 255, 0.18);
@@ -43,11 +44,17 @@ body {
 .os-wallpaper {
   position: fixed;
   inset: 0;
-  background-image: var(--bg-wallpaper);
+  background-image: var(--bg-wallpaper-light);
   background-size: cover;
   background-position: center;
   filter: saturate(1.2) contrast(1.05) brightness(0.9);
   z-index: -2;
+}
+
+@media (prefers-color-scheme: dark) {
+  .os-wallpaper {
+    background-image: var(--bg-wallpaper-dark);
+  }
 }
 
 .glass {
@@ -143,65 +150,44 @@ body {
   color: var(--text-muted);
 }
 
-/* Login */
+/* Auth */
 
-.login-card {
-  width: 360px;
-  padding: 28px 26px 24px;
-  text-align: left;
-}
-
-.login-avatar-wrap {
+.auth-shell {
+  position: fixed;
+  inset: 0;
   display: flex;
+  align-items: center;
   justify-content: center;
-  margin-bottom: 10px;
+  padding: 16px;
 }
 
-.login-avatar {
-  width: 72px;
-  height: 72px;
-  border-radius: 24px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+.auth-card {
+  width: 360px;
+  padding: 24px 22px 20px;
 }
 
-.login-title {
-  margin: 0;
-  font-size: 1.5rem;
-}
-
-.login-subtitle {
-  margin: 6px 0 18px;
-  color: var(--text-muted);
-  font-size: 0.9rem;
-}
-
-.login-field-group {
+.auth-card h2 {
+  margin-top: 0;
   margin-bottom: 12px;
 }
 
-.login-label {
-  display: block;
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  margin-bottom: 4px;
-}
-
-.login-input {
+.auth-input {
   width: 100%;
-  padding: 10px 12px;
+  padding: 9px 11px;
   border-radius: var(--radius-md);
   border: 1px solid rgba(255, 255, 255, 0.25);
   background: rgba(0, 0, 0, 0.35);
   color: var(--text-main);
   outline: none;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
 }
 
-.login-input::placeholder {
+.auth-input::placeholder {
   color: rgba(255, 255, 255, 0.45);
 }
 
-.login-input:focus {
+.auth-input:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 1px rgba(76, 201, 240, 0.4);
 }
@@ -224,17 +210,22 @@ body {
   filter: brightness(1.05);
 }
 
-.login-error {
-  margin-top: 8px;
+.auth-error {
+  margin-top: 6px;
   min-height: 18px;
   font-size: 0.8rem;
   color: var(--danger);
 }
 
-.login-footnote {
+.auth-switch {
   margin-top: 10px;
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   color: var(--text-muted);
+}
+
+.auth-switch span {
+  color: var(--accent);
+  cursor: pointer;
 }
 
 /* Admin */
