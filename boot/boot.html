@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Jason OS – Boot</title>
-  <link rel="icon" href="../assets/favicon.ico" />
+  <link rel="icon" href="../assets/jason.png" />
   <link rel="stylesheet" href="../css/index.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script defer src="boot.js"></script>
@@ -20,13 +20,17 @@
       <h1 class="boot-title">Jason OS</h1>
       <p class="boot-subtitle">Booting your liquid glass workspace…</p>
       <div class="boot-progress"><div class="boot-bar"></div></div>
-      <p class="boot-hint">Sit back. Jason’s doing things.</p>
+      <p class="boot-hint">Jason is preparing your system…</p>
     </div>
 
     <!-- Auth Screen -->
     <div id="auth-screen" class="auth-shell hidden">
       <!-- Login -->
       <div id="login-box" class="auth-card glass">
+        <div class="auth-logo-wrap">
+          <img src="../assets/jason.png" class="auth-logo" />
+        </div>
+
         <h2>Login</h2>
 
         <label>Username</label>
@@ -43,6 +47,10 @@
 
       <!-- Signup -->
       <div id="signup-box" class="auth-card glass hidden">
+        <div class="auth-logo-wrap">
+          <img src="../assets/jason.png" class="auth-logo" />
+        </div>
+
         <h2>Create Account</h2>
 
         <label>Username</label>

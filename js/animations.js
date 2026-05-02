@@ -1,5 +1,6 @@
 (function () {
   function bounceIcon(el) {
+    if (!el) return;
     el.classList.remove("dock-bounce");
     void el.offsetWidth;
     el.classList.add("dock-bounce");

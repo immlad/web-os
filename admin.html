@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <title>Jason OS – Admin</title>
-  <link rel="icon" href="assets/favicon.ico" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" />
+  <link rel="icon" href="assets/jason.png" />
   <link rel="stylesheet" href="css/index.css" />
   <link rel="stylesheet" href="css/app.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <script>
     window.addEventListener("load", () => {
       const isAdmin = sessionStorage.getItem("jason_admin") === "true";
@@ -23,6 +23,7 @@
       function renderUsers() {
         usersList.innerHTML = "";
         const accounts = JSON.parse(localStorage.getItem("jason_accounts") || "{}");
+
         Object.keys(accounts).forEach((user) => {
           const li = document.createElement("li");
           li.className = "user-row";
@@ -39,9 +40,11 @@
             const accounts = JSON.parse(localStorage.getItem("jason_accounts") || "{}");
             delete accounts[u];
             localStorage.setItem("jason_accounts", JSON.stringify(accounts));
+
             if (localStorage.getItem("jason_session") === u) {
               localStorage.removeItem("jason_session");
             }
+
             renderUsers();
           });
         });
@@ -55,26 +58,28 @@
           msgStatus.textContent = "Message cannot be empty.";
           return;
         }
+
         localStorage.setItem("jason_global_message", text);
-        msgStatus.textContent = "Global message set.";
+        msgStatus.textContent = "Global message sent.";
       });
     });
   </script>
 </head>
+
 <body class="os-body">
   <div class="os-wallpaper"></div>
 
   <div class="admin-shell">
     <div class="top-bar glass">
       <div class="top-left">
-        <span class="logo-dot red"></span>
-        <span class="logo-dot amber"></span>
-        <span class="logo-dot green"></span>
-        <span class="logo-text">Jason OS Admin</span>
+        <img src="assets/jason.png" class="admin-logo" />
+        <span class="logo-text">Jason Admin</span>
       </div>
+
       <div class="top-center">
         <span class="top-pill glass-soft">Root Access</span>
       </div>
+
       <div class="top-right">
         <span class="status-indicator admin"></span>
         <span class="status-text">Privileged</span>
@@ -82,8 +87,8 @@
     </div>
 
     <div class="admin-panel glass centered">
-      <h1>Admin Control Center</h1>
-      <p class="muted">You are running Jason OS in elevated mode.</p>
+      <h1>Jason Admin Panel</h1>
+      <p class="muted">Manage users and broadcast system messages.</p>
 
       <h3>Users</h3>
       <ul id="users-list" class="users-list"></ul>
