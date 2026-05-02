@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Jason OS Boot</title>
-  <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
-  <link rel="stylesheet" href="../css/index.css">
+  <meta charset="UTF-8" />
+  <title>Jason OS – Boot</title>
+  <link rel="icon" href="../assets/favicon.ico" />
+  <link rel="stylesheet" href="../css/index.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script defer src="boot.js"></script>
 </head>
 <body class="boot-body">
-  <div class="boot-screen">
-    <div class="boot-glow"></div>
-    <img src="../assets/app-default.png" class="boot-logo" alt="Logo">
-    <div class="boot-title">Jason OS</div>
-    <div class="boot-subtitle">Booting...</div>
-    <div class="boot-bar">
-      <div class="boot-bar-fill" id="bootBarFill"></div>
-    </div>
-    <div class="boot-log" id="bootLog"></div>
-  </div>
+  <div class="os-wallpaper"></div>
 
-  <script src="boot.js"></script>
+  <div class="boot-container glass centered">
+    <div class="boot-logo-wrap">
+      <img src="../assets/jason.png" alt="Jason OS Logo" class="boot-logo" />
+    </div>
+    <h1 class="boot-title">Jason OS</h1>
+    <p class="boot-subtitle">Booting into a cleaner reality…</p>
+    <div class="boot-progress">
+      <div class="boot-bar"></div>
+    </div>
+    <p class="boot-hint">Press nothing. Just enjoy the glow.</p>
+  </div>
 </body>
 </html>
