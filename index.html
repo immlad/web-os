@@ -23,6 +23,8 @@
 <body class="os-body">
   <div class="os-wallpaper"></div>
 
+  <!-- global message will be injected here by JS -->
+
   <div id="desktop" class="desktop">
     <!-- Top bar -->
     <div class="top-bar glass">
@@ -33,7 +35,7 @@
         <span class="logo-text">Jason OS</span>
       </div>
       <div class="top-center">
-        <span class="top-pill glass-soft" id="theme-label">Theme: JASON</span>
+        <span class="top-pill glass-soft" id="theme-label">Theme: Default</span>
       </div>
       <div class="top-right">
         <span class="status-indicator"></span>
@@ -78,7 +80,7 @@
           <div class="window-col glass-soft">
             <h3>Session Info</h3>
             <p class="muted-small">Mode: <strong id="mode-label">Standard User</strong></p>
-            <p class="muted-small">Theme: <strong id="theme-label-small">JASON</strong></p>
+            <p class="muted-small">Theme: <strong id="theme-label-small">Default</strong></p>
             <p class="muted-small">Status: <strong>Stable</strong></p>
           </div>
         </div>
@@ -173,26 +175,26 @@
     <!-- Dock -->
     <div class="dock glass" id="dock">
       <button class="dock-item" data-app="home" draggable="true">
-        <img src="assets/app-default.png" alt="Home" />
+        <img src="assets/icon-home.png" alt="Home" />
         <span>Home</span>
       </button>
       <button class="dock-item" data-app="profile" draggable="true">
-        <img src="assets/jason.png" alt="Profile" />
+        <img src="assets/icon-profile.png" alt="Profile" />
         <span>Profile</span>
       </button>
       <button class="dock-item" data-app="settings" draggable="true">
-        <img src="assets/app-default.png" alt="Settings" />
+        <img src="assets/icon-settings.png" alt="Settings" />
         <span>Settings</span>
       </button>
       <button class="dock-item" data-app="nebulo" draggable="true">
-        <img src="assets/app-default.png" alt="Nebulo" />
+        <img src="assets/icon-nebulo.png" alt="Nebulo" />
         <span>Nebulo</span>
       </button>
       <button class="dock-item" data-app="chat" draggable="true">
-        <img src="assets/app-default.png" alt="Chat" />
+        <img src="assets/icon-chat.png" alt="Chat" />
         <span>Chat</span>
       </button>
-      <!-- Admin app will be injected by JS if admin -->
+      <!-- Admin app injected by JS if admin -->
     </div>
   </div>
 </body>

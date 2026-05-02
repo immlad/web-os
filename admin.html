@@ -13,7 +13,51 @@
       const isAdmin = sessionStorage.getItem("jason_admin") === "true";
       if (!isAdmin) {
         window.location.href = "boot/boot.html";
+        return;
       }
+
+      const usersList = document.getElementById("users-list");
+      const msgInput = document.getElementById("global-message");
+      const msgStatus = document.getElementById("msg-status");
+
+      function renderUsers() {
+        usersList.innerHTML = "";
+        const accounts = JSON.parse(localStorage.getItem("jason_accounts") || "{}");
+        Object.keys(accounts).forEach((user) => {
+          const li = document.createElement("li");
+          li.className = "user-row";
+          li.innerHTML = `
+            <span>${user}</span>
+            <button class="ban-btn" data-user="${user}">Ban</button>
+          `;
+          usersList.appendChild(li);
+        });
+
+        usersList.querySelectorAll(".ban-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const u = btn.getAttribute("data-user");
+            const accounts = JSON.parse(localStorage.getItem("jason_accounts") || "{}");
+            delete accounts[u];
+            localStorage.setItem("jason_accounts", JSON.stringify(accounts));
+            if (localStorage.getItem("jason_session") === u) {
+              localStorage.removeItem("jason_session");
+            }
+            renderUsers();
+          });
+        });
+      }
+
+      renderUsers();
+
+      document.getElementById("send-global").addEventListener("click", () => {
+        const text = msgInput.value.trim();
+        if (!text) {
+          msgStatus.textContent = "Message cannot be empty.";
+          return;
+        }
+        localStorage.setItem("jason_global_message", text);
+        msgStatus.textContent = "Global message set.";
+      });
     });
   </script>
 </head>
@@ -41,26 +85,15 @@
       <h1>Admin Control Center</h1>
       <p class="muted">You are running Jason OS in elevated mode.</p>
 
-      <div class="admin-grid">
-        <div class="admin-card glass-soft">
-          <h3>Users</h3>
-          <p class="muted-small">Manage sessions, roles, and access.</p>
-        </div>
-        <div class="admin-card glass-soft">
-          <h3>Processes</h3>
-          <p class="muted-small">Monitor running apps and services.</p>
-        </div>
-        <div class="admin-card glass-soft">
-          <h3>Appearance</h3>
-          <p class="muted-small">Liquid glass theme is locked on.</p>
-        </div>
-        <div class="admin-card glass-soft">
-          <h3>Power</h3>
-          <p class="muted-small">Reboot or shutdown Jason OS.</p>
-        </div>
-      </div>
+      <h3>Users</h3>
+      <ul id="users-list" class="users-list"></ul>
 
-      <button class="btn-primary" onclick="window.location.href='index.html'">
+      <h3>Global Message</h3>
+      <textarea id="global-message" class="auth-input" rows="3" placeholder="Enter a message shown to all users"></textarea>
+      <button id="send-global" class="btn-primary">Send Global Message</button>
+      <p id="msg-status" class="muted-small"></p>
+
+      <button class="btn-primary" style="margin-top:16px" onclick="window.location.href='index.html'">
         Back to Desktop
       </button>
     </div>
