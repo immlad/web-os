@@ -166,7 +166,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const isFs = win.classList.contains("fullscreen");
 
     if (!isFs) {
-      // Save current bounds
       const rect = win.getBoundingClientRect();
       win.dataset.prevLeft = rect.left;
       win.dataset.prevTop = rect.top;
@@ -272,6 +271,50 @@ document.addEventListener("DOMContentLoaded", () => {
       handleLaunch(app);
     });
   });
+
+  // --- Dock magnification (true macOS wave) ---
+  const dock = document.getElementById("dock");
+  const dockItems = Array.from(document.querySelectorAll(".dock-item"));
+
+  function updateDockMagnification(mouseY) {
+    const maxScale = 1.6;
+    const midScale = 1.3;
+    const lowScale = 1.1;
+    const influenceRadius = 80; // px
+
+    dockItems.forEach((item) => {
+      const rect = item.getBoundingClientRect();
+      const centerY = rect.top + rect.height / 2;
+      const distance = Math.abs(mouseY - centerY);
+
+      let scale = 1;
+
+      if (distance < influenceRadius) {
+        const t = 1 - distance / influenceRadius;
+        if (t > 0.66) {
+          scale = maxScale;
+        } else if (t > 0.33) {
+          scale = midScale;
+        } else {
+          scale = lowScale;
+        }
+      }
+
+      item.style.transform = `scale(${scale})`;
+    });
+  }
+
+  if (dock) {
+    dock.addEventListener("mousemove", (e) => {
+      updateDockMagnification(e.clientY);
+    });
+
+    dock.addEventListener("mouseleave", () => {
+      dockItems.forEach((item) => {
+        item.style.transform = "scale(1)";
+      });
+    });
+  }
 
   // --- Admin console wiring ---
   const adminPanel = document.getElementById("admin-panel");
