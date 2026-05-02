@@ -17,8 +17,16 @@
       <span class="topbar-logo"></span>
       <span class="topbar-title">JASON OS Tahoe</span>
     </div>
-    <div class="topbar-center"></div>
+
+    <div class="topbar-center topbar-pill">
+      <span class="topbar-pill-item active">Desktop</span>
+      <span class="topbar-pill-item">Apps</span>
+      <span class="topbar-pill-item">Control Center</span>
+    </div>
+
     <div class="topbar-right">
+      <div id="topbar-admin-badge" class="topbar-admin-badge hidden">Admin</div>
+      <span id="topbar-username" class="topbar-username"></span>
       <div class="app-switcher" id="app-switcher"></div>
       <span id="topbar-clock"></span>
     </div>
@@ -29,36 +37,6 @@
 
   <!-- Desktop layout -->
   <main class="desktop">
-    <!-- Left app rail -->
-    <aside class="desktop-rail glass">
-      <div class="rail-title">Apps</div>
-
-      <button class="rail-item" data-app="nebulo">
-        <img src="assets/app-default.png" class="rail-icon app-icon" alt="Nebulo" />
-        <span class="rail-label">Nebulo</span>
-      </button>
-
-      <button class="rail-item" data-app="chat">
-        <img src="assets/app-default.png" class="rail-icon app-icon" alt="Liquid Aura" />
-        <span class="rail-label">Liquid Aura</span>
-      </button>
-
-      <button class="rail-item" data-app="ideas">
-        <img src="assets/app-default.png" class="rail-icon app-icon" alt="Ideas" />
-        <span class="rail-label">Ideas</span>
-      </button>
-
-      <button class="rail-item" data-app="settings">
-        <img src="assets/app-default.png" class="rail-icon app-icon" alt="Settings" />
-        <span class="rail-label">Settings</span>
-      </button>
-
-      <button class="rail-item" data-app="admin">
-        <img src="assets/app-default.png" class="rail-icon app-icon" alt="Admin" />
-        <span class="rail-label">Admin</span>
-      </button>
-    </aside>
-
     <!-- Center hero -->
     <section class="desktop-hero">
       <h1 class="desktop-title">JASON OS</h1>
@@ -167,20 +145,28 @@
     </div>
   </div>
 
-  <!-- Dock -->
+  <!-- Vertical dock (left) -->
   <nav class="dock glass">
     <div class="dock-inner">
       <button class="dock-item" data-app="nebulo">
-        <img src="assets/app-default.png" alt="Nebulo" class="dock-icon app-icon" />
+        <span class="dock-emoji" data-emoji="🌐">🌐</span>
+        <img src="assets/jason.png" alt="" class="dock-jason-icon" />
       </button>
       <button class="dock-item" data-app="chat">
-        <img src="assets/app-default.png" alt="Liquid Aura" class="dock-icon app-icon" />
+        <span class="dock-emoji" data-emoji="💬">💬</span>
+        <img src="assets/jason.png" alt="" class="dock-jason-icon" />
+      </button>
+      <button class="dock-item" data-app="ideas">
+        <span class="dock-emoji" data-emoji="💡">💡</span>
+        <img src="assets/jason.png" alt="" class="dock-jason-icon" />
       </button>
       <button class="dock-item" data-app="settings">
-        <img src="assets/app-default.png" alt="Settings" class="dock-icon app-icon" />
+        <span class="dock-emoji" data-emoji="⚙️">⚙️</span>
+        <img src="assets/jason.png" alt="" class="dock-jason-icon" />
       </button>
       <button class="dock-item" data-app="admin">
-        <img src="assets/app-default.png" alt="Admin" class="dock-icon app-icon" />
+        <span class="dock-emoji" data-emoji="🛡️">🛡️</span>
+        <img src="assets/jason.png" alt="" class="dock-jason-icon" />
       </button>
     </div>
   </nav>

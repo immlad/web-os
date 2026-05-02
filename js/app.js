@@ -10,6 +10,22 @@ document.addEventListener("DOMContentLoaded", () => {
   const user = JSON.parse(userRaw);
   const isAdmin = !!user.isAdmin;
 
+  // --- User name + admin badge ---
+  const usernameEl = document.getElementById("topbar-username");
+  const adminBadgeEl = document.getElementById("topbar-admin-badge");
+
+  if (usernameEl) {
+    usernameEl.textContent = user.name || "";
+  }
+
+  if (adminBadgeEl) {
+    if (isAdmin) {
+      adminBadgeEl.classList.remove("hidden");
+    } else {
+      adminBadgeEl.classList.add("hidden");
+    }
+  }
+
   // --- Random desktop phrase ---
   const phrases = [
     "I am Iceman",
@@ -40,26 +56,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // --- Theme switching + localStorage (from Settings) ---
-  const appIcons = document.querySelectorAll(".app-icon");
-  const jasonIconPath = "assets/jason.png";
-  const defaultIconPath = "assets/app-default.png";
-
   function applyTheme(theme) {
     body.classList.remove("theme-cloud", "theme-night", "theme-forest", "theme-jason");
     body.classList.add(`theme-${theme}`);
     localStorage.setItem("jasonos_theme", theme);
-
-    if (theme === "jason") {
-      appIcons.forEach((img) => {
-        img.dataset.originalSrc = img.dataset.originalSrc || img.getAttribute("src");
-        img.setAttribute("src", jasonIconPath);
-      });
-    } else {
-      appIcons.forEach((img) => {
-        const original = img.dataset.originalSrc || defaultIconPath;
-        img.setAttribute("src", original);
-      });
-    }
   }
 
   const savedTheme = localStorage.getItem("jasonos_theme") || "cloud";
@@ -229,7 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
     win.addEventListener("mousedown", () => bringToFront(win));
   });
 
-  // --- App launcher (rail + dock) ---
+  // --- App launcher (dock) ---
   function handleLaunch(appId) {
     openWindowById(appId);
   }

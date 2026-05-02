@@ -33,12 +33,58 @@
   text-transform: uppercase;
 }
 
+/* Topbar pills + admin badge */
+.topbar-center {
+  flex: 1;
+  justify-content: center;
+}
+
+.topbar-pill {
+  padding: 2px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.18) inset;
+}
+
+.topbar-pill-item {
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  color: var(--color-fg-soft);
+}
+
+.topbar-pill-item.active {
+  background: rgba(255, 255, 255, 0.22);
+  color: var(--color-fg);
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.topbar-username {
+  font-size: 11px;
+  color: var(--color-fg-soft);
+}
+
+.topbar-admin-badge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #ff7b7b, #ffb36b);
+  color: #1b1b1f;
+  box-shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.4);
+}
+
 /* App switcher */
 .app-switcher {
   display: flex;
   align-items: center;
   gap: 4px;
-  margin-right: 8px;
+  margin-right: 4px;
 }
 
 .app-switcher-btn {
@@ -76,63 +122,9 @@
   position: fixed;
   inset: 0;
   padding-top: calc(var(--topbar-height) + 24px);
-  padding-bottom: calc(var(--dock-height) + 24px);
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-/* Left rail – vertical apps */
-.desktop-rail {
-  position: absolute;
-  left: 16px;
-  top: 72px;
-  bottom: 96px;
-  width: 220px;
-  padding: 16px 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  z-index: 10;
-}
-
-.rail-title {
-  font-size: 14px;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--color-fg-soft);
-  margin-bottom: 10px;
-}
-
-.rail-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  border-radius: 16px;
-  border: none;
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--color-fg);
-  padding: 10px 12px;
-  cursor: pointer;
-  transition: 0.18s ease all;
-}
-
-.rail-item:hover {
-  background: rgba(255, 255, 255, 0.12);
-  transform: translateX(4px);
-}
-
-.rail-icon {
-  width: 56px;
-  height: 56px;
-  border-radius: 14px;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.6);
-}
-
-.rail-label {
-  font-size: 14px;
-  font-weight: 600;
 }
 
 /* Center hero */
@@ -154,23 +146,25 @@
   color: var(--color-fg-soft);
 }
 
-/* Dock */
+/* Vertical dock (left) */
 .dock {
   position: fixed;
-  left: 50%;
-  bottom: 12px;
-  transform: translateX(-50%);
-  height: var(--dock-height);
-  padding: 10px 18px;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: var(--dock-width);
+  padding: 10px 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 30;
+  border-radius: 999px;
 }
 
 .dock-inner {
   display: flex;
-  gap: 18px;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .dock-item {
@@ -178,19 +172,43 @@
   border: none;
   padding: 0;
   cursor: pointer;
-  transform-origin: bottom center;
-  transition: transform 0.16s ease;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-origin: center;
+  transition: transform 0.16s ease, background 0.16s ease;
 }
 
 .dock-item:hover {
-  transform: translateY(-6px) scale(1.12);
+  transform: scale(1.12);
+  background: rgba(255, 255, 255, 0.12);
 }
 
-.dock-icon {
-  width: 56px;
-  height: 56px;
-  border-radius: 18px;
-  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.6);
+/* Emoji icons by default */
+.dock-emoji {
+  font-size: 26px;
+  line-height: 1;
+}
+
+/* Jason override icons */
+.dock-jason-icon {
+  display: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.6);
+}
+
+/* When JASON theme is active, hide emoji and show jason.png */
+body.theme-jason .dock-emoji {
+  display: none;
+}
+
+body.theme-jason .dock-jason-icon {
+  display: block;
 }
 
 /* Windows */
@@ -208,6 +226,10 @@
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.16s ease, transform 0.16s ease;
+  border-radius: 22px;
+  background: radial-gradient(circle at top left,
+      rgba(255, 255, 255, 0.16),
+      rgba(10, 10, 25, 0.9));
 }
 
 .window.active {
@@ -241,6 +263,7 @@
   padding: 0 12px;
   gap: 10px;
   cursor: move;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .window-controls {
@@ -283,7 +306,7 @@
   width: 100%;
   height: 100%;
   border: none;
-  border-radius: 0 0 18px 18px;
+  border-radius: 0 0 22px 22px;
 }
 
 .window-body-placeholder {
@@ -461,10 +484,6 @@
 @media (max-width: 768px) {
   .desktop-title {
     font-size: 40px;
-  }
-
-  .desktop-rail {
-    width: 180px;
   }
 
   .window {
