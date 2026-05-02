@@ -3,238 +3,176 @@
 <head>
   <meta charset="UTF-8" />
   <title>Jason OS – Desktop</title>
+
+  <!-- Icon -->
   <link rel="icon" href="assets/jason.png" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" />
+
+  <!-- Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" />
+
+  <!-- Styles -->
   <link rel="stylesheet" href="css/index.css" />
   <link rel="stylesheet" href="css/app.css" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <script>
-    window.addEventListener("load", () => {
-      const session = localStorage.getItem("jason_session");
-      const isAdmin = sessionStorage.getItem("jason_admin") === "true";
-      if (!session && !isAdmin) {
-        window.location.href = "boot/boot.html";
-      }
-    });
-  </script>
-
+  <!-- Scripts -->
   <script defer src="js/animations.js"></script>
   <script defer src="js/app.js"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 
 <body class="os-body">
+
+  <!-- Wallpaper -->
   <div class="os-wallpaper"></div>
 
-  <!-- Global message banner injected by JS -->
+  <!-- START BUTTON (Windows 11 style) -->
+  <button id="start-btn" class="start-btn glass-soft">
+    <img src="assets/start.png" class="start-icon" />
+  </button>
 
-  <div id="desktop" class="desktop">
-
-    <!-- Top bar -->
-    <div class="top-bar glass">
-      <div class="top-left">
-        <img src="assets/jason.png" class="top-logo" />
-        <span class="logo-text">Jason OS</span>
-      </div>
-
-      <div class="top-center">
-        <span class="top-pill glass-soft" id="theme-label">Theme: Default</span>
-      </div>
-
-      <div class="top-right">
-        <span class="status-indicator"></span>
-        <span class="status-text">Online</span>
-        <button id="logout-btn" class="logout-btn glass-soft">Logout</button>
-      </div>
+  <!-- START MENU -->
+  <div id="start-menu" class="start-menu glass hidden">
+    <h2 class="start-title">Jason OS</h2>
+    <div class="start-grid">
+      <button class="start-item" data-app="home">🏠 Home</button>
+      <button class="start-item" data-app="profile">👤 Profile</button>
+      <button class="start-item" data-app="settings">⚙️ Settings</button>
+      <button class="start-item" data-app="nebulo">🌙 Nebulo</button>
+      <button class="start-item" data-app="chat">💬 Chat</button>
     </div>
-
-    <!-- Big title + phrase -->
-    <div class="desktop-title">
-      <h1 class="jason-title">JASON OS</h1>
-      <p class="jason-subtitle" id="jason-phrase"></p>
-    </div>
-
-    <!-- Desktop icons -->
-    <div class="desktop-icons" id="desktop-icons">
-      <button class="desktop-icon" data-app="home" draggable="true">
-        <div class="desktop-icon-emoji">🏠</div>
-        <span>Home</span>
-      </button>
-
-      <button class="desktop-icon" data-app="profile" draggable="true">
-        <div class="desktop-icon-emoji">👤</div>
-        <span>Profile</span>
-      </button>
-
-      <button class="desktop-icon" data-app="settings" draggable="true">
-        <div class="desktop-icon-emoji">⚙️</div>
-        <span>Settings</span>
-      </button>
-
-      <button class="desktop-icon" data-app="nebulo" draggable="true">
-        <div class="desktop-icon-emoji">🌙</div>
-        <span>Nebulo</span>
-      </button>
-
-      <button class="desktop-icon" data-app="chat" draggable="true">
-        <div class="desktop-icon-emoji">💬</div>
-        <span>Chat</span>
-      </button>
-
-      <!-- Admin desktop icon injected by JS -->
-    </div>
-
-    <!-- Main window -->
-    <div class="window glass" id="main-window">
-      <div class="window-header">
-        <div class="window-left">
-          <span class="win-dot close"></span>
-          <span class="win-dot min"></span>
-          <span class="win-dot max"></span>
-          <span class="window-title">Jason OS Home</span>
-        </div>
-        <div class="window-right">
-          <span class="window-badge">User Session</span>
-        </div>
-      </div>
-
-      <div class="window-body">
-        <div class="window-columns">
-          <div class="window-col">
-            <h1>Welcome</h1>
-            <p class="muted">
-              This is your clean, modern Jason OS desktop. Everything floats on liquid glass.
-            </p>
-
-            <ul class="feature-list">
-              <li><span class="bullet"></span> Liquid glass windows</li>
-              <li><span class="bullet"></span> macOS‑style animations</li>
-              <li><span class="bullet"></span> Themeable environment</li>
-              <li><span class="bullet"></span> Nebulo & Chat apps</li>
-            </ul>
-          </div>
-
-          <div class="window-col glass-soft">
-            <h3>Session Info</h3>
-            <p class="muted-small">Mode: <strong id="mode-label">Standard User</strong></p>
-            <p class="muted-small">Theme: <strong id="theme-label-small">Default</strong></p>
-            <p class="muted-small">Status: <strong>Stable</strong></p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Profile window -->
-    <div class="window glass hidden" id="profile-window">
-      <div class="window-header">
-        <div class="window-left">
-          <span class="win-dot close"></span>
-          <span class="win-dot min"></span>
-          <span class="win-dot max"></span>
-          <span class="window-title">Profile</span>
-        </div>
-      </div>
-
-      <div class="window-body">
-        <h2>Edit Profile</h2>
-
-        <label>Username</label>
-        <input id="edit-username" class="auth-input" />
-
-        <label>Password</label>
-        <input id="edit-password" type="password" class="auth-input" />
-
-        <button id="save-profile" class="btn-primary">Save</button>
-        <p id="profile-status" class="muted-small"></p>
-      </div>
-    </div>
-
-    <!-- Settings window -->
-    <div class="window glass hidden" id="settings-window">
-      <div class="window-header">
-        <div class="window-left">
-          <span class="win-dot close"></span>
-          <span class="win-dot min"></span>
-          <span class="win-dot max"></span>
-          <span class="window-title">Settings</span>
-        </div>
-      </div>
-
-      <div class="window-body">
-        <h2>Appearance</h2>
-        <p class="muted-small">Choose your Jason OS theme.</p>
-
-        <div class="theme-grid">
-          <button class="theme-btn" data-theme="forest">Forest</button>
-          <button class="theme-btn" data-theme="night">Night</button>
-          <button class="theme-btn" data-theme="cloud">Cloud</button>
-          <button class="theme-btn" data-theme="jason">JASON</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Nebulo window -->
-    <div class="window glass hidden" id="nebulo-window">
-      <div class="window-header">
-        <div class="window-left">
-          <span class="win-dot close"></span>
-          <span class="win-dot min"></span>
-          <span class="win-dot max"></span>
-          <span class="window-title">Nebulo</span>
-        </div>
-      </div>
-
-      <div class="window-body iframe-body">
-        <iframe src="https://nebulo.bostoncareercounselor.com" class="app-iframe"></iframe>
-      </div>
-    </div>
-
-    <!-- Chat window -->
-    <div class="window glass hidden" id="chat-window">
-      <div class="window-header">
-        <div class="window-left">
-          <span class="win-dot close"></span>
-          <span class="win-dot min"></span>
-          <span class="win-dot max"></span>
-          <span class="window-title">Chat</span>
-        </div>
-      </div>
-
-      <div class="window-body iframe-body">
-        <iframe src="https://immlad.github.io/liquid-aura/#/app" class="app-iframe"></iframe>
-      </div>
-    </div>
-
-    <!-- Dock -->
-    <div class="dock glass" id="dock">
-      <button class="dock-item" data-app="home" draggable="true">
-        <div class="dock-emoji">🏠</div>
-        <span>Home</span>
-      </button>
-
-      <button class="dock-item" data-app="profile" draggable="true">
-        <div class="dock-emoji">👤</div>
-        <span>Profile</span>
-      </button>
-
-      <button class="dock-item" data-app="settings" draggable="true">
-        <div class="dock-emoji">⚙️</div>
-        <span>Settings</span>
-      </button>
-
-      <button class="dock-item" data-app="nebulo" draggable="true">
-        <div class="dock-emoji">🌙</div>
-        <span>Nebulo</span>
-      </button>
-
-      <button class="dock-item" data-app="chat" draggable="true">
-        <div class="dock-emoji">💬</div>
-        <span>Chat</span>
-      </button>
-
-      <!-- Admin app injected by JS -->
-    </div>
-
   </div>
+
+  <!-- DESKTOP ICONS (Windows 11 style) -->
+  <div id="desktop-icons" class="desktop-icons">
+    <button class="desktop-icon" data-app="home">
+      <div class="desktop-icon-img">🏠</div>
+      <span>Home</span>
+    </button>
+
+    <button class="desktop-icon" data-app="profile">
+      <div class="desktop-icon-img">👤</div>
+      <span>Profile</span>
+    </button>
+
+    <button class="desktop-icon" data-app="settings">
+      <div class="desktop-icon-img">⚙️</div>
+      <span>Settings</span>
+    </button>
+
+    <button class="desktop-icon" data-app="nebulo">
+      <div class="desktop-icon-img">🌙</div>
+      <span>Nebulo</span>
+    </button>
+
+    <button class="desktop-icon" data-app="chat">
+      <div class="desktop-icon-img">💬</div>
+      <span>Chat</span>
+    </button>
+  </div>
+
+  <!-- WINDOWS (Windows 11 Fluent style) -->
+
+  <!-- HOME -->
+  <div id="home-window" class="window glass hidden">
+    <div class="window-header">
+      <span class="window-title">Home</span>
+      <div class="window-controls">
+        <span class="win-btn min"></span>
+        <span class="win-btn max"></span>
+        <span class="win-btn close"></span>
+      </div>
+    </div>
+    <div class="window-body">
+      <h1>Welcome to Jason OS</h1>
+      <p>Your Windows‑11‑Gaming‑Edition desktop is ready.</p>
+    </div>
+  </div>
+
+  <!-- PROFILE -->
+  <div id="profile-window" class="window glass hidden">
+    <div class="window-header">
+      <span class="window-title">Profile</span>
+      <div class="window-controls">
+        <span class="win-btn min"></span>
+        <span class="win-btn max"></span>
+        <span class="win-btn close"></span>
+      </div>
+    </div>
+    <div class="window-body">
+      <h2>Edit Profile</h2>
+      <label>Username</label>
+      <input id="edit-username" class="auth-input" />
+
+      <label>Password</label>
+      <input id="edit-password" type="password" class="auth-input" />
+
+      <button id="save-profile" class="btn-primary">Save</button>
+      <p id="profile-status" class="muted-small"></p>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div id="settings-window" class="window glass hidden">
+    <div class="window-header">
+      <span class="window-title">Settings</span>
+      <div class="window-controls">
+        <span class="win-btn min"></span>
+        <span class="win-btn max"></span>
+        <span class="win-btn close"></span>
+      </div>
+    </div>
+    <div class="window-body">
+      <h2>Appearance</h2>
+      <p class="muted-small">Choose your theme.</p>
+
+      <div class="theme-grid">
+        <button class="theme-btn" data-theme="forest">Forest</button>
+        <button class="theme-btn" data-theme="night">Night</button>
+        <button class="theme-btn" data-theme="cloud">Cloud</button>
+        <button class="theme-btn" data-theme="jason">JASON</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEBULO -->
+  <div id="nebulo-window" class="window glass hidden">
+    <div class="window-header">
+      <span class="window-title">Nebulo</span>
+      <div class="window-controls">
+        <span class="win-btn min"></span>
+        <span class="win-btn max"></span>
+        <span class="win-btn close"></span>
+      </div>
+    </div>
+    <div class="window-body iframe-body">
+      <iframe src="https://nebulo.bostoncareercounselor.com" class="app-iframe"></iframe>
+    </div>
+  </div>
+
+  <!-- CHAT -->
+  <div id="chat-window" class="window glass hidden">
+    <div class="window-header">
+      <span class="window-title">Chat</span>
+      <div class="window-controls">
+        <span class="win-btn min"></span>
+        <span class="win-btn max"></span>
+        <span class="win-btn close"></span>
+      </div>
+    </div>
+    <div class="window-body iframe-body">
+      <iframe src="https://immlad.github.io/liquid-aura/#/app" class="app-iframe"></iframe>
+    </div>
+  </div>
+
+  <!-- macOS Dock -->
+  <div id="dock" class="dock glass">
+    <button class="dock-item" data-app="home"><div class="dock-icon">🏠</div></button>
+    <button class="dock-item" data-app="profile"><div class="dock-icon">👤</div></button>
+    <button class="dock-item" data-app="settings"><div class="dock-icon">⚙️</div></button>
+    <button class="dock-item" data-app="nebulo"><div class="dock-icon">🌙</div></button>
+    <button class="dock-item" data-app="chat"><div class="dock-icon">💬</div></button>
+  </div>
+
 </body>
 </html>

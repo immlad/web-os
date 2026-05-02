@@ -3,68 +3,34 @@
 <head>
   <meta charset="UTF-8" />
   <title>Jason OS – Boot</title>
-  <link rel="icon" href="../assets/jason.png" />
+
   <link rel="stylesheet" href="../css/index.css" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="../css/app.css" />
   <script defer src="boot.js"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
+
 <body class="boot-body">
+
   <div class="os-wallpaper"></div>
 
   <div class="boot-center">
-    <!-- Boot card -->
-    <div id="boot-screen" class="boot-container glass">
-      <div class="boot-logo-wrap">
-        <img src="../assets/jason.png" alt="Jason OS Logo" class="boot-logo" />
-      </div>
+    <div class="boot-container glass">
+
+      <img src="../assets/jason.png" class="boot-logo" />
+
       <h1 class="boot-title">Jason OS</h1>
-      <p class="boot-subtitle">Booting your liquid glass workspace…</p>
-      <div class="boot-progress"><div class="boot-bar"></div></div>
-      <p class="boot-hint">Jason is preparing your system…</p>
-    </div>
+      <p class="boot-subtitle">Windows 11 Gaming Edition</p>
 
-    <!-- Auth Screen -->
-    <div id="auth-screen" class="auth-shell hidden">
-      <!-- Login -->
-      <div id="login-box" class="auth-card glass">
-        <div class="auth-logo-wrap">
-          <img src="../assets/jason.png" class="auth-logo" />
-        </div>
-
-        <h2>Login</h2>
-
-        <label>Username</label>
-        <input id="login-user" class="auth-input" placeholder="Enter username" />
-
-        <label>Password</label>
-        <input id="login-pass" type="password" class="auth-input" placeholder="Enter password" />
-
-        <button id="login-btn" class="btn-primary">Login</button>
-        <p id="login-error" class="auth-error"></p>
-
-        <p class="auth-switch">No account? <span id="go-signup">Sign up</span></p>
+      <div class="boot-progress">
+        <div id="boot-bar" class="boot-bar"></div>
       </div>
 
-      <!-- Signup -->
-      <div id="signup-box" class="auth-card glass hidden">
-        <div class="auth-logo-wrap">
-          <img src="../assets/jason.png" class="auth-logo" />
-        </div>
+      <p class="boot-hint">Starting up...</p>
 
-        <h2>Create Account</h2>
-
-        <label>Username</label>
-        <input id="signup-user" class="auth-input" placeholder="Choose username" />
-
-        <label>Password</label>
-        <input id="signup-pass" type="password" class="auth-input" placeholder="Choose password" />
-
-        <button id="signup-btn" class="btn-primary">Create Account</button>
-        <p id="signup-error" class="auth-error"></p>
-
-        <p class="auth-switch">Already have an account? <span id="go-login">Login</span></p>
-      </div>
     </div>
   </div>
+
 </body>
 </html>

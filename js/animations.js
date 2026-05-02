@@ -1,10 +1,12 @@
-// ===============================
-// Jason OS – animations.js
-// ===============================
+// ======================================================
+// Jason OS – Windows 11 Gaming Edition Animations
+// ======================================================
 
 (function () {
 
-  // Bounce animation for dock icons
+  // ------------------------------------------------------
+  // Dock Bounce Animation
+  // ------------------------------------------------------
   function bounceIcon(el) {
     if (!el) return;
     el.classList.remove("dock-bounce");
@@ -12,7 +14,9 @@
     el.classList.add("dock-bounce");
   }
 
-  // Window zoom-open animation
+  // ------------------------------------------------------
+  // Window Zoom-Open Animation
+  // ------------------------------------------------------
   function zoomOpen(win) {
     if (!win) return;
     win.classList.remove("window-zoom");
@@ -20,19 +24,24 @@
     win.classList.add("window-zoom");
   }
 
-  // Window minimize animation
+  // ------------------------------------------------------
+  // Window Minimize Animation
+  // ------------------------------------------------------
   function minimizeWindow(win) {
     if (!win) return;
     win.classList.add("window-minimize");
+
     setTimeout(() => {
       win.style.display = "none";
       win.classList.remove("window-minimize");
-    }, 280);
+    }, 220);
   }
 
-  // Dock hover lift effect
+  // ------------------------------------------------------
+  // Dock Hover Lift Effect
+  // ------------------------------------------------------
   function enableDockHover() {
-    document.querySelectorAll(".dock-item .dock-emoji").forEach((icon) => {
+    document.querySelectorAll(".dock-icon").forEach(icon => {
       icon.addEventListener("mouseenter", () => {
         icon.classList.add("dock-hover");
       });
@@ -42,12 +51,17 @@
     });
   }
 
-  // Export animations
+  // Enable hover on load
+  window.addEventListener("load", enableDockHover);
+
+  // ------------------------------------------------------
+  // Export Animations
+  // ------------------------------------------------------
   window.JasonAnimations = {
     bounceIcon,
     zoomOpen,
     minimizeWindow,
-    enableDockHover,
+    enableDockHover
   };
 
 })();

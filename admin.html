@@ -2,106 +2,42 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Jason OS – Admin</title>
-  <link rel="icon" href="assets/jason.png" />
-  <link rel="stylesheet" href="css/index.css" />
-  <link rel="stylesheet" href="css/app.css" />
+  <title>Jason OS – Admin Panel</title>
+
+  <link rel="stylesheet" href="../css/index.css" />
+  <link rel="stylesheet" href="../css/app.css" />
+  <script defer src="admin.js"></script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <script>
-    window.addEventListener("load", () => {
-      const isAdmin = sessionStorage.getItem("jason_admin") === "true";
-      if (!isAdmin) {
-        window.location.href = "boot/boot.html";
-        return;
-      }
-
-      const usersList = document.getElementById("users-list");
-      const msgInput = document.getElementById("global-message");
-      const msgStatus = document.getElementById("msg-status");
-
-      function renderUsers() {
-        usersList.innerHTML = "";
-        const accounts = JSON.parse(localStorage.getItem("jason_accounts") || "{}");
-
-        Object.keys(accounts).forEach((user) => {
-          const li = document.createElement("li");
-          li.className = "user-row";
-          li.innerHTML = `
-            <span>${user}</span>
-            <button class="ban-btn" data-user="${user}">Ban</button>
-          `;
-          usersList.appendChild(li);
-        });
-
-        usersList.querySelectorAll(".ban-btn").forEach((btn) => {
-          btn.addEventListener("click", () => {
-            const u = btn.getAttribute("data-user");
-            const accounts = JSON.parse(localStorage.getItem("jason_accounts") || "{}");
-            delete accounts[u];
-            localStorage.setItem("jason_accounts", JSON.stringify(accounts));
-
-            if (localStorage.getItem("jason_session") === u) {
-              localStorage.removeItem("jason_session");
-            }
-
-            renderUsers();
-          });
-        });
-      }
-
-      renderUsers();
-
-      document.getElementById("send-global").addEventListener("click", () => {
-        const text = msgInput.value.trim();
-        if (!text) {
-          msgStatus.textContent = "Message cannot be empty.";
-          return;
-        }
-
-        localStorage.setItem("jason_global_message", text);
-        msgStatus.textContent = "Global message sent.";
-      });
-    });
-  </script>
 </head>
 
 <body class="os-body">
+
+  <!-- Wallpaper -->
   <div class="os-wallpaper"></div>
 
+  <!-- Admin Container -->
   <div class="admin-shell">
-    <div class="top-bar glass">
-      <div class="top-left">
-        <img src="assets/jason.png" class="admin-logo" />
-        <span class="logo-text">Jason Admin</span>
-      </div>
-
-      <div class="top-center">
-        <span class="top-pill glass-soft">Root Access</span>
-      </div>
-
-      <div class="top-right">
-        <span class="status-indicator admin"></span>
-        <span class="status-text">Privileged</span>
-      </div>
-    </div>
-
     <div class="admin-panel glass centered">
-      <h1>Jason Admin Panel</h1>
-      <p class="muted">Manage users and broadcast system messages.</p>
 
-      <h3>Users</h3>
+      <h1>Admin Panel</h1>
+      <p class="muted">Manage users and system settings.</p>
+
+      <h3>Registered Users</h3>
       <ul id="users-list" class="users-list"></ul>
 
       <h3>Global Message</h3>
-      <textarea id="global-message" class="auth-input" rows="3" placeholder="Enter a message shown to all users"></textarea>
-      <button id="send-global" class="btn-primary">Send Global Message</button>
-      <p id="msg-status" class="muted-small"></p>
+      <input id="global-text" class="auth-input" placeholder="Enter announcement..." />
+      <button id="send-global" class="btn-primary">Send Announcement</button>
 
-      <button class="btn-primary" style="margin-top:16px" onclick="window.location.href='index.html'">
-        Back to Desktop
+      <p id="admin-status" class="muted-small"></p>
+
+      <button id="logout-admin" class="btn-primary" style="margin-top: 20px;">
+        Logout
       </button>
+
     </div>
   </div>
+
 </body>
 </html>

@@ -1,23 +1,32 @@
+/* ==========================================================
+   ROOT VARIABLES — Windows 11 Gaming Edition (Purple Neon)
+   ========================================================== */
+
 :root {
   --bg-wallpaper: url("../assets/app-default.png");
-  --glass-bg: rgba(18, 22, 35, 0.55);
-  --glass-bg-soft: rgba(18, 22, 35, 0.35);
-  --glass-border: rgba(255, 255, 255, 0.18);
-  --accent: #4cc9f0;
-  --accent-strong: #4361ee;
+  --accent: #d946ef;
+  --glow: #d946ef55;
+
+  --glass-bg: rgba(20, 20, 30, 0.55);
+  --glass-soft: rgba(20, 20, 30, 0.35);
+  --glass-border: rgba(255, 255, 255, 0.14);
+
   --text-main: #f5f5f7;
   --text-muted: #b0b0c0;
-  --danger: #ff4b6e;
-  --radius-lg: 20px;
+
+  --radius-lg: 18px;
   --radius-md: 12px;
-  --blur-strong: 26px;
-  --blur-soft: 16px;
-  --shadow-soft: 0 22px 60px rgba(0, 0, 0, 0.55);
-  --font-main: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-    "Segoe UI", sans-serif;
+
+  --blur-strong: 28px;
+  --blur-soft: 18px;
+
+  --shadow-win: 0 18px 40px rgba(0, 0, 0, 0.55),
+                0 0 22px var(--glow);
 }
 
-/* RESET */
+/* ==========================================================
+   GLOBAL RESET
+   ========================================================== */
 
 *,
 *::before,
@@ -25,24 +34,18 @@
   box-sizing: border-box;
 }
 
-html,
-body {
+html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  font-family: var(--font-main);
+  font-family: "Inter", sans-serif;
   color: var(--text-main);
-}
-
-/* BACKGROUND */
-
-.os-body,
-.boot-body {
-  position: relative;
-  min-height: 100vh;
   overflow: hidden;
-  background: radial-gradient(circle at top, #151827 0, #050712 55%, #02030a 100%);
 }
+
+/* ==========================================================
+   WALLPAPER
+   ========================================================== */
 
 .os-wallpaper {
   position: fixed;
@@ -50,279 +53,263 @@ body {
   background-image: var(--bg-wallpaper);
   background-size: cover;
   background-position: center;
-  filter: saturate(1.2) contrast(1.05) brightness(0.9);
+  filter: brightness(0.85) saturate(1.2);
   z-index: -2;
 }
 
-/* GLASS EFFECTS */
+/* ==========================================================
+   GLASS EFFECTS
+   ========================================================== */
 
 .glass {
-  background: linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.12),
-      rgba(255, 255, 255, 0.02)
-    ),
-    var(--glass-bg);
+  background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   backdrop-filter: blur(var(--blur-strong)) saturate(1.4);
   -webkit-backdrop-filter: blur(var(--blur-strong)) saturate(1.4);
-  box-shadow: var(--shadow-soft);
   border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-win);
 }
 
 .glass-soft {
-  background: linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.08),
-      rgba(255, 255, 255, 0.01)
-    ),
-    var(--glass-bg-soft);
-  border-radius: var(--radius-md);
+  background: var(--glass-soft);
   border: 1px solid rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(var(--blur-soft)) saturate(1.3);
   -webkit-backdrop-filter: blur(var(--blur-soft)) saturate(1.3);
-}
-
-.centered {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.hidden {
-  display: none !important;
-}
-
-/* BOOT SCREEN */
-
-.boot-center {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.boot-container {
-  width: 360px;
-  padding: 32px 28px 24px;
-  text-align: center;
-}
-
-.boot-logo-wrap {
-  display: inline-flex;
-  padding: 6px;
-  border-radius: 24px;
-  background: radial-gradient(circle at top, rgba(255, 255, 255, 0.2), transparent);
-}
-
-.boot-logo {
-  width: 80px;
-  height: 80px;
-  border-radius: 22px;
-}
-
-.boot-title {
-  margin: 14px 0 4px;
-  font-size: 1.6rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.boot-subtitle {
-  margin: 4px 0 18px;
-  color: var(--text-muted);
-  font-size: 0.9rem;
-}
-
-.boot-progress {
-  width: 100%;
-  height: 6px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  overflow: hidden;
-}
-
-.boot-bar {
-  width: 0;
-  height: 100%;
-  border-radius: inherit;
-  background: linear-gradient(90deg, var(--accent), var(--accent-strong));
-}
-
-.boot-hint {
-  margin-top: 10px;
-  font-size: 0.8rem;
-  color: var(--text-muted);
-}
-
-/* AUTH SCREENS */
-
-.auth-shell {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-}
-
-.auth-card {
-  width: 360px;
-  padding: 24px 22px 20px;
-}
-
-.auth-logo-wrap {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 10px;
-}
-
-.auth-logo {
-  width: 70px;
-  height: 70px;
-  border-radius: 18px;
-}
-
-.auth-card h2 {
-  margin-top: 0;
-  margin-bottom: 12px;
-}
-
-.auth-input {
-  width: 100%;
-  padding: 9px 11px;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  background: rgba(0, 0, 0, 0.35);
-  color: var(--text-main);
-  outline: none;
-  font-size: 0.9rem;
-  margin-bottom: 10px;
 }
 
-.auth-input::placeholder {
-  color: rgba(255, 255, 255, 0.45);
+/* ==========================================================
+   WINDOWS 11 START BUTTON
+   ========================================================== */
+
+.start-btn {
+  position: fixed;
+  bottom: 18px;
+  left: 22px;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.18s ease;
 }
 
-.auth-input:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 1px rgba(76, 201, 240, 0.4);
+.start-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
 }
 
-.btn-primary {
-  width: 100%;
+.start-icon {
+  width: 26px;
+  height: 26px;
+  opacity: 0.9;
+}
+
+/* ==========================================================
+   START MENU
+   ========================================================== */
+
+.start-menu {
+  position: fixed;
+  bottom: 80px;
+  left: 22px;
+  width: 260px;
+  padding: 16px;
+  border-radius: var(--radius-lg);
+  animation: fadeIn 0.2s ease;
+}
+
+.start-title {
+  margin: 0 0 12px;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.start-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.start-item {
   padding: 10px 12px;
   border-radius: var(--radius-md);
   border: none;
   cursor: pointer;
-  background: linear-gradient(135deg, var(--accent-strong), var(--accent));
-  color: #fff;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  font-size: 0.85rem;
-}
-
-.btn-primary:hover {
-  filter: brightness(1.05);
-}
-
-.auth-error {
-  margin-top: 6px;
-  min-height: 18px;
-  font-size: 0.8rem;
-  color: var(--danger);
-}
-
-.auth-switch {
-  margin-top: 10px;
-  font-size: 0.8rem;
-  color: var(--text-muted);
-}
-
-.auth-switch span {
-  color: var(--accent);
-  cursor: pointer;
-}
-
-/* ADMIN PANEL */
-
-.admin-shell {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-}
-
-.admin-panel {
-  width: 760px;
-  padding: 28px 26px 24px;
-}
-
-.admin-panel h1 {
-  margin-top: 0;
-  margin-bottom: 6px;
-}
-
-.muted {
-  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-main);
+  text-align: left;
   font-size: 0.9rem;
 }
 
-.muted-small {
-  color: var(--text-muted);
-  font-size: 0.82rem;
+.start-item:hover {
+  background: rgba(255, 255, 255, 0.18);
 }
 
-.users-list {
-  list-style: none;
-  padding: 0;
-  margin: 8px 0 16px;
+/* ==========================================================
+   DESKTOP ICONS — Windows 11 Style
+   ========================================================== */
+
+.desktop-icons {
+  position: fixed;
+  top: 40px;
+  left: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
-.user-row {
+.desktop-icon {
+  width: 90px;
+  padding: 8px 6px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  text-align: center;
+  cursor: pointer;
+  transition: 0.18s ease;
+}
+
+.desktop-icon:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.desktop-icon-img {
+  width: 42px;
+  height: 42px;
+  margin: 0 auto 4px;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.35);
+  background-size: cover;
+}
+
+/* ==========================================================
+   WINDOWS — Fluent Acrylic + Neon Glow
+   ========================================================== */
+
+.window {
+  position: absolute;
+  top: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(760px, 90%);
+  min-height: 260px;
+  overflow: hidden;
+  display: none;
+}
+
+.window-full {
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 40px);
+  height: calc(100% - 80px);
+}
+
+.window-header {
+  padding: 10px 14px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 4px 0;
-  font-size: 0.85rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  font-size: 0.9rem;
 }
 
-.ban-btn {
-  padding: 4px 8px;
+.window-title {
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.window-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.win-btn {
+  width: 12px;
+  height: 12px;
   border-radius: 999px;
-  border: none;
   cursor: pointer;
-  background: rgba(239, 68, 68, 0.2);
-  color: #fecaca;
-  font-size: 0.75rem;
 }
 
-/* GLOBAL BANNER */
+.win-btn.min { background: #febc2e; }
+.win-btn.max { background: #28c840; }
+.win-btn.close { background: #ff5f57; }
 
-.global-banner {
+.window-body {
+  padding: 18px 16px;
+}
+
+/* ==========================================================
+   IFRAME APPS
+   ========================================================== */
+
+.iframe-body {
+  padding: 0;
+}
+
+.app-iframe {
+  width: 100%;
+  height: 420px;
+  border: none;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+/* ==========================================================
+   macOS DOCK — Gaming Edition
+   ========================================================== */
+
+.dock {
   position: fixed;
-  top: 64px;
+  bottom: 18px;
   left: 50%;
   transform: translateX(-50%);
-  padding: 8px 14px;
+  display: flex;
+  gap: 18px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  backdrop-filter: blur(22px) saturate(1.4);
+  -webkit-backdrop-filter: blur(22px) saturate(1.4);
+  background: rgba(20, 20, 30, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.dock-item {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.dock-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.35);
   display: flex;
   align-items: center;
-  gap: 10px;
-  z-index: 20;
+  justify-content: center;
+  font-size: 28px;
+  transition: 0.18s ease;
+  background-size: cover;
 }
 
-.global-text {
-  font-size: 0.85rem;
+.dock-hover {
+  transform: scale(1.22) translateY(-6px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.6),
+              0 0 18px var(--glow);
 }
 
-.global-close {
-  padding: 4px 8px;
-  border-radius: 999px;
-  border: none;
-  cursor: pointer;
-  background: rgba(255, 255, 255, 0.16);
-  color: var(--text-main);
-  font-size: 0.75rem;
+/* ==========================================================
+   ANIMATIONS
+   ========================================================== */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
