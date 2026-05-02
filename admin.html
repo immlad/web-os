@@ -19,8 +19,13 @@
       font-size: 20px;
       margin-bottom: 8px;
     }
-    .pending-list, .approved-list {
-      margin-top: 12px;
+    h2 {
+      margin-top: 18px;
+      margin-bottom: 6px;
+      font-size: 16px;
+    }
+    .pending-list, .approved-list, .users-list, .banned-list, .messages-list {
+      margin-top: 8px;
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
@@ -29,7 +34,7 @@
       background: rgba(255,255,255,0.06);
       border-radius: 10px;
       padding: 10px;
-      width: 220px;
+      width: 260px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.6);
     }
     .card-title {
@@ -47,23 +52,56 @@
       color: #fff;
       box-shadow: 0 8px 20px rgba(0,0,0,0.6);
     }
+    button.secondary {
+      background: rgba(255,255,255,0.12);
+    }
     a {
       color: #8fd4ff;
       font-size: 12px;
       word-break: break-all;
+    }
+    .global-message-form {
+      margin-top: 8px;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .global-message-form input {
+      flex: 1;
+      min-width: 200px;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+    }
+    .message-card {
+      width: 260px;
     }
   </style>
 </head>
 <body>
   <div class="root">
     <h1>Jason OS Admin</h1>
-    <p>Approve or reject submitted web apps. Changes appear in the App Store.</p>
+    <p>Manage users, apps, bans, and global messages.</p>
 
     <h2>Pending Apps</h2>
     <div id="pending" class="pending-list"></div>
 
     <h2>Approved Apps</h2>
     <div id="approved" class="approved-list"></div>
+
+    <h2>Users</h2>
+    <div id="users" class="users-list"></div>
+
+    <h2>Banned Users</h2>
+    <div id="banned" class="banned-list"></div>
+
+    <h2>Global Messages</h2>
+    <div class="global-message-form">
+      <input id="globalMessageInput" type="text" placeholder="Enter a global message...">
+      <button id="globalMessageSend">Send</button>
+    </div>
+    <div id="messages" class="messages-list"></div>
   </div>
 
   <script>
@@ -91,7 +129,43 @@
       localStorage.setItem("jason_custom_apps", JSON.stringify(list));
     }
 
-    function render() {
+    function getUsers() {
+      try {
+        return JSON.parse(localStorage.getItem("jason_users") || "[]");
+      } catch {
+        return [];
+      }
+    }
+
+    function saveUsers(list) {
+      localStorage.setItem("jason_users", JSON.stringify(list));
+    }
+
+    function getBannedUsers() {
+      try {
+        return JSON.parse(localStorage.getItem("jason_banned_users") || "[]");
+      } catch {
+        return [];
+      }
+    }
+
+    function saveBannedUsers(list) {
+      localStorage.setItem("jason_banned_users", JSON.stringify(list));
+    }
+
+    function getGlobalMessages() {
+      try {
+        return JSON.parse(localStorage.getItem("jason_global_messages") || "[]");
+      } catch {
+        return [];
+      }
+    }
+
+    function saveGlobalMessages(list) {
+      localStorage.setItem("jason_global_messages", JSON.stringify(list));
+    }
+
+    function renderApps() {
       const pendingRoot = document.getElementById("pending");
       const approvedRoot = document.getElementById("approved");
       pendingRoot.innerHTML = "";
@@ -125,17 +199,18 @@
             });
             savePendingApps(p);
             saveCustomApps(a);
-            render();
+            renderApps();
           };
 
           const rejectBtn = document.createElement("button");
           rejectBtn.textContent = "Reject";
+          rejectBtn.className = "secondary";
           rejectBtn.style.marginLeft = "6px";
           rejectBtn.onclick = () => {
             const p = getPendingApps();
             p.splice(index, 1);
             savePendingApps(p);
-            render();
+            renderApps();
           };
 
           card.appendChild(approveBtn);
@@ -160,7 +235,126 @@
       }
     }
 
-    render();
+    function renderUsers() {
+      const usersRoot = document.getElementById("users");
+      const bannedRoot = document.getElementById("banned");
+      usersRoot.innerHTML = "";
+      bannedRoot.innerHTML = "";
+
+      const users = getUsers();
+      const banned = getBannedUsers();
+
+      if (!users.length) {
+        usersRoot.innerHTML = '<div style="opacity:0.8;">No users.</div>';
+      } else {
+        users.forEach((u, index) => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            <div class="card-title">${u.username}</div>
+            <div>Password: ${u.password}</div>
+          `;
+          const deleteBtn = document.createElement("button");
+          deleteBtn.textContent = "Delete";
+          deleteBtn.onclick = () => {
+            const list = getUsers();
+            list.splice(index, 1);
+            saveUsers(list);
+            renderUsers();
+          };
+
+          const banBtn = document.createElement("button");
+          banBtn.textContent = "Ban";
+          banBtn.className = "secondary";
+          banBtn.style.marginLeft = "6px";
+          banBtn.onclick = () => {
+            const list = getUsers();
+            const user = list.splice(index, 1)[0];
+            saveUsers(list);
+            const b = getBannedUsers();
+            if (!b.includes(user.username.toLowerCase())) {
+              b.push(user.username.toLowerCase());
+              saveBannedUsers(b);
+            }
+            renderUsers();
+          };
+
+          card.appendChild(deleteBtn);
+          card.appendChild(banBtn);
+          usersRoot.appendChild(card);
+        });
+      }
+
+      const bannedList = getBannedUsers();
+      if (!bannedList.length) {
+        bannedRoot.innerHTML = '<div style="opacity:0.8;">No banned users.</div>';
+      } else {
+        bannedList.forEach((name, index) => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            <div class="card-title">${name}</div>
+          `;
+          const unbanBtn = document.createElement("button");
+          unbanBtn.textContent = "Unban";
+          unbanBtn.onclick = () => {
+            const b = getBannedUsers();
+            b.splice(index, 1);
+            saveBannedUsers(b);
+            renderUsers();
+          };
+          card.appendChild(unbanBtn);
+          bannedRoot.appendChild(card);
+        });
+      }
+    }
+
+    function renderMessages() {
+      const messagesRoot = document.getElementById("messages");
+      messagesRoot.innerHTML = "";
+      const msgs = getGlobalMessages();
+      if (!msgs.length) {
+        messagesRoot.innerHTML = '<div style="opacity:0.8;">No global messages.</div>';
+        return;
+      }
+      msgs.forEach(msg => {
+        const card = document.createElement("div");
+        card.className = "card message-card";
+        card.innerHTML = `
+          <div class="card-title">${msg.text}</div>
+          <div style="font-size:12px;opacity:0.8;">By: ${msg.author || "admin"} • ${new Date(msg.time).toLocaleString()}</div>
+        `;
+        messagesRoot.appendChild(card);
+      });
+    }
+
+    function initGlobalMessageForm() {
+      const input = document.getElementById("globalMessageInput");
+      const btn = document.getElementById("globalMessageSend");
+
+      btn.onclick = () => {
+        const text = input.value.trim();
+        if (!text) return;
+        const msgs = getGlobalMessages();
+        msgs.push({
+          text,
+          author: "admin",
+          time: Date.now()
+        });
+        saveGlobalMessages(msgs);
+        input.value = "";
+        renderMessages();
+      };
+    }
+
+    function renderAll() {
+      renderApps();
+      renderUsers();
+      renderMessages();
+    }
+
+    renderAll();
+    initGlobalMessageForm();
   </script>
 </body>
 </html>

@@ -1,6 +1,9 @@
 const authScreen = document.getElementById("authScreen");
 const desktopEl = document.getElementById("desktop");
 const dock = document.getElementById("dock");
+const dockIconsEl = document.getElementById("dockIcons");
+const dockSearchInput = document.getElementById("dockSearchInput");
+const dockSearchResults = document.getElementById("dockSearchResults");
 const windowsContainer = document.getElementById("windows");
 const missionControlOverlay = document.getElementById("missionControlOverlay");
 
@@ -28,7 +31,7 @@ const DEFAULT_ICON = "assets/app-default.png";
 const JASON_ICON = "assets/jason.png";
 const SEBASTIAN_ICON = "assets/sebastian.png";
 
-// desktop grid for snap
+// desktop grid
 const DESKTOP_COLUMNS = 7;
 const DESKTOP_START_X = 40;
 const DESKTOP_START_Y = 160;
@@ -56,7 +59,9 @@ setInterval(() => {
 
 desktopTagline.textContent = randomTagline();
 setInterval(() => {
-  desktopTagline.textContent = randomTagline();
+  if (!getLatestGlobalMessage()) {
+    desktopTagline.textContent = randomTagline();
+  }
 }, 4000);
 
 // Clock
@@ -77,7 +82,7 @@ if (logoutBtn) {
 }
 
 // ---------------------------
-// AUTH
+// STORAGE HELPERS
 // ---------------------------
 function getUsers() {
   try {
@@ -91,6 +96,63 @@ function saveUsers(users) {
   localStorage.setItem("jason_users", JSON.stringify(users));
 }
 
+function getBannedUsers() {
+  try {
+    return JSON.parse(localStorage.getItem("jason_banned_users") || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function saveBannedUsers(list) {
+  localStorage.setItem("jason_banned_users", JSON.stringify(list));
+}
+
+function getGlobalMessages() {
+  try {
+    return JSON.parse(localStorage.getItem("jason_global_messages") || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function saveGlobalMessages(list) {
+  localStorage.setItem("jason_global_messages", JSON.stringify(list));
+}
+
+function getLatestGlobalMessage() {
+  const msgs = getGlobalMessages();
+  if (!msgs.length) return null;
+  return msgs[msgs.length - 1];
+}
+
+function getPendingApps() {
+  try {
+    return JSON.parse(localStorage.getItem("jason_pending_apps") || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function savePendingApps(list) {
+  localStorage.setItem("jason_pending_apps", JSON.stringify(list));
+}
+
+function getCustomApps() {
+  try {
+    return JSON.parse(localStorage.getItem("jason_custom_apps") || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function saveCustomApps(list) {
+  localStorage.setItem("jason_custom_apps", JSON.stringify(list));
+}
+
+// ---------------------------
+// AUTH
+// ---------------------------
 function setAuthMessage(msg, isError = false) {
   authMessage.textContent = msg;
   authMessage.style.color = isError ? "#ff6b6b" : "#a0ffb0";
@@ -102,6 +164,12 @@ signupBtn.addEventListener("click", () => {
 
   if (!username || !password) {
     setAuthMessage("Enter a username and password to sign up.", true);
+    return;
+  }
+
+  const banned = getBannedUsers();
+  if (banned.includes(username.toLowerCase())) {
+    setAuthMessage("This account is banned.", true);
     return;
   }
 
@@ -122,6 +190,12 @@ loginBtn.addEventListener("click", () => {
 
   if (!username || !password) {
     setAuthMessage("Enter your username and password.", true);
+    return;
+  }
+
+  const banned = getBannedUsers();
+  if (banned.includes(username.toLowerCase())) {
+    setAuthMessage("This account is banned.", true);
     return;
   }
 
@@ -158,6 +232,12 @@ loginBtn.addEventListener("click", () => {
 
   initThemeSystem();
   initDesktop();
+  initDockSearch();
+
+  const latestGlobal = getLatestGlobalMessage();
+  if (latestGlobal) {
+    desktopTagline.textContent = `Global: ${latestGlobal.text}`;
+  }
 });
 
 passwordInput.addEventListener("keydown", e => {
@@ -175,7 +255,7 @@ const themes = [
   { id: "ocean", name: "Ocean" },
   { id: "night", name: "Night" },
   { id: "jason", name: "Jason" }
-  // sebastian added dynamically after unlock
+  // sebastian added dynamically
 ];
 
 let currentTheme = "liquid-glass";
@@ -208,7 +288,6 @@ function applyTheme(id) {
   } else if (id === "sebastian") {
     applyWallpaper(SEBASTIAN_ICON);
   } else {
-    // default: blank (body gradient)
     applyWallpaper(null);
   }
 
@@ -244,33 +323,6 @@ function refreshAllIconsForTheme() {
 }
 
 // ---------------------------
-// APP STORAGE
-// ---------------------------
-function getPendingApps() {
-  try {
-    return JSON.parse(localStorage.getItem("jason_pending_apps") || "[]");
-  } catch {
-    return [];
-  }
-}
-
-function savePendingApps(list) {
-  localStorage.setItem("jason_pending_apps", JSON.stringify(list));
-}
-
-function getCustomApps() {
-  try {
-    return JSON.parse(localStorage.getItem("jason_custom_apps") || "[]");
-  } catch {
-    return [];
-  }
-}
-
-function saveCustomApps(list) {
-  localStorage.setItem("jason_custom_apps", JSON.stringify(list));
-}
-
-// ---------------------------
 // APPS CONFIG
 // ---------------------------
 let apps = [];
@@ -297,9 +349,9 @@ function buildApps() {
       icon: baseIcon
     },
     {
-      name: "Chat",
+      name: "Global Chat",
       type: "iframe",
-      url: "https://iquid-aura.vercel.app",
+      url: "chat.html",
       icon: baseIcon
     },
     {
@@ -323,10 +375,7 @@ function buildApps() {
     name: app.name,
     type: "dynamic",
     url: app.url,
-    icon:
-      currentTheme === "sebastian"
-        ? SEBASTIAN_ICON
-        : app.icon || baseIcon
+    icon: baseIcon
   }));
 
   apps = [...baseApps, ...customApps];
@@ -342,7 +391,7 @@ function buildApps() {
 }
 
 // ---------------------------
-// DESKTOP GRID (7 columns)
+// DESKTOP INIT
 // ---------------------------
 function initDesktop() {
   buildApps();
@@ -364,14 +413,13 @@ function addDesktopApp(app, x, y) {
   icon.style.left = x + "px";
   icon.style.top = y + "px";
   icon.innerHTML = `
-    <img src="${app.icon}">
+    <img src="${getThemeIcon()}">
     <div>${app.name}</div>
   `;
   icon.addEventListener("click", () => openApp(app));
   desktopEl.appendChild(icon);
 
   makeDesktopIconDraggable(icon);
-
   addDockIcon(app);
 }
 
@@ -379,11 +427,11 @@ function addDockIcon(app) {
   const icon = document.createElement("div");
   icon.className = "dock-icon";
   icon.innerHTML = `
-    <img src="${app.icon}" alt="${app.name}">
+    <img src="${getThemeIcon()}" alt="${app.name}">
     <div class="dock-label">${app.name}</div>
   `;
   icon.addEventListener("click", () => openApp(app));
-  dock.appendChild(icon);
+  dockIconsEl.appendChild(icon);
 
   makeDockIconDraggable(icon);
 }
@@ -603,7 +651,7 @@ function themePreviewStyle(id) {
 }
 
 // ---------------------------
-// ABOUT (Sebastian unlock, no admin hint)
+// ABOUT (no admin hints)
 // ---------------------------
 function openAboutWindow() {
   aboutClickCount++;
@@ -628,7 +676,7 @@ function openAboutWindow() {
     </div>
     <div style="padding:18px; font-size:14px;">
       <h2>Jason OS</h2>
-      <p>A custom web OS with liquid glass visuals, themes, animations, a web app store, and a customizable desktop.</p>
+      <p>A custom web OS with liquid glass visuals, themes, animations, a web app store, global chat, and a customizable desktop.</p>
       <p>Includes hidden features, secret themes, and advanced UI effects.</p>
     </div>
   `;
@@ -758,8 +806,8 @@ function openStoreWindow() {
     card.style.cursor = "pointer";
     card.innerHTML = `
       <div style="text-align:center;">
-        <img src="${currentTheme === "sebastian" ? SEBASTIAN_ICON : (app.icon || DEFAULT_ICON)}" style="width:60px;height:60px;border-radius:16px;object-fit:cover;box-shadow:0 8px 20px rgba(0,0,0,0.5);">
-        <div style="margin-top:6px;font-size:13px;">${app.name}</div>
+        <img src="${getThemeIcon()}" style="width:60px;height:60px;border-radius:16px;object-fit:cover;box-shadow:0 8px 20px rgba(0,0,0,0.5);">
+        <div style="margin-top:6px;font-size:11px;">${app.name}</div>
       </div>
     `;
     card.addEventListener("click", () => {
@@ -818,7 +866,6 @@ function snapWindow(win, clientX, clientY) {
   const nearRight = clientX >= w - margin;
 
   if (nearTop) {
-    // maximize
     win.style.left = "0px";
     win.style.top = "0px";
     win.style.width = w + "px";
@@ -946,7 +993,7 @@ function enableControls(win) {
 // MISSION CONTROL
 // ---------------------------
 let missionControlActive = false;
-let missionControlLayout = new Map(); // win -> {left, top, width, height}
+let missionControlLayout = new Map();
 
 function enterMissionControl() {
   if (missionControlActive) return;
@@ -969,7 +1016,6 @@ function enterMissionControl() {
   const cellH = (h - padding * 2) / rows;
 
   wins.forEach((win, index) => {
-    const rect = win.getBoundingClientRect();
     missionControlLayout.set(win, {
       left: win.offsetLeft,
       top: win.offsetTop,
@@ -1022,7 +1068,6 @@ function onMissionControlWindowClick(e) {
   win.style.zIndex = zIndexCounter++;
 }
 
-// keyboard: F3 to toggle, ESC to exit
 document.addEventListener("keydown", e => {
   if (e.key === "F3") {
     if (missionControlActive) {
@@ -1037,3 +1082,47 @@ document.addEventListener("keydown", e => {
     }
   }
 });
+
+// ---------------------------
+// DOCK SEARCH
+// ---------------------------
+function initDockSearch() {
+  if (!dockSearchInput) return;
+
+  dockSearchInput.addEventListener("input", () => {
+    const q = dockSearchInput.value.trim().toLowerCase();
+    if (!q) {
+      dockSearchResults.classList.add("hidden");
+      dockSearchResults.innerHTML = "";
+      return;
+    }
+
+    const matches = apps.filter(a => a.name.toLowerCase().includes(q));
+    if (!matches.length) {
+      dockSearchResults.innerHTML = `<div>No apps found</div>`;
+      dockSearchResults.classList.remove("hidden");
+      return;
+    }
+
+    dockSearchResults.innerHTML = matches
+      .map(a => `<div data-app="${a.name}">${a.name}</div>`)
+      .join("");
+    dockSearchResults.classList.remove("hidden");
+
+    dockSearchResults.querySelectorAll("div").forEach(div => {
+      div.addEventListener("click", () => {
+        const name = div.getAttribute("data-app");
+        const app = apps.find(a => a.name === name);
+        if (app) openApp(app);
+        dockSearchResults.classList.add("hidden");
+        dockSearchInput.value = "";
+      });
+    });
+  });
+
+  document.addEventListener("click", e => {
+    if (!dock.contains(e.target)) {
+      dockSearchResults.classList.add("hidden");
+    }
+  });
+}
