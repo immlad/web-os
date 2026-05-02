@@ -314,21 +314,21 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // --- Dock magnification (cleaner macOS wave) ---
+  // --- Dock magnification (horizontal, ultra-clean) ---
   const dock = document.getElementById("dock");
   const dockInner = document.getElementById("dock-inner");
   let dockItems = Array.from(document.querySelectorAll(".dock-item"));
 
-  function updateDockMagnification(mouseY) {
+  function updateDockMagnification(mouseX) {
     const maxScale = 1.45;
     const midScale = 1.25;
     const lowScale = 1.10;
-    const influenceRadius = 70;
+    const influenceRadius = 90;
 
     dockItems.forEach((item) => {
       const rect = item.getBoundingClientRect();
-      const centerY = rect.top + rect.height / 2;
-      const distance = Math.abs(mouseY - centerY);
+      const centerX = rect.left + rect.width / 2;
+      const distance = Math.abs(mouseX - centerX);
 
       let scale = 1;
 
@@ -346,7 +346,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (dock) {
     dock.addEventListener("mousemove", (e) => {
-      updateDockMagnification(e.clientY);
+      updateDockMagnification(e.clientX);
     });
 
     dock.addEventListener("mouseleave", () => {
@@ -356,7 +356,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // --- Dock drag & drop reordering (like Windows) ---
+  // --- Dock drag & drop reordering ---
   const DOCK_ORDER_KEY = "jasonos_dock_order";
 
   function loadDockOrder() {
@@ -388,11 +388,9 @@ document.addEventListener("DOMContentLoaded", () => {
       if (item) dockInner.appendChild(item);
     });
 
-    // Rebuild dockItems NodeList
     dockItems = Array.from(document.querySelectorAll(".dock-item"));
   }
 
-  // Initial order save if none
   if (!loadDockOrder()) {
     const initialOrder = dockItems.map((item) => item.dataset.app);
     saveDockOrder(initialOrder);
@@ -449,7 +447,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   wireDockDragAndDrop();
 
-  // Re-wire after order changes
   const observer = new MutationObserver(() => {
     dockItems = Array.from(document.querySelectorAll(".dock-item"));
     wireDockDragAndDrop();
@@ -516,7 +513,6 @@ document.addEventListener("DOMContentLoaded", () => {
     windowOriginalStates.clear();
   }
 
-  // Toggle with F9
   document.addEventListener("keydown", (e) => {
     if (e.key === "F9") {
       if (missionControlActive) {
@@ -619,18 +615,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // --- Windows-style search bar behavior (simple) ---
-  const searchInput = document.getElementById("search-input");
-  if (searchInput) {
-    searchInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        const q = searchInput.value.trim();
-        if (!q) return;
-        showNotification(`Search: "${q}" (not wired to anything yet)`);
-      }
-    });
-  }
-
-  // Optional: welcome notification
+  // Welcome notification
   showNotification(`Welcome, ${user.name}`);
 });

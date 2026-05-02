@@ -15,7 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const lower = name.toLowerCase();
 
-    // Banned names
     const bannedRaw = localStorage.getItem("jasonos_banned_names");
     const bannedNames = bannedRaw ? JSON.parse(bannedRaw) : [];
     if (bannedNames.includes(lower)) {
@@ -23,7 +22,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Admin names
     const adminRaw = localStorage.getItem("jasonos_admin_names");
     const adminNames = adminRaw ? JSON.parse(adminRaw) : [];
 
