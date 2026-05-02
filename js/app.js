@@ -38,28 +38,30 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // --- Theme switching + localStorage ---
-  const themeButtons = document.querySelectorAll(".topbar-theme-btn");
-  const appIcons = document.querySelectorAll(".app-icon");
-  const jasonIconPath = "assets/jason.png";
-  const defaultIconPath = "assets/app-default.png";
+  // --- Theme switching + localStorage ---
+const themeButtons = document.querySelectorAll(".topbar-theme-btn");
+const appIcons = document.querySelectorAll(".app-icon");
+const jasonIconPath = "assets/jason.png";
+const defaultIconPath = "assets/app-default.png";
 
-  function applyTheme(theme) {
-    body.classList.remove("theme-cloud", "theme-night", "theme-forest", "theme-jason");
-    body.classList.add(`theme-${theme}`);
-    localStorage.setItem("jasonos_theme", theme);
+function applyTheme(theme) {
+  body.classList.remove("theme-cloud", "theme-night", "theme-forest", "theme-jason");
+  body.classList.add(`theme-${theme}`);
+  localStorage.setItem("jasonos_theme", theme);
 
-    if (theme === "jason") {
-      appIcons.forEach((img) => {
-        img.dataset.originalSrc = img.dataset.originalSrc || img.getAttribute("src");
-        img.setAttribute("src", jasonIconPath);
-      });
-    } else {
-      appIcons.forEach((img) => {
-        const original = img.dataset.originalSrc || defaultIconPath;
-        img.setAttribute("src", original);
-      });
-    }
+  // JASON theme overrides icons + wallpaper
+  if (theme === "jason") {
+    appIcons.forEach((img) => {
+      img.dataset.originalSrc = img.dataset.originalSrc || img.getAttribute("src");
+      img.setAttribute("src", jasonIconPath);
+    });
+  } else {
+    appIcons.forEach((img) => {
+      const original = img.dataset.originalSrc || defaultIconPath;
+      img.setAttribute("src", original);
+    });
   }
+}
 
   themeButtons.forEach((btn) => {
     btn.addEventListener("click", () => {

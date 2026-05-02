@@ -55,7 +55,7 @@ body:not(.theme-cloud):not(.theme-night):not(.theme-forest):not(.theme-jason)
 
 /* JASON theme */
 body.theme-jason .desktop-wallpaper {
-  background-image: url("../assets/wallpaper-dark.png");
+  background-image: url("../assets/jason.png");
 }
 
 /* Glass utility */

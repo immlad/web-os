@@ -94,49 +94,50 @@
   left: 16px;
   top: 72px;
   bottom: 96px;
-  width: 160px;
-  padding: 12px 10px;
+  width: 220px;
+  padding: 16px 14px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 14px;
   z-index: 10;
 }
 
 .rail-title {
-  font-size: 11px;
+  font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--color-fg-soft);
-  margin-bottom: 6px;
+  margin-bottom: 10px;
 }
 
 .rail-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  border-radius: 12px;
+  gap: 14px;
+  border-radius: 16px;
   border: none;
-  background: transparent;
-  color: var(--color-fg-soft);
-  padding: 4px 6px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-fg);
+  padding: 10px 12px;
   cursor: pointer;
-  transition: 0.16s ease all;
+  transition: 0.18s ease all;
 }
 
 .rail-item:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--color-fg);
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateX(4px);
 }
 
 .rail-icon {
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.6);
 }
 
 .rail-label {
-  font-size: 12px;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 /* Center hero */
