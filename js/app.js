@@ -1,165 +1,214 @@
-// ======================================================
-// Jason OS – Windows 11 Gaming Edition (A3 Dock Version)
-// ======================================================
+document.addEventListener("DOMContentLoaded", () => {
+  const body = document.body;
 
-// THEMES
-const themes = {
-  forest: {
-    wallpaper: "assets/wallpaper-forest.png",
-    accent: "#22c55e",
-    glow: "#22c55e55"
-  },
-  night: {
-    wallpaper: "assets/wallpaper-night.png",
-    accent: "#4f46e5",
-    glow: "#4f46e555"
-  },
-  cloud: {
-    wallpaper: "assets/wallpaper-cloud.png",
-    accent: "#38bdf8",
-    glow: "#38bdf855"
-  },
-  jason: {
-    wallpaper: "assets/jason.png",
-    accent: "#d946ef",
-    glow: "#d946ef55"
-  }
-};
-
-// APPLY THEME
-function applyTheme(key) {
-  const theme = themes[key];
-  const root = document.documentElement;
-
-  if (theme) {
-    root.style.setProperty("--accent", theme.accent);
-    root.style.setProperty("--glow", theme.glow);
-    root.style.setProperty("--bg-wallpaper", `url("${theme.wallpaper}")`);
+  // --- Auth guard ---
+  const userRaw = localStorage.getItem("jasonos_user");
+  if (!userRaw) {
+    window.location.href = "boot/boot.html";
+    return;
   }
 
-  localStorage.setItem("jason_theme", key);
-}
+  // --- Random desktop phrase ---
+  const phrases = [
+    "I am Iceman",
+    "Ja makin me dinner mom?",
+    "I am Fireman",
+    "UwU Nyaa~ Jason"
+  ];
+  const phraseEl = document.getElementById("desktop-phrase");
+  if (phraseEl) {
+    const pick = phrases[Math.floor(Math.random() * phrases.length)];
+    phraseEl.textContent = pick;
+  }
 
-// ======================================================
-// MAIN OS LOGIC
-// ======================================================
+  // --- Clock ---
+  const clockEl = document.getElementById("topbar-clock");
+  function updateClock() {
+    const now = new Date();
+    const opts = {
+      weekday: "short",
+      hour: "2-digit",
+      minute: "2-digit"
+    };
+    clockEl.textContent = now.toLocaleString(undefined, opts);
+  }
+  if (clockEl) {
+    updateClock();
+    setInterval(updateClock, 30_000);
+  }
 
-window.addEventListener("load", () => {
+  // --- Theme switching + localStorage ---
+  const themeButtons = document.querySelectorAll(".topbar-theme-btn");
+  const appIcons = document.querySelectorAll(".app-icon");
+  const jasonIconPath = "assets/jason.png";
+  const defaultIconPath = "assets/app-default.png";
 
-  // LOAD THEME
-  const savedTheme = localStorage.getItem("jason_theme");
-  if (savedTheme) applyTheme(savedTheme);
+  function applyTheme(theme) {
+    body.classList.remove("theme-cloud", "theme-night", "theme-forest", "theme-jason");
+    body.classList.add(`theme-${theme}`);
+    localStorage.setItem("jasonos_theme", theme);
 
-  // WINDOWS
-  const windows = {
-    home: document.getElementById("home-window"),
-    profile: document.getElementById("profile-window"),
-    settings: document.getElementById("settings-window"),
-    nebulo: document.getElementById("nebulo-window"),
-    chat: document.getElementById("chat-window")
-  };
+    if (theme === "jason") {
+      appIcons.forEach((img) => {
+        img.dataset.originalSrc = img.dataset.originalSrc || img.getAttribute("src");
+        img.setAttribute("src", jasonIconPath);
+      });
+    } else {
+      appIcons.forEach((img) => {
+        const original = img.dataset.originalSrc || defaultIconPath;
+        img.setAttribute("src", original);
+      });
+    }
+  }
 
-  // OPEN WINDOW
-  function openWindow(app) {
-    const win = windows[app];
+  themeButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const theme = btn.dataset.theme;
+      applyTheme(theme);
+    });
+  });
+
+  const savedTheme = localStorage.getItem("jasonos_theme") || "cloud";
+  applyTheme(savedTheme);
+
+  // --- Window management (open/close, drag, z-index, app switcher) ---
+  const windows = Array.from(document.querySelectorAll("[data-app-window]"));
+  const appSwitcher = document.getElementById("app-switcher");
+  let zCounter = 50;
+
+  function bringToFront(win) {
+    zCounter += 1;
+    win.style.zIndex = zCounter;
+    windows.forEach((w) => w.classList.remove("focused"));
+    win.classList.add("focused");
+    updateAppSwitcherActive(win.dataset.appId);
+  }
+
+  function openWindowById(id) {
+    const win = document.getElementById(`window-${id}`);
     if (!win) return;
 
     win.classList.remove("hidden");
-    win.style.display = "block";
-
-    if (window.JasonAnimations?.zoomOpen) {
-      window.JasonAnimations.zoomOpen(win);
+    // If first time, center it
+    if (!win.dataset.positioned) {
+      const rect = win.getBoundingClientRect();
+      win.style.left = `${(window.innerWidth - rect.width) / 2}px`;
+      win.style.top = `${80 + Math.random() * 40}px`;
+      win.style.transform = "none";
+      win.dataset.positioned = "true";
     }
+
+    requestAnimationFrame(() => {
+      win.classList.add("active");
+      bringToFront(win);
+      ensureAppInSwitcher(id, win);
+    });
   }
 
-  // CLOSE WINDOW
   function closeWindow(win) {
-    win.classList.add("hidden");
-    win.style.display = "none";
+    win.classList.remove("active");
+    setTimeout(() => {
+      win.classList.add("hidden");
+      removeAppFromSwitcher(win.dataset.appId);
+    }, 160);
   }
 
-  // MINIMIZE WINDOW
-  function minimizeWindow(win) {
-    if (window.JasonAnimations?.minimizeWindow) {
-      window.JasonAnimations.minimizeWindow(win);
-    } else {
-      closeWindow(win);
+  // Dragging
+  function makeDraggable(win) {
+    const handle = win.querySelector("[data-drag-handle]");
+    if (!handle) return;
+
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+    let startLeft = 0;
+    let startTop = 0;
+
+    handle.addEventListener("mousedown", (e) => {
+      if (e.button !== 0) return;
+      isDragging = true;
+      bringToFront(win);
+
+      const rect = win.getBoundingClientRect();
+      startX = e.clientX;
+      startY = e.clientY;
+      startLeft = rect.left;
+      startTop = rect.top;
+
+      win.style.transform = "none";
+
+      document.addEventListener("mousemove", onMouseMove);
+      document.addEventListener("mouseup", onMouseUp);
+    });
+
+    function onMouseMove(e) {
+      if (!isDragging) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      win.style.left = `${startLeft + dx}px`;
+      win.style.top = `${startTop + dy}px`;
+    }
+
+    function onMouseUp() {
+      isDragging = false;
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
     }
   }
 
-  // MAXIMIZE WINDOW
-  function maximizeWindow(win) {
-    win.classList.toggle("window-full");
+  windows.forEach((win) => {
+    makeDraggable(win);
+
+    const closeBtn = win.querySelector("[data-close]");
+    if (closeBtn) {
+      closeBtn.addEventListener("click", () => closeWindow(win));
+    }
+
+    win.addEventListener("mousedown", () => bringToFront(win));
+  });
+
+  // --- App launcher (rail + dock) ---
+  function handleLaunch(appId) {
+    openWindowById(appId);
   }
 
-  // WINDOW CONTROLS
-  document.querySelectorAll(".window").forEach(win => {
-    const closeBtn = win.querySelector(".win-btn.close");
-    const minBtn = win.querySelector(".win-btn.min");
-    const maxBtn = win.querySelector(".win-btn.max");
-
-    if (closeBtn) closeBtn.addEventListener("click", () => closeWindow(win));
-    if (minBtn) minBtn.addEventListener("click", () => minimizeWindow(win));
-    if (maxBtn) maxBtn.addEventListener("click", () => maximizeWindow(win));
-  });
-
-  // DOCK ICONS — MAGNIFY + BOUNCE + OPEN APP
-  document.querySelectorAll(".dock-item").forEach(btn => {
-    const icon = btn.querySelector(".dock-icon");
-
-    // Hover magnification
-    btn.addEventListener("mousemove", () => {
-      icon.classList.add("dock-magnify");
-    });
-
-    btn.addEventListener("mouseleave", () => {
-      icon.classList.remove("dock-magnify");
-    });
-
-    // Click bounce + open
-    btn.addEventListener("click", () => {
-      const app = btn.getAttribute("data-app");
-
-      if (window.JasonAnimations?.bounceIcon) {
-        window.JasonAnimations.bounceIcon(icon);
-      }
-
-      openWindow(app);
+  document.querySelectorAll("[data-app]").forEach((el) => {
+    el.addEventListener("click", () => {
+      const app = el.dataset.app;
+      handleLaunch(app);
     });
   });
 
-  // THEME BUTTONS
-  document.querySelectorAll(".theme-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      applyTheme(btn.getAttribute("data-theme"));
-    });
-  });
+  // --- App switcher UI ---
+  function ensureAppInSwitcher(appId, win) {
+    if (!appSwitcher) return;
+    if (!appId) return;
 
-  // PROFILE SAVE
-  const saveProfile = document.getElementById("save-profile");
-  const profileStatus = document.getElementById("profile-status");
-
-  if (saveProfile) {
-    saveProfile.addEventListener("click", () => {
-      const user = document.getElementById("edit-username").value.trim();
-      const pass = document.getElementById("edit-password").value.trim();
-
-      if (!user || !pass) {
-        profileStatus.textContent = "All fields required.";
-        return;
-      }
-
-      let accounts = JSON.parse(localStorage.getItem("jason_accounts") || "{}");
-      const oldUser = localStorage.getItem("jason_session");
-
-      if (oldUser && accounts[oldUser]) delete accounts[oldUser];
-
-      accounts[user] = pass;
-      localStorage.setItem("jason_accounts", JSON.stringify(accounts));
-      localStorage.setItem("jason_session", user);
-
-      profileStatus.textContent = "Profile saved.";
-    });
+    let btn = appSwitcher.querySelector(`[data-switch-app="${appId}"]`);
+    if (!btn) {
+      btn = document.createElement("button");
+      btn.className = "app-switcher-btn";
+      btn.dataset.switchApp = appId;
+      const title = win.querySelector(".window-title")?.textContent || appId;
+      btn.textContent = title;
+      btn.addEventListener("click", () => {
+        openWindowById(appId);
+      });
+      appSwitcher.appendChild(btn);
+    }
+    updateAppSwitcherActive(appId);
   }
 
+  function removeAppFromSwitcher(appId) {
+    if (!appSwitcher || !appId) return;
+    const btn = appSwitcher.querySelector(`[data-switch-app="${appId}"]`);
+    if (btn) appSwitcher.removeChild(btn);
+  }
+
+  function updateAppSwitcherActive(appId) {
+    if (!appSwitcher) return;
+    appSwitcher.querySelectorAll(".app-switcher-btn").forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.switchApp === appId);
+    });
+  }
 });

@@ -1,49 +1,11 @@
-// ======================================================
-// Jason OS – Animation Engine (A3 Dock Version)
-// ======================================================
+export function fadeInWindow(el) {
+  el.classList.add("active");
+  el.classList.remove("hidden");
+}
 
-(function () {
-
-  // ------------------------------------------------------
-  // Dock Bounce Animation
-  // ------------------------------------------------------
-  function bounceIcon(el) {
-    if (!el) return;
-    el.classList.remove("dock-bounce");
-    void el.offsetWidth; // restart animation
-    el.classList.add("dock-bounce");
-  }
-
-  // ------------------------------------------------------
-  // Window Zoom-Open Animation
-  // ------------------------------------------------------
-  function zoomOpen(win) {
-    if (!win) return;
-    win.classList.remove("window-zoom");
-    void win.offsetWidth;
-    win.classList.add("window-zoom");
-  }
-
-  // ------------------------------------------------------
-  // Window Minimize Animation
-  // ------------------------------------------------------
-  function minimizeWindow(win) {
-    if (!win) return;
-    win.classList.add("window-minimize");
-
-    setTimeout(() => {
-      win.style.display = "none";
-      win.classList.remove("window-minimize");
-    }, 220);
-  }
-
-  // ------------------------------------------------------
-  // Export Animations
-  // ------------------------------------------------------
-  window.JasonAnimations = {
-    bounceIcon,
-    zoomOpen,
-    minimizeWindow
-  };
-
-})();
+export function fadeOutWindow(el) {
+  el.classList.remove("active");
+  setTimeout(() => {
+    el.classList.add("hidden");
+  }, 160);
+}

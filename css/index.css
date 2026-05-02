@@ -1,244 +1,74 @@
-/* ==========================================================
-   ROOT VARIABLES — Windows 11 Gaming Edition (Rounded)
-   ========================================================== */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
 
 :root {
-  --bg-wallpaper: url("../assets/app-default.png");
-  --accent: #d946ef;
-  --glow: #d946ef55;
+  --font-main: "Montserrat", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 
-  --glass-bg: rgba(20, 20, 30, 0.55);
-  --glass-soft: rgba(20, 20, 30, 0.35);
-  --glass-border: rgba(255, 255, 255, 0.14);
+  --color-fg: #f5f5f7;
+  --color-fg-soft: #c7c7cc;
+  --color-accent: #4da3ff;
 
-  --text-main: #f5f5f7;
-  --text-muted: #b0b0c0;
+  --glass-bg: rgba(15, 15, 30, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.18);
+  --glass-shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
 
-  --radius-xl: 28px;
-  --radius-lg: 22px;
-  --radius-md: 16px;
-  --radius-sm: 12px;
-
-  --blur-strong: 28px;
-  --blur-soft: 18px;
-
-  --shadow-win: 0 18px 40px rgba(0, 0, 0, 0.55),
-                0 0 22px var(--glow);
+  --topbar-height: 32px;
+  --dock-height: 80px;
 }
 
-/* ==========================================================
-   GLOBAL RESET
-   ========================================================== */
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-html, body {
+body {
   margin: 0;
   padding: 0;
-  height: 100%;
-  font-family: "Inter", sans-serif;
-  color: var(--text-main);
+  font-family: var(--font-main);
+  color: var(--color-fg);
   overflow: hidden;
 }
 
-.hidden {
-  display: none !important;
-}
-
-/* ==========================================================
-   WALLPAPER
-   ========================================================== */
-
-.os-wallpaper {
+/* Wallpapers by theme */
+.desktop-wallpaper {
   position: fixed;
   inset: 0;
-  background-image: var(--bg-wallpaper);
   background-size: cover;
   background-position: center;
-  filter: brightness(0.85) saturate(1.2);
   z-index: -2;
 }
 
-/* ==========================================================
-   GLASS EFFECTS
-   ========================================================== */
+/* Cloud */
+body.theme-cloud .desktop-wallpaper {
+  background-image: url("../assets/wallpaper-cloud.png");
+}
 
+/* Night */
+body.theme-night .desktop-wallpaper {
+  background-image: url("../assets/wallpaper-night.png");
+}
+
+/* Forest */
+body.theme-forest .desktop-wallpaper {
+  background-image: url("../assets/wallpaper-forest.png");
+}
+
+/* Default / fallback */
+body:not(.theme-cloud):not(.theme-night):not(.theme-forest):not(.theme-jason)
+  .desktop-wallpaper {
+  background-image: url("../assets/wallpaper.png");
+}
+
+/* JASON theme */
+body.theme-jason .desktop-wallpaper {
+  background-image: url("../assets/wallpaper-dark.png");
+}
+
+/* Glass utility */
 .glass {
+  backdrop-filter: blur(26px) saturate(160%);
+  -webkit-backdrop-filter: blur(26px) saturate(160%);
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
-  backdrop-filter: blur(var(--blur-strong)) saturate(1.4);
-  -webkit-backdrop-filter: blur(var(--blur-strong)) saturate(1.4);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-win);
+  box-shadow: var(--glass-shadow);
+  border-radius: 18px;
 }
 
-.glass-soft {
-  background: var(--glass-soft);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(var(--blur-soft)) saturate(1.3);
-  -webkit-backdrop-filter: blur(var(--blur-soft)) saturate(1.3);
-  border-radius: var(--radius-lg);
-}
-
-/* ==========================================================
-   DESKTOP (EMPTY)
-   ========================================================== */
-
-.desktop-icons {
-  position: fixed;
-  top: 40px;
-  left: 28px;
-  display: none; /* EMPTY DESKTOP */
-}
-
-/* ==========================================================
-   WINDOWS — Fluent Acrylic + Rounded
-   ========================================================== */
-
-.window {
-  position: absolute;
-  top: 120px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(760px, 90%);
-  min-height: 260px;
-  overflow: hidden;
-  display: none;
-  border-radius: var(--radius-xl);
-}
-
-.window-full {
-  top: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(100% - 40px);
-  height: calc(100% - 80px);
-  border-radius: var(--radius-xl);
-}
-
-.window-header {
-  padding: 12px 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
-  font-size: 0.9rem;
-  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-}
-
-.window-title {
-  font-weight: 600;
-  color: var(--text-main);
-}
-
-.window-controls {
-  display: flex;
-  gap: 10px;
-}
-
-.win-btn {
-  width: 14px;
-  height: 14px;
-  border-radius: 999px;
-  cursor: pointer;
-}
-
-.win-btn.min { background: #febc2e; }
-.win-btn.max { background: #28c840; }
-.win-btn.close { background: #ff5f57; }
-
-.window-body {
-  padding: 20px 18px;
-}
-
-/* ==========================================================
-   IFRAME APPS
-   ========================================================== */
-
-.iframe-body {
-  padding: 0;
-}
-
-.app-iframe {
-  width: 100%;
-  height: 420px;
-  border: none;
-  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
-}
-
-/* ==========================================================
-   macOS DOCK — A3 (Magnify + Bounce)
-   ========================================================== */
-
-.dock {
-  position: fixed;
-  bottom: 22px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 22px;
-  padding: 14px 26px;
-  border-radius: 999px;
-  backdrop-filter: blur(22px) saturate(1.4);
-  -webkit-backdrop-filter: blur(22px) saturate(1.4);
-  background: rgba(20, 20, 30, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
-}
-
-.dock-item {
-  border: none;
-  background: transparent;
-  cursor: pointer;
-}
-
-.dock-icon {
-  width: 58px;
-  height: 58px;
-  border-radius: var(--radius-lg);
-  background: rgba(0, 0, 0, 0.35);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 30px;
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
-  background-size: cover;
-  background-position: center;
-}
-
-/* Nebulo dock icon */
-.nebulo-icon {
-  background-image: url("https://nebulo.bostoncareercounselor.com/assets/img/nebulo-logo.png");
-}
-
-/* Hover magnification */
-.dock-magnify {
-  transform: scale(1.35) translateY(-10px);
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.6),
-              0 0 18px var(--glow);
-}
-
-/* Bounce animation */
-.dock-bounce {
-  animation: dockBounce 0.6s ease;
-}
-
-@keyframes dockBounce {
-  0% { transform: translateY(0); }
-  30% { transform: translateY(-18px); }
-  60% { transform: translateY(4px); }
-  100% { transform: translateY(0); }
-}
-
-/* ==========================================================
-   ANIMATIONS
-   ========================================================== */
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
+/* Hidden helper */
+.hidden {
+  display: none !important;
 }

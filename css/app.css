@@ -1,163 +1,411 @@
-/* ==========================================================
-   WINDOWS 11 GAMING EDITION — APP UI STYLES (ROUNDED)
-   ========================================================== */
-
-/* ==========================================================
-   WINDOW ANIMATIONS
-   ========================================================== */
-
-.window-zoom {
-  animation: winZoom 0.22s ease;
+/* Top bar */
+.topbar {
+  position: fixed;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: var(--topbar-height);
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 70%;
+  max-width: 1100px;
+  font-size: 12px;
+  z-index: 40;
 }
 
-@keyframes winZoom {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) scale(0.92);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(-50%) scale(1);
-  }
+.topbar-left,
+.topbar-center,
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.window-minimize {
-  animation: winMin 0.22s ease forwards;
+.topbar-logo {
+  font-size: 16px;
 }
 
-@keyframes winMin {
-  from {
-    opacity: 1;
-    transform: translateX(-50%) scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: translateX(-50%) scale(0.85);
-  }
-}
-
-/* ==========================================================
-   WINDOW CONTENT
-   ========================================================== */
-
-.window-body h1,
-.window-body h2 {
-  margin-top: 0;
-  font-weight: 700;
-}
-
-.window-body p {
-  color: var(--text-muted);
-  font-size: 0.92rem;
-}
-
-/* ==========================================================
-   PROFILE INPUTS
-   ========================================================== */
-
-.auth-input {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(0, 0, 0, 0.35);
-  color: var(--text-main);
-  font-size: 0.9rem;
-  margin-bottom: 14px;
-  outline: none;
-  transition: 0.18s ease;
-}
-
-.auth-input:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px var(--glow);
-}
-
-/* ==========================================================
-   BUTTONS
-   ========================================================== */
-
-.btn-primary {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: var(--radius-md);
-  border: none;
-  cursor: pointer;
-  background: linear-gradient(135deg, var(--accent), #a21caf);
-  color: #fff;
+.topbar-title {
   font-weight: 600;
-  letter-spacing: 0.04em;
-  font-size: 0.9rem;
-  transition: 0.18s ease;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
-.btn-primary:hover {
-  filter: brightness(1.08);
-}
-
-/* ==========================================================
-   THEME GRID
-   ========================================================== */
-
-.theme-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
-  margin-top: 14px;
-}
-
-.theme-btn {
-  padding: 12px 14px;
-  border-radius: var(--radius-md);
-  border: none;
+.topbar-theme-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--color-fg-soft);
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
   cursor: pointer;
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--text-main);
-  font-size: 0.9rem;
-  transition: 0.18s ease;
+  transition: 0.18s ease all;
 }
 
-.theme-btn:hover {
-  background: rgba(255, 255, 255, 0.18);
+.topbar-theme-btn:hover {
+  border-color: rgba(255, 255, 255, 0.35);
+  color: var(--color-fg);
+  background: rgba(255, 255, 255, 0.06);
 }
 
-/* ==========================================================
-   DOCK POLISH — A3 (Magnify + Bounce)
-   ========================================================== */
+/* App switcher */
+.app-switcher {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-right: 8px;
+}
+
+.app-switcher-btn {
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--color-fg-soft);
+  font-size: 10px;
+  padding: 2px 8px;
+  cursor: pointer;
+  max-width: 120px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.app-switcher-btn.active {
+  border-color: rgba(255, 255, 255, 0.4);
+  color: var(--color-fg);
+}
+
+/* Desktop */
+.desktop {
+  position: fixed;
+  inset: 0;
+  padding-top: calc(var(--topbar-height) + 24px);
+  padding-bottom: calc(var(--dock-height) + 24px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Left rail (FroggieOS-style icons, but no frog) */
+.desktop-rail {
+  position: absolute;
+  left: 16px;
+  top: 72px;
+  bottom: 96px;
+  width: 160px;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 10;
+}
+
+.rail-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-fg-soft);
+  margin-bottom: 6px;
+}
+
+.rail-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 12px;
+  border: none;
+  background: transparent;
+  color: var(--color-fg-soft);
+  padding: 4px 6px;
+  cursor: pointer;
+  transition: 0.16s ease all;
+}
+
+.rail-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-fg);
+}
+
+.rail-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.6);
+}
+
+.rail-label {
+  font-size: 12px;
+}
+
+/* Center hero */
+.desktop-hero {
+  text-align: center;
+  pointer-events: none;
+}
+
+.desktop-title {
+  font-size: 64px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.desktop-subtitle {
+  margin-top: 10px;
+  font-size: 16px;
+  color: var(--color-fg-soft);
+}
+
+/* Dock */
+.dock {
+  position: fixed;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  height: var(--dock-height);
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 30;
+}
+
+.dock-inner {
+  display: flex;
+  gap: 18px;
+}
+
+.dock-item {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transform-origin: bottom center;
+  transition: transform 0.16s ease;
+}
+
+.dock-item:hover {
+  transform: translateY(-6px) scale(1.12);
+}
 
 .dock-icon {
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.6);
 }
 
-.dock-bounce {
-  animation: dockBounce 0.6s ease;
+/* Windows */
+.window {
+  position: fixed;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(960px, 80vw);
+  height: min(560px, 65vh);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 20;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.16s ease, transform 0.16s ease;
 }
 
-@keyframes dockBounce {
-  0% { transform: translateY(0); }
-  30% { transform: translateY(-18px); }
-  60% { transform: translateY(4px); }
-  100% { transform: translateY(0); }
+.window.active {
+  opacity: 1;
+  pointer-events: auto;
 }
 
-/* ==========================================================
-   DESKTOP ICON POLISH (DESKTOP EMPTY)
-   ========================================================== */
-
-.desktop-icon-img {
-  transition: 0.18s ease;
+.window-titlebar {
+  height: 32px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 10px;
+  cursor: move;
 }
 
-/* ==========================================================
-   RESPONSIVE
-   ========================================================== */
+.window-controls {
+  display: flex;
+  gap: 6px;
+}
 
-@media (max-width: 640px) {
-  .window {
-    width: calc(100% - 20px);
+.win-btn {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.win-close {
+  background: #ff5f57;
+}
+
+.win-minimize {
+  background: #febc2e;
+}
+
+.win-full {
+  background: #28c840;
+}
+
+.window-title {
+  font-size: 12px;
+  color: var(--color-fg-soft);
+}
+
+.window-body {
+  flex: 1;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.window-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 0 0 18px 18px;
+}
+
+.window-body-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: var(--color-fg-soft);
+}
+
+/* Boot screen */
+.boot-body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-main);
+  color: var(--color-fg);
+  background-image: url("../assets/wallpaper-dark.png");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.boot-overlay {
+  width: min(420px, 90vw);
+  padding: 32px 28px 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.boot-logo img {
+  width: 72px;
+  height: 72px;
+  border-radius: 24px;
+  margin-bottom: 10px;
+}
+
+.boot-title {
+  margin: 0;
+  font-size: 28px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.boot-subtitle {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--color-fg-soft);
+}
+
+.boot-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.boot-tabs {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.boot-tab {
+  flex: 1;
+  background: transparent;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  padding: 6px 0;
+  font-size: 12px;
+  color: var(--color-fg-soft);
+  cursor: pointer;
+  transition: 0.18s ease all;
+}
+
+.boot-tab.active {
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-fg);
+}
+
+.boot-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.boot-fields input {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--color-fg);
+  font-size: 13px;
+}
+
+.boot-fields input::placeholder {
+  color: var(--color-fg-soft);
+}
+
+.boot-submit {
+  margin-top: 4px;
+  width: 100%;
+  padding: 8px 0;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #4da3ff, #9b6bff);
+  color: #fff;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+.boot-submit:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7);
+}
+
+/* Small screens */
+@media (max-width: 768px) {
+  .desktop-title {
+    font-size: 40px;
   }
 
-  .app-iframe {
-    height: 320px;
+  .desktop-rail {
+    width: 140px;
+  }
+
+  .window {
+    width: 94vw;
+    height: 70vh;
   }
 }
