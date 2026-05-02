@@ -1,11 +1,18 @@
+// ===============================
+// Jason OS – animations.js
+// ===============================
+
 (function () {
+
+  // Bounce animation for dock icons
   function bounceIcon(el) {
     if (!el) return;
     el.classList.remove("dock-bounce");
-    void el.offsetWidth;
+    void el.offsetWidth; // restart animation
     el.classList.add("dock-bounce");
   }
 
+  // Window zoom-open animation
   function zoomOpen(win) {
     if (!win) return;
     win.classList.remove("window-zoom");
@@ -13,6 +20,7 @@
     win.classList.add("window-zoom");
   }
 
+  // Window minimize animation
   function minimizeWindow(win) {
     if (!win) return;
     win.classList.add("window-minimize");
@@ -22,6 +30,7 @@
     }, 280);
   }
 
+  // Dock hover lift effect
   function enableDockHover() {
     document.querySelectorAll(".dock-item .dock-emoji").forEach((icon) => {
       icon.addEventListener("mouseenter", () => {
@@ -33,10 +42,12 @@
     });
   }
 
+  // Export animations
   window.JasonAnimations = {
     bounceIcon,
     zoomOpen,
     minimizeWindow,
     enableDockHover,
   };
+
 })();

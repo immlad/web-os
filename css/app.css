@@ -1,10 +1,16 @@
+/* ============================
+   DESKTOP LAYOUT
+   ============================ */
+
 .desktop {
   position: relative;
   width: 100%;
   height: 100vh;
 }
 
-/* Top bar */
+/* ============================
+   TOP BAR
+   ============================ */
 
 .top-bar {
   position: fixed;
@@ -28,29 +34,17 @@
   gap: 8px;
 }
 
+.top-logo {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+}
+
 .logo-text {
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   font-size: 0.78rem;
-}
-
-.logo-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-}
-
-.logo-dot.red {
-  background: #ff5f57;
-}
-
-.logo-dot.amber {
-  background: #febc2e;
-}
-
-.logo-dot.green {
-  background: #28c840;
 }
 
 .top-pill {
@@ -90,7 +84,9 @@
   background: rgba(255, 255, 255, 0.18);
 }
 
-/* Desktop title */
+/* ============================
+   DESKTOP TITLE
+   ============================ */
 
 .desktop-title {
   position: fixed;
@@ -117,7 +113,9 @@
   margin-top: 8px;
 }
 
-/* Desktop icons */
+/* ============================
+   DESKTOP ICONS
+   ============================ */
 
 .desktop-icons {
   position: fixed;
@@ -141,6 +139,11 @@
   cursor: pointer;
   color: var(--text-main);
   font-size: 0.75rem;
+  backdrop-filter: blur(8px);
+}
+
+.desktop-icon:hover {
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .desktop-icon-emoji {
@@ -153,9 +156,13 @@
   justify-content: center;
   font-size: 22px;
   background: rgba(0, 0, 0, 0.45);
+  background-size: cover;
+  background-position: center;
 }
 
-/* Dock */
+/* ============================
+   DOCK
+   ============================ */
 
 .dock {
   position: fixed;
@@ -192,10 +199,12 @@
   justify-content: center;
   font-size: 28px;
   background: rgba(0, 0, 0, 0.35);
+  background-size: cover;
+  background-position: center;
   transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 
-/* Dock hover + bounce */
+/* Hover + bounce */
 
 .dock-hover {
   transform: scale(1.22) translateY(-6px);
@@ -207,21 +216,15 @@
 }
 
 @keyframes dockBounce {
-  0% {
-    transform: translateY(0);
-  }
-  30% {
-    transform: translateY(-18px);
-  }
-  60% {
-    transform: translateY(4px);
-  }
-  100% {
-    transform: translateY(0);
-  }
+  0% { transform: translateY(0); }
+  30% { transform: translateY(-18px); }
+  60% { transform: translateY(4px); }
+  100% { transform: translateY(0); }
 }
 
-/* Windows */
+/* ============================
+   WINDOWS
+   ============================ */
 
 .window {
   position: absolute;
@@ -264,33 +267,12 @@
   cursor: pointer;
 }
 
-.win-dot.close {
-  background: #ff5f57;
-}
-
-.win-dot.min {
-  background: #febc2e;
-}
-
-.win-dot.max {
-  background: #28c840;
-}
+.win-dot.close { background: #ff5f57; }
+.win-dot.min { background: #febc2e; }
+.win-dot.max { background: #28c840; }
 
 .window-title {
   font-size: 0.82rem;
-  color: var(--text-muted);
-}
-
-.window-right {
-  display: flex;
-  align-items: center;
-}
-
-.window-badge {
-  padding: 3px 8px;
-  border-radius: 999px;
-  font-size: 0.72rem;
-  background: rgba(255, 255, 255, 0.08);
   color: var(--text-muted);
 }
 
@@ -302,15 +284,6 @@
   display: grid;
   grid-template-columns: minmax(0, 2fr) minmax(0, 1.2fr);
   gap: 16px;
-}
-
-.window-col h1 {
-  margin-top: 0;
-  margin-bottom: 6px;
-}
-
-.window-col p {
-  margin: 0;
 }
 
 .feature-list {
@@ -335,30 +308,9 @@
   background: var(--accent);
 }
 
-/* Settings */
-
-.theme-grid {
-  display: flex;
-  gap: 10px;
-  margin-top: 12px;
-  flex-wrap: wrap;
-}
-
-.theme-btn {
-  padding: 6px 12px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  background: rgba(0, 0, 0, 0.35);
-  color: var(--text-main);
-  cursor: pointer;
-  font-size: 0.8rem;
-}
-
-.theme-btn:hover {
-  border-color: var(--accent);
-}
-
-/* Iframe apps */
+/* ============================
+   IFRAME APPS
+   ============================ */
 
 .iframe-body {
   padding: 0;
@@ -371,68 +323,9 @@
   border-radius: 0 0 var(--radius-lg) var(--radius-lg);
 }
 
-/* Global banner */
-
-.global-banner {
-  position: fixed;
-  top: 64px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 8px 14px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  z-index: 20;
-}
-
-.global-text {
-  font-size: 0.85rem;
-}
-
-.global-close {
-  padding: 4px 8px;
-  border-radius: 999px;
-  border: none;
-  cursor: pointer;
-  background: rgba(255, 255, 255, 0.16);
-  color: var(--text-main);
-  font-size: 0.75rem;
-}
-
-/* Animations */
-
-.window-zoom {
-  animation: zoomOpen 0.28s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-@keyframes zoomOpen {
-  0% {
-    transform: translateX(-50%) scale(0.82);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(-50%) scale(1);
-    opacity: 1;
-  }
-}
-
-.window-minimize {
-  animation: minimizeWin 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-  transform-origin: bottom center;
-}
-
-@keyframes minimizeWin {
-  0% {
-    transform: translateX(-50%) scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(-50%) scale(0.1) translateY(40px);
-    opacity: 0;
-  }
-}
-
-/* Responsive */
+/* ============================
+   RESPONSIVE
+   ============================ */
 
 @media (max-width: 640px) {
   .top-bar {
@@ -443,13 +336,8 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .admin-panel {
-    width: calc(100% - 32px);
-  }
-
-  .auth-card,
-  .boot-container {
-    width: calc(100% - 32px);
+  .desktop-icons {
+    left: 10px;
   }
 
   .jason-title {
@@ -462,9 +350,5 @@
 
   .app-iframe {
     height: 320px;
-  }
-
-  .desktop-icons {
-    left: 10px;
   }
 }

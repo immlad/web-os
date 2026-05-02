@@ -17,6 +17,8 @@
     "Segoe UI", sans-serif;
 }
 
+/* RESET */
+
 *,
 *::before,
 *::after {
@@ -31,6 +33,8 @@ body {
   font-family: var(--font-main);
   color: var(--text-main);
 }
+
+/* BACKGROUND */
 
 .os-body,
 .boot-body {
@@ -49,6 +53,8 @@ body {
   filter: saturate(1.2) contrast(1.05) brightness(0.9);
   z-index: -2;
 }
+
+/* GLASS EFFECTS */
 
 .glass {
   background: linear-gradient(
@@ -88,7 +94,7 @@ body {
   display: none !important;
 }
 
-/* Boot */
+/* BOOT SCREEN */
 
 .boot-center {
   position: fixed;
@@ -151,7 +157,7 @@ body {
   color: var(--text-muted);
 }
 
-/* Auth */
+/* AUTH SCREENS */
 
 .auth-shell {
   position: fixed;
@@ -165,6 +171,18 @@ body {
 .auth-card {
   width: 360px;
   padding: 24px 22px 20px;
+}
+
+.auth-logo-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.auth-logo {
+  width: 70px;
+  height: 70px;
+  border-radius: 18px;
 }
 
 .auth-card h2 {
@@ -229,7 +247,7 @@ body {
   cursor: pointer;
 }
 
-/* Admin */
+/* ADMIN PANEL */
 
 .admin-shell {
   position: relative;
@@ -257,8 +275,6 @@ body {
   font-size: 0.82rem;
 }
 
-/* Users list */
-
 .users-list {
   list-style: none;
   padding: 0;
@@ -280,5 +296,33 @@ body {
   cursor: pointer;
   background: rgba(239, 68, 68, 0.2);
   color: #fecaca;
+  font-size: 0.75rem;
+}
+
+/* GLOBAL BANNER */
+
+.global-banner {
+  position: fixed;
+  top: 64px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 20;
+}
+
+.global-text {
+  font-size: 0.85rem;
+}
+
+.global-close {
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.16);
+  color: var(--text-main);
   font-size: 0.75rem;
 }
