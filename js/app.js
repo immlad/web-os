@@ -273,48 +273,46 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // --- Dock magnification (true macOS wave) ---
-  const dock = document.getElementById("dock");
-  const dockItems = Array.from(document.querySelectorAll(".dock-item"));
+ // --- Dock magnification (cleaner macOS wave) ---
+const dock = document.getElementById("dock");
+const dockItems = Array.from(document.querySelectorAll(".dock-item"));
 
-  function updateDockMagnification(mouseY) {
-    const maxScale = 1.6;
-    const midScale = 1.3;
-    const lowScale = 1.1;
-    const influenceRadius = 80; // px
+function updateDockMagnification(mouseY) {
+  const maxScale = 1.45;  // slightly smaller wave for smaller dock
+  const midScale = 1.25;
+  const lowScale = 1.10;
+  const influenceRadius = 70; // tighter radius
 
+  dockItems.forEach((item) => {
+    const rect = item.getBoundingClientRect();
+    const centerY = rect.top + rect.height / 2;
+    const distance = Math.abs(mouseY - centerY);
+
+    let scale = 1;
+
+    if (distance < influenceRadius) {
+      const t = 1 - distance / influenceRadius;
+      scale =
+        t > 0.66 ? maxScale :
+        t > 0.33 ? midScale :
+        lowScale;
+    }
+
+    item.style.transform = `scale(${scale})`;
+  });
+}
+
+if (dock) {
+  dock.addEventListener("mousemove", (e) => {
+    updateDockMagnification(e.clientY);
+  });
+
+  dock.addEventListener("mouseleave", () => {
     dockItems.forEach((item) => {
-      const rect = item.getBoundingClientRect();
-      const centerY = rect.top + rect.height / 2;
-      const distance = Math.abs(mouseY - centerY);
-
-      let scale = 1;
-
-      if (distance < influenceRadius) {
-        const t = 1 - distance / influenceRadius;
-        if (t > 0.66) {
-          scale = maxScale;
-        } else if (t > 0.33) {
-          scale = midScale;
-        } else {
-          scale = lowScale;
-        }
-      }
-
-      item.style.transform = `scale(${scale})`;
+      item.style.transform = "scale(1)";
     });
-  }
-
-  if (dock) {
-    dock.addEventListener("mousemove", (e) => {
-      updateDockMagnification(e.clientY);
-    });
-
-    dock.addEventListener("mouseleave", () => {
-      dockItems.forEach((item) => {
-        item.style.transform = "scale(1)";
-      });
-    });
-  }
+  });
+}
 
   // --- Admin console wiring ---
   const adminPanel = document.getElementById("admin-panel");

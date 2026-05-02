@@ -147,31 +147,28 @@
 }
 
 /* Floating vertical dock (Big Sur style, left) */
+/* Floating vertical dock (smaller, cleaner) */
 .dock {
   position: fixed;
-  left: 24px;
+  left: 20px;
   top: 50%;
   transform: translateY(-50%);
-  width: 110px;
-  padding: 14px 10px;
+  width: 86px; /* smaller */
+  padding: 10px 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 30;
-  border-radius: 40px;
+  border-radius: 32px; /* smaller pill */
   box-shadow:
-    0 18px 45px rgba(0, 0, 0, 0.7),
-    0 0 0 0.5px rgba(255, 255, 255, 0.25) inset;
-}
-
-.dock-rect {
-  border-radius: 40px;
+    0 14px 32px rgba(0, 0, 0, 0.55),
+    0 0 0 0.5px rgba(255, 255, 255, 0.22) inset;
 }
 
 .dock-inner {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px; /* tighter spacing */
 }
 
 .dock-item {
@@ -179,32 +176,33 @@
   border: none;
   padding: 0;
   cursor: pointer;
-  width: 70px;
-  height: 50px;
-  border-radius: 18px;
+  width: 58px;   /* smaller */
+  height: 42px;  /* smaller */
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.12s ease;
+  transition:
+    background 0.12s ease,
+    transform 0.12s cubic-bezier(0.25, 0.8, 0.25, 1); /* smoother */
   transform-origin: center;
 }
 
 .dock-item:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.10);
 }
 
 .dock-emoji {
-  font-size: 28px;
+  font-size: 22px; /* smaller icons */
   line-height: 1;
-  display: block;
 }
 
 .dock-jason-icon {
   display: none;
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.6);
+  width: 28px; /* smaller */
+  height: 28px;
+  border-radius: 8px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.55);
 }
 
 /* JASON theme overrides emojis */
@@ -216,11 +214,11 @@ body.theme-jason .dock-jason-icon {
   display: block;
 }
 
-/* Dock label tooltip */
+/* Tooltip stays the same size */
 .dock-item::after {
   content: attr(data-label);
   position: absolute;
-  left: 90px;
+  left: 80px;
   padding: 3px 8px;
   border-radius: 6px;
   font-size: 11px;
