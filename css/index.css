@@ -505,3 +505,26 @@ body.has-custom-wallpaper .desktop {
 .wallpaper-upload input[type="file"] {
   font-size: 13px;
 }
+
+/* MISSION CONTROL */
+
+.mission-control-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top, rgba(0,0,0,0.85), rgba(0,0,0,0.95));
+  backdrop-filter: blur(18px);
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.18s ease-out;
+}
+
+body.mission-control-active .mission-control-overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+body.mission-control-active .window {
+  transition: left 0.18s ease-out, top 0.18s ease-out, transform 0.18s ease-out, opacity 0.18s ease-out;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.9);
+}

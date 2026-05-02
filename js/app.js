@@ -2,6 +2,7 @@ const authScreen = document.getElementById("authScreen");
 const desktopEl = document.getElementById("desktop");
 const dock = document.getElementById("dock");
 const windowsContainer = document.getElementById("windows");
+const missionControlOverlay = document.getElementById("missionControlOverlay");
 
 const signupBtn = document.getElementById("signupBtn");
 const loginBtn = document.getElementById("loginBtn");
@@ -22,6 +23,18 @@ let isAdmin = false;
 let aboutClickCount = 0;
 let sebastianUnlocked = false;
 
+// icons
+const DEFAULT_ICON = "assets/app-default.png";
+const JASON_ICON = "assets/jason.png";
+const SEBASTIAN_ICON = "assets/sebastian.png";
+
+// desktop grid for snap
+const DESKTOP_COLUMNS = 7;
+const DESKTOP_START_X = 40;
+const DESKTOP_START_Y = 160;
+const DESKTOP_STEP_X = 110;
+const DESKTOP_STEP_Y = 120;
+
 // Taglines
 const taglines = [
   "I am Iceman",
@@ -36,7 +49,6 @@ function randomTagline() {
   return taglines[Math.floor(Math.random() * taglines.length)];
 }
 
-// Taglines
 loginTagline.textContent = randomTagline();
 setInterval(() => {
   loginTagline.textContent = randomTagline();
@@ -172,19 +184,9 @@ let customWallpaperURL = null;
 function initThemeSystem() {
   currentTheme = "liquid-glass";
   customWallpaperURL = null;
-  document.body.classList.remove(
-    "theme-liquid-glass",
-    "theme-amoled",
-    "theme-light",
-    "theme-forest",
-    "theme-ocean",
-    "theme-night",
-    "theme-jason",
-    "theme-sebastian",
-    "has-custom-wallpaper"
-  );
-  document.body.style.removeProperty("--wallpaper-url");
-  applyTheme(currentTheme);
+  document.body.className = "";
+  document.body.classList.add("theme-liquid-glass");
+  applyWallpaper(null);
 }
 
 function applyTheme(id) {
@@ -204,11 +206,13 @@ function applyTheme(id) {
   if (id === "jason") {
     applyWallpaper("assets/wallpaper.png");
   } else if (id === "sebastian") {
-    applyWallpaper("assets/sebastian.png");
-    refreshAllIconsForTheme();
+    applyWallpaper(SEBASTIAN_ICON);
   } else {
-    refreshAllIconsForTheme();
+    // default: blank (body gradient)
+    applyWallpaper(null);
   }
+
+  refreshAllIconsForTheme();
 }
 
 function applyWallpaper(url) {
@@ -224,9 +228,9 @@ function applyWallpaper(url) {
 }
 
 function getThemeIcon() {
-  if (currentTheme === "sebastian") return "assets/sebastian.png";
-  if (currentTheme === "jason") return "assets/favicon.ico";
-  return "assets/favicon.ico";
+  if (currentTheme === "sebastian") return SEBASTIAN_ICON;
+  if (currentTheme === "jason") return JASON_ICON;
+  return DEFAULT_ICON;
 }
 
 function refreshAllIconsForTheme() {
@@ -319,7 +323,10 @@ function buildApps() {
     name: app.name,
     type: "dynamic",
     url: app.url,
-    icon: currentTheme === "sebastian" ? "assets/sebastian.png" : (app.icon || baseIcon)
+    icon:
+      currentTheme === "sebastian"
+        ? SEBASTIAN_ICON
+        : app.icon || baseIcon
   }));
 
   apps = [...baseApps, ...customApps];
@@ -340,18 +347,12 @@ function buildApps() {
 function initDesktop() {
   buildApps();
 
-  const columns = 7;
-  const startX = 40;
-  const startY = 160;
-  const stepX = 110;
-  const stepY = 120;
-
   apps.forEach((app, index) => {
-    const col = index % columns;
-    const row = Math.floor(index / columns);
+    const col = index % DESKTOP_COLUMNS;
+    const row = Math.floor(index / DESKTOP_COLUMNS);
 
-    const x = startX + col * stepX;
-    const y = startY + row * stepY;
+    const x = DESKTOP_START_X + col * DESKTOP_STEP_X;
+    const y = DESKTOP_START_Y + row * DESKTOP_STEP_Y;
 
     addDesktopApp(app, x, y);
   });
@@ -757,7 +758,7 @@ function openStoreWindow() {
     card.style.cursor = "pointer";
     card.innerHTML = `
       <div style="text-align:center;">
-        <img src="${currentTheme === "sebastian" ? "assets/sebastian.png" : (app.icon || "assets/favicon.ico")}" style="width:60px;height:60px;border-radius:16px;object-fit:cover;box-shadow:0 8px 20px rgba(0,0,0,0.5);">
+        <img src="${currentTheme === "sebastian" ? SEBASTIAN_ICON : (app.icon || DEFAULT_ICON)}" style="width:60px;height:60px;border-radius:16px;object-fit:cover;box-shadow:0 8px 20px rgba(0,0,0,0.5);">
         <div style="margin-top:6px;font-size:13px;">${app.name}</div>
       </div>
     `;
@@ -772,7 +773,7 @@ function openStoreWindow() {
 }
 
 // ---------------------------
-// DRAGGING WINDOWS
+// DRAGGING WINDOWS + SNAP
 // ---------------------------
 function enableDragging(win) {
   const header = win.querySelector(".window-header");
@@ -781,6 +782,7 @@ function enableDragging(win) {
   let dragging = false;
 
   header.addEventListener("mousedown", e => {
+    if (e.button !== 0) return;
     dragging = true;
     win.style.zIndex = zIndexCounter++;
     offsetX = e.clientX - win.offsetLeft;
@@ -792,10 +794,13 @@ function enableDragging(win) {
       win.style.top = ev.clientY - offsetY + "px";
     };
 
-    const up = () => {
+    const up = ev => {
+      if (!dragging) return;
       dragging = false;
       document.removeEventListener("mousemove", move);
       document.removeEventListener("mouseup", up);
+
+      snapWindow(win, ev.clientX, ev.clientY);
     };
 
     document.addEventListener("mousemove", move);
@@ -803,8 +808,44 @@ function enableDragging(win) {
   });
 }
 
+function snapWindow(win, clientX, clientY) {
+  const margin = 20;
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+
+  const nearTop = clientY <= margin;
+  const nearLeft = clientX <= margin;
+  const nearRight = clientX >= w - margin;
+
+  if (nearTop) {
+    // maximize
+    win.style.left = "0px";
+    win.style.top = "0px";
+    win.style.width = w + "px";
+    win.style.height = h + "px";
+    win.classList.add("fullscreen-mode");
+    return;
+  }
+
+  win.classList.remove("fullscreen-mode");
+  win.style.width = "640px";
+  win.style.height = "420px";
+
+  if (nearLeft) {
+    win.style.left = "0px";
+    win.style.top = "0px";
+    win.style.width = w / 2 + "px";
+    win.style.height = h + "px";
+  } else if (nearRight) {
+    win.style.left = w / 2 + "px";
+    win.style.top = "0px";
+    win.style.width = w / 2 + "px";
+    win.style.height = h + "px";
+  }
+}
+
 // ---------------------------
-// DRAGGING DESKTOP ICONS
+// DRAGGING DESKTOP ICONS + SNAP TO GRID
 // ---------------------------
 function makeDesktopIconDraggable(icon) {
   let dragging = false;
@@ -825,14 +866,31 @@ function makeDesktopIconDraggable(icon) {
     };
 
     const up = () => {
+      if (!dragging) return;
       dragging = false;
       document.removeEventListener("mousemove", move);
       document.removeEventListener("mouseup", up);
+
+      snapDesktopIcon(icon);
     };
 
     document.addEventListener("mousemove", move);
     document.addEventListener("mouseup", up);
   });
+}
+
+function snapDesktopIcon(icon) {
+  const x = icon.offsetLeft;
+  const y = icon.offsetTop;
+
+  const col = Math.round((x - DESKTOP_START_X) / DESKTOP_STEP_X);
+  const row = Math.round((y - DESKTOP_START_Y) / DESKTOP_STEP_Y);
+
+  const snappedX = DESKTOP_START_X + col * DESKTOP_STEP_X;
+  const snappedY = DESKTOP_START_Y + row * DESKTOP_STEP_Y;
+
+  icon.style.left = snappedX + "px";
+  icon.style.top = snappedY + "px";
 }
 
 // ---------------------------
@@ -883,3 +941,99 @@ function enableControls(win) {
   win.querySelector(".fullscreen").onclick = () =>
     win.classList.toggle("fullscreen-mode");
 }
+
+// ---------------------------
+// MISSION CONTROL
+// ---------------------------
+let missionControlActive = false;
+let missionControlLayout = new Map(); // win -> {left, top, width, height}
+
+function enterMissionControl() {
+  if (missionControlActive) return;
+  missionControlActive = true;
+  document.body.classList.add("mission-control-active");
+  missionControlOverlay.classList.remove("hidden");
+
+  const wins = Array.from(document.querySelectorAll(".window"));
+  if (!wins.length) return;
+
+  missionControlLayout.clear();
+
+  const cols = 3;
+  const rows = Math.ceil(wins.length / cols);
+  const padding = 40;
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+
+  const cellW = (w - padding * 2) / cols;
+  const cellH = (h - padding * 2) / rows;
+
+  wins.forEach((win, index) => {
+    const rect = win.getBoundingClientRect();
+    missionControlLayout.set(win, {
+      left: win.offsetLeft,
+      top: win.offsetTop,
+      width: win.offsetWidth,
+      height: win.offsetHeight
+    });
+
+    const col = index % cols;
+    const row = Math.floor(index / cols);
+
+    const targetLeft = padding + col * cellW + cellW * 0.05;
+    const targetTop = padding + row * cellH + cellH * 0.05;
+    const targetWidth = cellW * 0.9;
+    const targetHeight = cellH * 0.9;
+
+    win.style.left = targetLeft + "px";
+    win.style.top = targetTop + "px";
+    win.style.width = targetWidth + "px";
+    win.style.height = targetHeight + "px";
+  });
+
+  missionControlOverlay.onclick = exitMissionControl;
+
+  wins.forEach(win => {
+    win.addEventListener("click", onMissionControlWindowClick, { once: true });
+  });
+}
+
+function exitMissionControl() {
+  if (!missionControlActive) return;
+  missionControlActive = false;
+  document.body.classList.remove("mission-control-active");
+  missionControlOverlay.classList.add("hidden");
+
+  missionControlLayout.forEach((pos, win) => {
+    win.style.left = pos.left + "px";
+    win.style.top = pos.top + "px";
+    win.style.width = pos.width + "px";
+    win.style.height = pos.height + "px";
+  });
+
+  missionControlLayout.clear();
+}
+
+function onMissionControlWindowClick(e) {
+  if (!missionControlActive) return;
+  e.stopPropagation();
+  const win = e.currentTarget;
+  exitMissionControl();
+  win.style.zIndex = zIndexCounter++;
+}
+
+// keyboard: F3 to toggle, ESC to exit
+document.addEventListener("keydown", e => {
+  if (e.key === "F3") {
+    if (missionControlActive) {
+      exitMissionControl();
+    } else {
+      enterMissionControl();
+    }
+  }
+  if (e.key === "Escape") {
+    if (missionControlActive) {
+      exitMissionControl();
+    }
+  }
+});
