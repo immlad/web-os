@@ -15,15 +15,19 @@
   --dock-height: 80px;
 }
 
+* {
+  box-sizing: border-box;
+  font-family: var(--font-main);
+}
+
 body {
   margin: 0;
   padding: 0;
-  font-family: var(--font-main);
   color: var(--color-fg);
   overflow: hidden;
 }
 
-/* Wallpapers by theme */
+/* Wallpapers by theme (desktop) */
 .desktop-wallpaper {
   position: fixed;
   inset: 0;
@@ -32,29 +36,52 @@ body {
   z-index: -2;
 }
 
-/* Cloud */
 body.theme-cloud .desktop-wallpaper {
   background-image: url("../assets/wallpaper-cloud.png");
 }
 
-/* Night */
 body.theme-night .desktop-wallpaper {
   background-image: url("../assets/wallpaper-night.png");
 }
 
-/* Forest */
 body.theme-forest .desktop-wallpaper {
   background-image: url("../assets/wallpaper-forest.png");
 }
 
-/* Default / fallback */
 body:not(.theme-cloud):not(.theme-night):not(.theme-forest):not(.theme-jason)
   .desktop-wallpaper {
   background-image: url("../assets/wallpaper.png");
 }
 
-/* JASON theme */
 body.theme-jason .desktop-wallpaper {
+  background-image: url("../assets/jason.png");
+}
+
+/* Boot background uses same theme wallpapers */
+.boot-body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+}
+
+.boot-body.theme-cloud {
+  background-image: url("../assets/wallpaper-cloud.png");
+}
+
+.boot-body.theme-night {
+  background-image: url("../assets/wallpaper-night.png");
+}
+
+.boot-body.theme-forest {
+  background-image: url("../assets/wallpaper-forest.png");
+}
+
+.boot-body.theme-jason {
   background-image: url("../assets/jason.png");
 }
 

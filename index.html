@@ -17,21 +17,19 @@
       <span class="topbar-logo"></span>
       <span class="topbar-title">JASON OS Tahoe</span>
     </div>
-    <div class="topbar-center">
-      <button class="topbar-theme-btn" data-theme="cloud">Cloud</button>
-      <button class="topbar-theme-btn" data-theme="night">Night</button>
-      <button class="topbar-theme-btn" data-theme="forest">Forest</button>
-      <button class="topbar-theme-btn" data-theme="jason">JASON</button>
-    </div>
+    <div class="topbar-center"></div>
     <div class="topbar-right">
       <div class="app-switcher" id="app-switcher"></div>
       <span id="topbar-clock"></span>
     </div>
   </header>
 
+  <!-- Global admin message -->
+  <div id="global-message" class="global-message glass hidden"></div>
+
   <!-- Desktop layout -->
   <main class="desktop">
-    <!-- Left app rail (like FroggieOS, but no frog) -->
+    <!-- Left app rail -->
     <aside class="desktop-rail glass">
       <div class="rail-title">Apps</div>
 
@@ -57,7 +55,7 @@
 
       <button class="rail-item" data-app="admin">
         <img src="assets/app-default.png" class="rail-icon app-icon" alt="Admin" />
-        <span class="rail-label">Admin (55)</span>
+        <span class="rail-label">Admin</span>
       </button>
     </aside>
 
@@ -68,13 +66,13 @@
     </section>
   </main>
 
-  <!-- App windows -->
+  <!-- Nebulo -->
   <div class="window glass hidden" id="window-nebulo" data-app-window data-app-id="nebulo">
     <div class="window-titlebar" data-drag-handle>
       <div class="window-controls">
-        <button class="win-btn win-close" data-close>&nbsp;</button>
+        <button class="win-btn win-close">&nbsp;</button>
         <button class="win-btn win-minimize">&nbsp;</button>
-        <button class="win-btn win-full">&nbsp;</button>
+        <button class="win-btn win-fullscreen">&nbsp;</button>
       </div>
       <span class="window-title">Nebulo</span>
     </div>
@@ -87,12 +85,13 @@
     </div>
   </div>
 
+  <!-- Liquid Aura Chat -->
   <div class="window glass hidden" id="window-chat" data-app-window data-app-id="chat">
     <div class="window-titlebar" data-drag-handle>
       <div class="window-controls">
-        <button class="win-btn win-close" data-close>&nbsp;</button>
+        <button class="win-btn win-close">&nbsp;</button>
         <button class="win-btn win-minimize">&nbsp;</button>
-        <button class="win-btn win-full">&nbsp;</button>
+        <button class="win-btn win-fullscreen">&nbsp;</button>
       </div>
       <span class="window-title">Liquid Aura Chat</span>
     </div>
@@ -105,13 +104,13 @@
     </div>
   </div>
 
-  <!-- Placeholder windows for Ideas / Settings / Admin -->
+  <!-- Ideas -->
   <div class="window glass hidden" id="window-ideas" data-app-window data-app-id="ideas">
     <div class="window-titlebar" data-drag-handle>
       <div class="window-controls">
-        <button class="win-btn win-close" data-close>&nbsp;</button>
+        <button class="win-btn win-close">&nbsp;</button>
         <button class="win-btn win-minimize">&nbsp;</button>
-        <button class="win-btn win-full">&nbsp;</button>
+        <button class="win-btn win-fullscreen">&nbsp;</button>
       </div>
       <span class="window-title">Ideas</span>
     </div>
@@ -120,35 +119,55 @@
     </div>
   </div>
 
+  <!-- Settings -->
   <div class="window glass hidden" id="window-settings" data-app-window data-app-id="settings">
     <div class="window-titlebar" data-drag-handle>
       <div class="window-controls">
-        <button class="win-btn win-close" data-close>&nbsp;</button>
+        <button class="win-btn win-close">&nbsp;</button>
         <button class="win-btn win-minimize">&nbsp;</button>
-        <button class="win-btn win-full">&nbsp;</button>
+        <button class="win-btn win-fullscreen">&nbsp;</button>
       </div>
       <span class="window-title">Settings</span>
     </div>
-    <div class="window-body window-body-placeholder">
-      <p>Settings panel coming soon.</p>
+    <div class="window-body settings-body">
+      <h2>Appearance</h2>
+      <p class="settings-caption">Choose your theme:</p>
+      <div class="settings-theme-row">
+        <button class="settings-theme-btn" data-theme="cloud">Cloud</button>
+        <button class="settings-theme-btn" data-theme="night">Night</button>
+        <button class="settings-theme-btn" data-theme="forest">Forest</button>
+        <button class="settings-theme-btn" data-theme="jason">JASON</button>
+      </div>
     </div>
   </div>
 
+  <!-- Admin -->
   <div class="window glass hidden" id="window-admin" data-app-window data-app-id="admin">
     <div class="window-titlebar" data-drag-handle>
       <div class="window-controls">
-        <button class="win-btn win-close" data-close>&nbsp;</button>
+        <button class="win-btn win-close">&nbsp;</button>
         <button class="win-btn win-minimize">&nbsp;</button>
-        <button class="win-btn win-full">&nbsp;</button>
+        <button class="win-btn win-fullscreen">&nbsp;</button>
       </div>
-      <span class="window-title">Admin</span>
+      <span class="window-title">Admin Console</span>
     </div>
-    <div class="window-body window-body-placeholder">
-      <p>Admin dashboard (55) – placeholder.</p>
+    <div class="window-body admin-body">
+      <div id="admin-locked" class="admin-locked hidden">
+        <p>You are not an admin. Only Minh or Jason can use this.</p>
+      </div>
+
+      <div id="admin-panel" class="admin-panel hidden">
+        <h2>Global Message</h2>
+        <p class="admin-caption">
+          Broadcast a message to all users. It will appear as <strong>Admin: message</strong> at the top of the OS.
+        </p>
+        <textarea id="admin-message-input" placeholder="Type your message here"></textarea>
+        <button id="admin-broadcast-btn">Send Global Message</button>
+      </div>
     </div>
   </div>
 
-  <!-- Dock (still macOS-style) -->
+  <!-- Dock -->
   <nav class="dock glass">
     <div class="dock-inner">
       <button class="dock-item" data-app="nebulo">
@@ -159,6 +178,9 @@
       </button>
       <button class="dock-item" data-app="settings">
         <img src="assets/app-default.png" alt="Settings" class="dock-icon app-icon" />
+      </button>
+      <button class="dock-item" data-app="admin">
+        <img src="assets/app-default.png" alt="Admin" class="dock-icon app-icon" />
       </button>
     </div>
   </nav>

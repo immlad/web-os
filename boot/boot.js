@@ -1,4 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // Apply saved theme to boot background
+  const body = document.body;
+  const savedTheme = localStorage.getItem("jasonos_theme") || "cloud";
+  body.classList.add(`theme-${savedTheme}`);
+
   const form = document.getElementById("boot-form");
 
   form.addEventListener("submit", (e) => {

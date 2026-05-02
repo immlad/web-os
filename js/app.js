@@ -7,6 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "boot/boot.html";
     return;
   }
+  const user = JSON.parse(userRaw);
+  const isAdmin = !!user.isAdmin;
 
   // --- Random desktop phrase ---
   const phrases = [
@@ -37,46 +39,63 @@ document.addEventListener("DOMContentLoaded", () => {
     setInterval(updateClock, 30_000);
   }
 
-  // --- Theme switching + localStorage ---
-  // --- Theme switching + localStorage ---
-const themeButtons = document.querySelectorAll(".topbar-theme-btn");
-const appIcons = document.querySelectorAll(".app-icon");
-const jasonIconPath = "assets/jason.png";
-const defaultIconPath = "assets/app-default.png";
+  // --- Theme switching + localStorage (from Settings) ---
+  const appIcons = document.querySelectorAll(".app-icon");
+  const jasonIconPath = "assets/jason.png";
+  const defaultIconPath = "assets/app-default.png";
 
-function applyTheme(theme) {
-  body.classList.remove("theme-cloud", "theme-night", "theme-forest", "theme-jason");
-  body.classList.add(`theme-${theme}`);
-  localStorage.setItem("jasonos_theme", theme);
+  function applyTheme(theme) {
+    body.classList.remove("theme-cloud", "theme-night", "theme-forest", "theme-jason");
+    body.classList.add(`theme-${theme}`);
+    localStorage.setItem("jasonos_theme", theme);
 
-  // JASON theme overrides icons + wallpaper
-  if (theme === "jason") {
-    appIcons.forEach((img) => {
-      img.dataset.originalSrc = img.dataset.originalSrc || img.getAttribute("src");
-      img.setAttribute("src", jasonIconPath);
-    });
-  } else {
-    appIcons.forEach((img) => {
-      const original = img.dataset.originalSrc || defaultIconPath;
-      img.setAttribute("src", original);
-    });
+    if (theme === "jason") {
+      appIcons.forEach((img) => {
+        img.dataset.originalSrc = img.dataset.originalSrc || img.getAttribute("src");
+        img.setAttribute("src", jasonIconPath);
+      });
+    } else {
+      appIcons.forEach((img) => {
+        const original = img.dataset.originalSrc || defaultIconPath;
+        img.setAttribute("src", original);
+      });
+    }
   }
-}
 
-  themeButtons.forEach((btn) => {
+  const savedTheme = localStorage.getItem("jasonos_theme") || "cloud";
+  applyTheme(savedTheme);
+
+  document.querySelectorAll(".settings-theme-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       const theme = btn.dataset.theme;
       applyTheme(theme);
     });
   });
 
-  const savedTheme = localStorage.getItem("jasonos_theme") || "cloud";
-  applyTheme(savedTheme);
+  // --- Global admin message ---
+  const globalMessageEl = document.getElementById("global-message");
+  function renderGlobalMessage() {
+    const msg = localStorage.getItem("jasonos_global_message");
+    if (msg && msg.trim()) {
+      globalMessageEl.textContent = `Admin: ${msg.trim()}`;
+      globalMessageEl.classList.remove("hidden");
+    } else {
+      globalMessageEl.classList.add("hidden");
+    }
+  }
+  renderGlobalMessage();
 
-  // --- Window management (open/close, drag, z-index, app switcher) ---
+  // --- Window management ---
   const windows = Array.from(document.querySelectorAll("[data-app-window]"));
   const appSwitcher = document.getElementById("app-switcher");
   let zCounter = 50;
+
+  function updateAppSwitcherActive(appId) {
+    if (!appSwitcher) return;
+    appSwitcher.querySelectorAll(".app-switcher-btn").forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.switchApp === appId);
+    });
+  }
 
   function bringToFront(win) {
     zCounter += 1;
@@ -86,12 +105,35 @@ function applyTheme(theme) {
     updateAppSwitcherActive(win.dataset.appId);
   }
 
+  function ensureAppInSwitcher(appId, win) {
+    if (!appSwitcher || !appId) return;
+
+    let btn = appSwitcher.querySelector(`[data-switch-app="${appId}"]`);
+    if (!btn) {
+      btn = document.createElement("button");
+      btn.className = "app-switcher-btn";
+      btn.dataset.switchApp = appId;
+      const title = win.querySelector(".window-title")?.textContent || appId;
+      btn.textContent = title;
+      btn.addEventListener("click", () => {
+        openWindowById(appId);
+      });
+      appSwitcher.appendChild(btn);
+    }
+    updateAppSwitcherActive(appId);
+  }
+
+  function removeAppFromSwitcher(appId) {
+    if (!appSwitcher || !appId) return;
+    const btn = appSwitcher.querySelector(`[data-switch-app="${appId}"]`);
+    if (btn) appSwitcher.removeChild(btn);
+  }
+
   function openWindowById(id) {
     const win = document.getElementById(`window-${id}`);
     if (!win) return;
 
-    win.classList.remove("hidden");
-    // If first time, center it
+    win.classList.remove("hidden", "minimized");
     if (!win.dataset.positioned) {
       const rect = win.getBoundingClientRect();
       win.style.left = `${(window.innerWidth - rect.width) / 2}px`;
@@ -108,11 +150,19 @@ function applyTheme(theme) {
   }
 
   function closeWindow(win) {
-    win.classList.remove("active");
+    win.classList.remove("active", "fullscreen", "minimized");
     setTimeout(() => {
       win.classList.add("hidden");
       removeAppFromSwitcher(win.dataset.appId);
     }, 160);
+  }
+
+  function minimizeWindow(win) {
+    win.classList.add("minimized");
+  }
+
+  function toggleFullscreen(win) {
+    win.classList.toggle("fullscreen");
   }
 
   // Dragging
@@ -128,6 +178,7 @@ function applyTheme(theme) {
 
     handle.addEventListener("mousedown", (e) => {
       if (e.button !== 0) return;
+      if (win.classList.contains("fullscreen")) return;
       isDragging = true;
       bringToFront(win);
 
@@ -161,9 +212,18 @@ function applyTheme(theme) {
   windows.forEach((win) => {
     makeDraggable(win);
 
-    const closeBtn = win.querySelector("[data-close]");
+    const closeBtn = win.querySelector(".win-close");
+    const minBtn = win.querySelector(".win-minimize");
+    const fullBtn = win.querySelector(".win-fullscreen");
+
     if (closeBtn) {
       closeBtn.addEventListener("click", () => closeWindow(win));
+    }
+    if (minBtn) {
+      minBtn.addEventListener("click", () => minimizeWindow(win));
+    }
+    if (fullBtn) {
+      fullBtn.addEventListener("click", () => toggleFullscreen(win));
     }
 
     win.addEventListener("mousedown", () => bringToFront(win));
@@ -181,36 +241,27 @@ function applyTheme(theme) {
     });
   });
 
-  // --- App switcher UI ---
-  function ensureAppInSwitcher(appId, win) {
-    if (!appSwitcher) return;
-    if (!appId) return;
+  // --- Admin console wiring ---
+  const adminPanel = document.getElementById("admin-panel");
+  const adminLocked = document.getElementById("admin-locked");
+  const adminInput = document.getElementById("admin-message-input");
+  const adminBtn = document.getElementById("admin-broadcast-btn");
 
-    let btn = appSwitcher.querySelector(`[data-switch-app="${appId}"]`);
-    if (!btn) {
-      btn = document.createElement("button");
-      btn.className = "app-switcher-btn";
-      btn.dataset.switchApp = appId;
-      const title = win.querySelector(".window-title")?.textContent || appId;
-      btn.textContent = title;
-      btn.addEventListener("click", () => {
-        openWindowById(appId);
-      });
-      appSwitcher.appendChild(btn);
+  if (adminPanel && adminLocked) {
+    if (isAdmin) {
+      adminPanel.classList.remove("hidden");
+      adminLocked.classList.add("hidden");
+    } else {
+      adminPanel.classList.add("hidden");
+      adminLocked.classList.remove("hidden");
     }
-    updateAppSwitcherActive(appId);
   }
 
-  function removeAppFromSwitcher(appId) {
-    if (!appSwitcher || !appId) return;
-    const btn = appSwitcher.querySelector(`[data-switch-app="${appId}"]`);
-    if (btn) appSwitcher.removeChild(btn);
-  }
-
-  function updateAppSwitcherActive(appId) {
-    if (!appSwitcher) return;
-    appSwitcher.querySelectorAll(".app-switcher-btn").forEach((btn) => {
-      btn.classList.toggle("active", btn.dataset.switchApp === appId);
+  if (isAdmin && adminBtn && adminInput) {
+    adminBtn.addEventListener("click", () => {
+      const msg = adminInput.value.trim();
+      localStorage.setItem("jasonos_global_message", msg);
+      renderGlobalMessage();
     });
   }
 });
