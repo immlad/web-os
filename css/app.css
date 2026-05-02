@@ -51,6 +51,7 @@
   border-radius: 999px;
   font-size: 11px;
   color: var(--color-fg-soft);
+  cursor: default;
 }
 
 .topbar-pill-item.active {
@@ -117,6 +118,122 @@
   z-index: 39;
 }
 
+/* Control Center (Sonoma style) */
+.control-center {
+  position: fixed;
+  top: 44px;
+  right: 16px;
+  width: 260px;
+  padding: 10px 10px 12px;
+  z-index: 50;
+  border-radius: 18px;
+}
+
+.cc-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.cc-tile {
+  flex: 1;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 11px;
+}
+
+.cc-tile-large {
+  min-height: 54px;
+}
+
+.cc-tile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+  color: var(--color-fg-soft);
+}
+
+.cc-tile-body {
+  font-size: 12px;
+}
+
+.cc-pill {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+}
+
+.cc-pill-on {
+  background: rgba(76, 217, 100, 0.18);
+  color: #a5f2b0;
+}
+
+.cc-pill-off {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--color-fg-soft);
+}
+
+.cc-toggle {
+  width: 32px;
+  height: 18px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  position: relative;
+  cursor: pointer;
+}
+
+.cc-toggle::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.16s ease;
+}
+
+.cc-toggle.cc-on {
+  background: rgba(76, 217, 100, 0.4);
+}
+
+.cc-toggle.cc-on::before {
+  transform: translateX(12px);
+}
+
+/* Notification banner */
+.notification-banner {
+  position: fixed;
+  top: 60px;
+  right: 16px;
+  width: 260px;
+  padding: 8px 10px;
+  border-radius: 14px;
+  font-size: 12px;
+  z-index: 60;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.notification-banner.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.nb-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.nb-body {
+  color: var(--color-fg-soft);
+}
+
 /* Desktop */
 .desktop {
   position: fixed;
@@ -146,60 +263,71 @@
   color: var(--color-fg-soft);
 }
 
-/* Floating vertical dock (Big Sur style, left) */
-/* Floating vertical dock (smaller, cleaner) */
+/* Floating vertical dock (Sonoma-style, long, draggable) */
 .dock {
   position: fixed;
   left: 20px;
   top: 50%;
   transform: translateY(-50%);
-  width: 86px; /* smaller */
-  padding: 10px 8px;
+  width: 86px;
+  min-height: 70vh; /* longer like Sonoma */
+  padding: 14px 8px;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
   z-index: 30;
-  border-radius: 32px; /* smaller pill */
+  border-radius: 32px;
+  background: radial-gradient(circle at top,
+      rgba(255, 255, 255, 0.18),
+      rgba(10, 10, 25, 0.85));
   box-shadow:
-    0 14px 32px rgba(0, 0, 0, 0.55),
-    0 0 0 0.5px rgba(255, 255, 255, 0.22) inset;
+    0 18px 45px rgba(0, 0, 0, 0.7),
+    0 0 0 0.5px rgba(255, 255, 255, 0.25) inset;
 }
 
 .dock-inner {
   display: flex;
   flex-direction: column;
-  gap: 10px; /* tighter spacing */
+  justify-content: space-between; /* stretch vertically */
+  gap: 10px;
+  width: 100%;
 }
 
 .dock-item {
   background: transparent;
   border: none;
   padding: 0;
-  cursor: pointer;
-  width: 58px;   /* smaller */
-  height: 42px;  /* smaller */
+  cursor: grab;
+  width: 58px;
+  height: 42px;
   border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
   transition:
     background 0.12s ease,
-    transform 0.12s cubic-bezier(0.25, 0.8, 0.25, 1); /* smoother */
+    transform 0.12s cubic-bezier(0.25, 0.8, 0.25, 1),
+    box-shadow 0.12s ease;
   transform-origin: center;
+}
+
+.dock-item:active {
+  cursor: grabbing;
 }
 
 .dock-item:hover {
   background: rgba(255, 255, 255, 0.10);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
 }
 
 .dock-emoji {
-  font-size: 22px; /* smaller icons */
+  font-size: 22px;
   line-height: 1;
 }
 
 .dock-jason-icon {
   display: none;
-  width: 28px; /* smaller */
+  width: 28px;
   height: 28px;
   border-radius: 8px;
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.55);
@@ -214,7 +342,7 @@ body.theme-jason .dock-jason-icon {
   display: block;
 }
 
-/* Tooltip stays the same size */
+/* Dock label tooltip */
 .dock-item::after {
   content: attr(data-label);
   position: absolute;
@@ -234,6 +362,38 @@ body.theme-jason .dock-jason-icon {
 .dock-item:hover::after {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* Windows-style search bar */
+.search-bar {
+  position: fixed;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(420px, 70vw);
+  height: 34px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  border-radius: 999px;
+  z-index: 35;
+  background: radial-gradient(circle at top left,
+      rgba(255, 255, 255, 0.18),
+      rgba(10, 10, 25, 0.85));
+}
+
+.search-icon {
+  font-size: 16px;
+  margin-right: 8px;
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--color-fg-soft);
+  font-size: 13px;
+  outline: none;
 }
 
 /* Windows (Sonoma style) */
@@ -326,15 +486,6 @@ body.theme-jason .dock-jason-icon {
 .window-title {
   font-size: 12px;
   color: var(--color-fg-soft);
-}
-
-/* Center title like Sonoma */
-.window-titlebar {
-  justify-content: flex-start;
-}
-
-.window-titlebar .window-title {
-  margin-left: 8px;
 }
 
 /* Body */
@@ -558,5 +709,14 @@ body.theme-jason .dock-jason-icon {
   .window {
     width: 94vw;
     height: 70vh;
+  }
+
+  .dock {
+    left: 10px;
+    min-height: 60vh;
+  }
+
+  .search-bar {
+    width: 80vw;
   }
 }

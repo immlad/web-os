@@ -35,6 +35,49 @@
   <!-- Global admin message -->
   <div id="global-message" class="global-message glass hidden"></div>
 
+  <!-- Control Center -->
+  <div id="control-center" class="control-center glass hidden">
+    <div class="cc-row">
+      <div class="cc-tile cc-tile-large">
+        <div class="cc-tile-header">
+          <span>Wi‑Fi</span>
+          <span class="cc-pill cc-pill-on">On</span>
+        </div>
+        <div class="cc-tile-body">JASON‑NET</div>
+      </div>
+
+      <div class="cc-tile cc-tile-large">
+        <div class="cc-tile-header">
+          <span>Bluetooth</span>
+          <span class="cc-pill cc-pill-off">Off</span>
+        </div>
+        <div class="cc-tile-body">Not Connected</div>
+      </div>
+    </div>
+
+    <div class="cc-row">
+      <div class="cc-tile">
+        <div class="cc-tile-header">
+          <span>Do Not Disturb</span>
+        </div>
+        <div class="cc-toggle" id="cc-dnd-toggle"></div>
+      </div>
+
+      <div class="cc-tile">
+        <div class="cc-tile-header">
+          <span>Dark Mode</span>
+        </div>
+        <div class="cc-toggle" id="cc-dark-toggle"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification banner -->
+  <div id="notification-banner" class="notification-banner glass hidden">
+    <div class="nb-title">Notification</div>
+    <div class="nb-body" id="notification-text"></div>
+  </div>
+
   <!-- Desktop layout -->
   <main class="desktop">
     <section class="desktop-hero">
@@ -181,44 +224,55 @@
     </div>
   </div>
 
-  <!-- Floating vertical dock (Big Sur style, left) -->
+  <!-- Floating vertical dock (Sonoma-style, long, draggable) -->
   <nav class="dock glass dock-rect" id="dock">
-    <div class="dock-inner">
-      <button class="dock-item" data-app="nebulo" data-label="Nebulo">
+    <div class="dock-inner" id="dock-inner">
+      <button class="dock-item" draggable="true" data-app="nebulo" data-label="Nebulo">
         <span class="dock-emoji" data-emoji="🌐">🌐</span>
         <img src="assets/jason.png" class="dock-jason-icon" />
       </button>
 
-      <button class="dock-item" data-app="chat" data-label="Liquid Aura">
+      <button class="dock-item" draggable="true" data-app="chat" data-label="Liquid Aura">
         <span class="dock-emoji" data-emoji="💬">💬</span>
         <img src="assets/jason.png" class="dock-jason-icon" />
       </button>
 
-      <button class="dock-item" data-app="ideas" data-label="Ideas">
+      <button class="dock-item" draggable="true" data-app="ideas" data-label="Ideas">
         <span class="dock-emoji" data-emoji="💡">💡</span>
         <img src="assets/jason.png" class="dock-jason-icon" />
       </button>
 
-      <button class="dock-item" data-app="music" data-label="Music">
+      <button class="dock-item" draggable="true" data-app="music" data-label="Music">
         <span class="dock-emoji" data-emoji="🎵">🎵</span>
         <img src="assets/jason.png" class="dock-jason-icon" />
       </button>
 
-      <button class="dock-item" data-app="settings" data-label="Settings">
+      <button class="dock-item" draggable="true" data-app="settings" data-label="Settings">
         <span class="dock-emoji" data-emoji="⚙️">⚙️</span>
         <img src="assets/jason.png" class="dock-jason-icon" />
       </button>
 
-      <button class="dock-item" data-app="admin" data-label="Admin">
+      <button class="dock-item" draggable="true" data-app="admin" data-label="Admin">
         <span class="dock-emoji" data-emoji="🛡️">🛡️</span>
         <img src="assets/jason.png" class="dock-jason-icon" />
       </button>
 
-      <button class="dock-item dock-logout" data-app="logout" data-label="Logout">
+      <button class="dock-item dock-logout" draggable="true" data-app="logout" data-label="Logout">
         <span class="dock-emoji" data-emoji="⏻️">⏻️</span>
         <img src="assets/jason.png" class="dock-jason-icon" />
       </button>
     </div>
   </nav>
+
+  <!-- Windows-style search bar -->
+  <div class="search-bar glass">
+    <span class="search-icon">🔍</span>
+    <input
+      type="text"
+      id="search-input"
+      class="search-input"
+      placeholder="Search"
+    />
+  </div>
 </body>
 </html>

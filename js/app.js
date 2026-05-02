@@ -85,6 +85,48 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   renderGlobalMessage();
 
+  // --- Notification helper ---
+  const notificationEl = document.getElementById("notification-banner");
+  const notificationTextEl = document.getElementById("notification-text");
+
+  function showNotification(text, timeout = 3500) {
+    if (!notificationEl || !notificationTextEl) return;
+    notificationTextEl.textContent = text;
+    notificationEl.classList.remove("hidden");
+    notificationEl.classList.add("show");
+
+    setTimeout(() => {
+      notificationEl.classList.remove("show");
+      setTimeout(() => notificationEl.classList.add("hidden"), 200);
+    }, timeout);
+  }
+
+  // --- Control Center toggle ---
+  const controlCenterEl = document.getElementById("control-center");
+  const ccDndToggle = document.getElementById("cc-dnd-toggle");
+  const ccDarkToggle = document.getElementById("cc-dark-toggle");
+
+  const topbarPills = document.querySelectorAll(".topbar-pill-item");
+  const ccTrigger = topbarPills[2]; // Desktop, Apps, Control Center
+
+  if (ccTrigger && controlCenterEl) {
+    ccTrigger.addEventListener("click", () => {
+      controlCenterEl.classList.toggle("hidden");
+    });
+  }
+
+  if (ccDndToggle) {
+    ccDndToggle.addEventListener("click", () => {
+      ccDndToggle.classList.toggle("cc-on");
+    });
+  }
+
+  if (ccDarkToggle) {
+    ccDarkToggle.addEventListener("click", () => {
+      ccDarkToggle.classList.toggle("cc-on");
+    });
+  }
+
   // --- Window management ---
   const windows = Array.from(document.querySelectorAll("[data-app-window]"));
   const appSwitcher = document.getElementById("app-switcher");
@@ -272,47 +314,218 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // --- Dock magnification (true macOS wave) ---
- // --- Dock magnification (cleaner macOS wave) ---
-const dock = document.getElementById("dock");
-const dockItems = Array.from(document.querySelectorAll(".dock-item"));
+  // --- Dock magnification (cleaner macOS wave) ---
+  const dock = document.getElementById("dock");
+  const dockInner = document.getElementById("dock-inner");
+  let dockItems = Array.from(document.querySelectorAll(".dock-item"));
 
-function updateDockMagnification(mouseY) {
-  const maxScale = 1.45;  // slightly smaller wave for smaller dock
-  const midScale = 1.25;
-  const lowScale = 1.10;
-  const influenceRadius = 70; // tighter radius
+  function updateDockMagnification(mouseY) {
+    const maxScale = 1.45;
+    const midScale = 1.25;
+    const lowScale = 1.10;
+    const influenceRadius = 70;
 
-  dockItems.forEach((item) => {
-    const rect = item.getBoundingClientRect();
-    const centerY = rect.top + rect.height / 2;
-    const distance = Math.abs(mouseY - centerY);
-
-    let scale = 1;
-
-    if (distance < influenceRadius) {
-      const t = 1 - distance / influenceRadius;
-      scale =
-        t > 0.66 ? maxScale :
-        t > 0.33 ? midScale :
-        lowScale;
-    }
-
-    item.style.transform = `scale(${scale})`;
-  });
-}
-
-if (dock) {
-  dock.addEventListener("mousemove", (e) => {
-    updateDockMagnification(e.clientY);
-  });
-
-  dock.addEventListener("mouseleave", () => {
     dockItems.forEach((item) => {
-      item.style.transform = "scale(1)";
+      const rect = item.getBoundingClientRect();
+      const centerY = rect.top + rect.height / 2;
+      const distance = Math.abs(mouseY - centerY);
+
+      let scale = 1;
+
+      if (distance < influenceRadius) {
+        const t = 1 - distance / influenceRadius;
+        scale =
+          t > 0.66 ? maxScale :
+          t > 0.33 ? midScale :
+          lowScale;
+      }
+
+      item.style.transform = `scale(${scale})`;
     });
+  }
+
+  if (dock) {
+    dock.addEventListener("mousemove", (e) => {
+      updateDockMagnification(e.clientY);
+    });
+
+    dock.addEventListener("mouseleave", () => {
+      dockItems.forEach((item) => {
+        item.style.transform = "scale(1)";
+      });
+    });
+  }
+
+  // --- Dock drag & drop reordering (like Windows) ---
+  const DOCK_ORDER_KEY = "jasonos_dock_order";
+
+  function loadDockOrder() {
+    const raw = localStorage.getItem(DOCK_ORDER_KEY);
+    if (!raw) return null;
+    try {
+      return JSON.parse(raw);
+    } catch {
+      return null;
+    }
+  }
+
+  function saveDockOrder(order) {
+    localStorage.setItem(DOCK_ORDER_KEY, JSON.stringify(order));
+  }
+
+  function applyDockOrder() {
+    const order = loadDockOrder();
+    if (!order || !dockInner) return;
+
+    const map = new Map();
+    dockItems.forEach((item) => {
+      map.set(item.dataset.app, item);
+    });
+
+    dockInner.innerHTML = "";
+    order.forEach((appId) => {
+      const item = map.get(appId);
+      if (item) dockInner.appendChild(item);
+    });
+
+    // Rebuild dockItems NodeList
+    dockItems = Array.from(document.querySelectorAll(".dock-item"));
+  }
+
+  // Initial order save if none
+  if (!loadDockOrder()) {
+    const initialOrder = dockItems.map((item) => item.dataset.app);
+    saveDockOrder(initialOrder);
+  } else {
+    applyDockOrder();
+  }
+
+  let dragSrcEl = null;
+
+  function handleDragStart(e) {
+    dragSrcEl = this;
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", this.dataset.app);
+    this.style.opacity = "0.4";
+  }
+
+  function handleDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    return false;
+  }
+
+  function handleDrop(e) {
+    e.stopPropagation();
+    const srcApp = e.dataTransfer.getData("text/plain");
+    const targetApp = this.dataset.app;
+    if (!srcApp || !targetApp || srcApp === targetApp) return false;
+
+    const order = loadDockOrder() || dockItems.map((i) => i.dataset.app);
+    const srcIndex = order.indexOf(srcApp);
+    const targetIndex = order.indexOf(targetApp);
+    if (srcIndex === -1 || targetIndex === -1) return false;
+
+    order.splice(srcIndex, 1);
+    order.splice(targetIndex, 0, srcApp);
+    saveDockOrder(order);
+    applyDockOrder();
+
+    return false;
+  }
+
+  function handleDragEnd() {
+    this.style.opacity = "1";
+  }
+
+  function wireDockDragAndDrop() {
+    dockItems.forEach((item) => {
+      item.addEventListener("dragstart", handleDragStart);
+      item.addEventListener("dragover", handleDragOver);
+      item.addEventListener("drop", handleDrop);
+      item.addEventListener("dragend", handleDragEnd);
+    });
+  }
+
+  wireDockDragAndDrop();
+
+  // Re-wire after order changes
+  const observer = new MutationObserver(() => {
+    dockItems = Array.from(document.querySelectorAll(".dock-item"));
+    wireDockDragAndDrop();
   });
-}
+  if (dockInner) {
+    observer.observe(dockInner, { childList: true });
+  }
+
+  // --- Mission Control (simple overview) ---
+  let missionControlActive = false;
+  const windowOriginalStates = new Map();
+
+  function enterMissionControl() {
+    if (missionControlActive) return;
+    missionControlActive = true;
+
+    const cols = 2;
+    const gap = 20;
+    const marginTop = 80;
+    const marginSide = 120;
+
+    windows.forEach((win, index) => {
+      if (win.classList.contains("hidden")) return;
+
+      const rect = win.getBoundingClientRect();
+      windowOriginalStates.set(win, {
+        left: rect.left,
+        top: rect.top,
+        width: rect.width,
+        height: rect.height,
+        transform: win.style.transform || ""
+      });
+
+      const col = index % cols;
+      const row = Math.floor(index / cols);
+
+      const targetWidth = (window.innerWidth - marginSide * 2 - gap * (cols - 1)) / cols;
+      const targetHeight = (window.innerHeight - marginTop * 2 - gap * 2) / 3;
+
+      win.style.transition = "all 0.18s ease";
+      win.style.left = `${marginSide + col * (targetWidth + gap)}px`;
+      win.style.top = `${marginTop + row * (targetHeight + gap)}px`;
+      win.style.width = `${targetWidth}px`;
+      win.style.height = `${targetHeight}px`;
+      win.style.transform = "none";
+    });
+  }
+
+  function exitMissionControl() {
+    if (!missionControlActive) return;
+    missionControlActive = false;
+
+    windows.forEach((win) => {
+      const state = windowOriginalStates.get(win);
+      if (!state) return;
+      win.style.left = `${state.left}px`;
+      win.style.top = `${state.top}px`;
+      win.style.width = `${state.width}px`;
+      win.style.height = `${state.height}px`;
+      win.style.transform = state.transform;
+      win.style.transition = "all 0.18s ease";
+    });
+
+    windowOriginalStates.clear();
+  }
+
+  // Toggle with F9
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "F9") {
+      if (missionControlActive) {
+        exitMissionControl();
+      } else {
+        enterMissionControl();
+      }
+    }
+  });
 
   // --- Admin console wiring ---
   const adminPanel = document.getElementById("admin-panel");
@@ -341,6 +554,7 @@ if (dock) {
       const msg = adminInput.value.trim();
       localStorage.setItem("jasonos_global_message", msg);
       renderGlobalMessage();
+      if (msg) showNotification("Global message updated");
     });
   }
 
@@ -404,4 +618,19 @@ if (dock) {
       alert(`Removed admin: ${n}`);
     });
   }
+
+  // --- Windows-style search bar behavior (simple) ---
+  const searchInput = document.getElementById("search-input");
+  if (searchInput) {
+    searchInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        const q = searchInput.value.trim();
+        if (!q) return;
+        showNotification(`Search: "${q}" (not wired to anything yet)`);
+      }
+    });
+  }
+
+  // Optional: welcome notification
+  showNotification(`Welcome, ${user.name}`);
 });
