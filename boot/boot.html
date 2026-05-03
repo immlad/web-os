@@ -8,21 +8,50 @@
   <script defer src="boot.js"></script>
 </head>
 <body class="boot-body">
-  <div class="boot-overlay glass">
+
+  <!-- SIGNUP SCREEN -->
+  <div id="signup-screen" class="boot-overlay glass hidden">
     <div class="boot-logo">
-      <img src="../assets/jason.png" alt="JASON" />
+      <img src="../assets/jason.png" />
       <h1 class="boot-title">JASON OS</h1>
       <p class="boot-subtitle">Create your account</p>
     </div>
 
-    <form class="boot-form" id="boot-form">
+    <form id="signup-form" class="boot-form">
       <div class="boot-fields">
-        <input type="text" id="boot-name" placeholder="Enter your name" required />
-        <input type="password" id="boot-password" placeholder="Password" required />
+        <input type="text" id="signup-name" placeholder="Enter your name" required />
+        <input type="password" id="signup-password" placeholder="Password" required />
       </div>
-
       <button type="submit" class="boot-submit">Create Account</button>
     </form>
+
+    <p style="margin-top:10px;font-size:12px;color:#ccc;">
+      Already have an account?
+      <span id="go-login" style="cursor:pointer;color:#4da3ff;">Log in</span>
+    </p>
   </div>
+
+  <!-- LOGIN SCREEN -->
+  <div id="login-screen" class="boot-overlay glass hidden">
+    <div class="boot-logo">
+      <img src="../assets/jason.png" />
+      <h1 class="boot-title">JASON OS</h1>
+      <p class="boot-subtitle">Log in to continue</p>
+    </div>
+
+    <form id="login-form" class="boot-form">
+      <div class="boot-fields">
+        <input type="text" id="login-name" placeholder="Enter your name" required />
+        <input type="password" id="login-password" placeholder="Password" required />
+      </div>
+      <button type="submit" class="boot-submit">Log In</button>
+    </form>
+
+    <p style="margin-top:10px;font-size:12px;color:#ccc;">
+      No account?
+      <span id="go-signup" style="cursor:pointer;color:#4da3ff;">Create one</span>
+    </p>
+  </div>
+
 </body>
 </html>
