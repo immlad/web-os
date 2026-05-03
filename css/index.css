@@ -418,3 +418,79 @@ body.theme-sebastian {
   border-radius: 8px;
   margin: 12px;
 }
+
+body.theme-jason {
+  --accent: #4da3ff;
+  background: #0b0f1a;
+}
+
+body.theme-cloud {
+  --accent: #ffffff;
+  background: #e8eef7;
+}
+
+body.theme-night {
+  --accent: #0a0a0a;
+  background: #000000;
+}
+
+body.theme-forest {
+  --accent: #0f3d0f;
+  background: #0b1f0b;
+}
+
+body.theme-sebastian {
+  --accent: #ff66cc;
+  background: #1a0010;
+}
+
+.app-root {
+  min-height: 100vh;
+  color: #fff;
+}
+
+.sync-banner {
+  padding: 12px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 8px;
+  margin: 12px;
+  font-size: 14px;
+}
+
+.la-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+}
+
+.la-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  object-fit: cover;
+}
+
+.la-header-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.la-header-name {
+  font-weight: 600;
+}
+
+.la-admin-pill {
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  display: inline-block;
+  margin-top: 2px;
+}
+
+.app-content {
+  padding: 16px;
+}
