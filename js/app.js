@@ -225,9 +225,8 @@ document.addEventListener("DOMContentLoaded", () => {
     win.addEventListener("mousedown", () => bringToFront(win));
   });
 
-  // ⭐ FIXED: Dock launcher + Liquid Aura sync
+  // Dock launcher + Liquid Aura sync
   function handleLaunch(appId) {
-
     if (appId === "logout") {
       localStorage.removeItem("jasonos_user");
       window.location.href = "boot/boot.html";
@@ -517,7 +516,7 @@ document.addEventListener("DOMContentLoaded", () => {
         alert("This user is already a true admin.");
         return;
       }
-            const list = getAdminNames();
+      const list = getAdminNames();
       if (!list.includes(n)) list.push(n);
       setAdminNames(list);
       alert(`Made admin: ${n}`);
