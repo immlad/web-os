@@ -63,6 +63,16 @@ body.theme-sebastian {
   flex-direction: column;
 }
 
+/* Global banner */
+.global-banner {
+  width: 100%;
+  padding: 10px;
+  background: var(--accent);
+  color: #fff;
+  text-align: center;
+  font-weight: 600;
+}
+
 /* Header */
 .la-header {
   height: var(--header-height);
@@ -129,4 +139,85 @@ body.theme-sebastian {
 .app-content p {
   font-size: 16px;
   opacity: 0.9;
+}
+
+/* Banned box */
+.banned-box {
+  padding: 20px;
+  border-radius: 12px;
+  background: rgba(255, 0, 0, 0.15);
+  border: 1px solid rgba(255, 0, 0, 0.4);
+  margin-bottom: 20px;
+}
+
+/* Admin panel */
+.admin-section {
+  margin-top: 24px;
+}
+
+.admin-panel {
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  margin: 0;
+  backdrop-filter: blur(10px);
+}
+
+.admin-panel h2 {
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.admin-panel section {
+  margin-bottom: 20px;
+}
+
+.admin-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.admin-panel input {
+  flex: 1;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid var(--accent);
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+}
+
+.admin-panel button {
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.admin-panel button:hover {
+  opacity: 0.9;
+}
+
+.admin-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.admin-list li {
+  padding: 4px 0;
+  font-size: 14px;
+}
+
+.global-msg-preview {
+  margin-top: 4px;
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.muted {
+  font-size: 13px;
+  opacity: 0.7;
 }
