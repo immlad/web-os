@@ -11,10 +11,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const signupForm = document.getElementById("signup-form");
   const loginForm = document.getElementById("login-form");
 
-  const existingUser = JSON.parse(localStorage.getItem("jasonos_user"));
+  // Load accounts list
+  let accounts = JSON.parse(localStorage.getItem("jasonos_accounts") || "[]");
 
-  // Show correct screen
-  if (existingUser) {
+  // If ANY account exists → show login
+  if (accounts.length > 0) {
     loginScreen.classList.remove("hidden");
   } else {
     signupScreen.classList.remove("hidden");
@@ -44,15 +45,27 @@ document.addEventListener("DOMContentLoaded", () => {
     const name = document.getElementById("signup-name").value.trim();
     const password = document.getElementById("signup-password").value;
 
-    const user = {
+    // Check if username exists
+    if (accounts.some(acc => acc.name.toLowerCase() === name.toLowerCase())) {
+      alert("This username is already taken.");
+      return;
+    }
+
+    const newUser = {
       name,
       password,
       isAdmin: isTrueAdmin(name),
       createdAt: Date.now()
     };
 
-    localStorage.setItem("jasonos_user", JSON.stringify(user));
-    window.location.href = "../index.html";
+    accounts.push(newUser);
+    localStorage.setItem("jasonos_accounts", JSON.stringify(accounts));
+
+    alert("Account created! Please log in.");
+
+    // Redirect to login
+    signupScreen.classList.add("hidden");
+    loginScreen.classList.remove("hidden");
   });
 
   // LOGIN
@@ -62,19 +75,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const name = document.getElementById("login-name").value.trim();
     const password = document.getElementById("login-password").value;
 
-    if (!existingUser) {
-      alert("No account exists. Please sign up.");
+    const account = accounts.find(acc => acc.name.toLowerCase() === name.toLowerCase());
+
+    if (!account) {
+      alert("No account exists with that name.");
       return;
     }
 
-    if (name !== existingUser.name || password !== existingUser.password) {
+    if (account.password !== password) {
       alert("Incorrect name or password.");
       return;
     }
 
     // Restore admin status
-    existingUser.isAdmin = isTrueAdmin(name);
-    localStorage.setItem("jasonos_user", JSON.stringify(existingUser));
+    account.isAdmin = isTrueAdmin(name);
+
+    // Save active user
+    localStorage.setItem("jasonos_user", JSON.stringify(account));
 
     window.location.href = "../index.html";
   });
