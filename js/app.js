@@ -14,17 +14,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const usernameEl = document.getElementById("topbar-username");
   const adminBadgeEl = document.getElementById("topbar-admin-badge");
 
-  if (usernameEl) {
-    usernameEl.textContent = user.name || "";
-  }
-
-  if (adminBadgeEl) {
-    if (isAdmin) {
-      adminBadgeEl.classList.remove("hidden");
-    } else {
-      adminBadgeEl.classList.add("hidden");
-    }
-  }
+  if (usernameEl) usernameEl.textContent = user.name || "";
+  if (adminBadgeEl) adminBadgeEl.classList.toggle("hidden", !isAdmin);
 
   // --- Random desktop phrase ---
   const phrases = [
@@ -34,30 +25,23 @@ document.addEventListener("DOMContentLoaded", () => {
     "UwU Nyaa~ Jason"
   ];
   const phraseEl = document.getElementById("desktop-phrase");
-  if (phraseEl) {
-    const pick = phrases[Math.floor(Math.random() * phrases.length)];
-    phraseEl.textContent = pick;
-  }
+  if (phraseEl) phraseEl.textContent = phrases[Math.floor(Math.random() * phrases.length)];
 
   // --- Clock ---
   const clockEl = document.getElementById("topbar-clock");
   function updateClock() {
     const now = new Date();
-    const opts = {
-      weekday: "short",
-      hour: "2-digit",
-      minute: "2-digit"
-    };
+    const opts = { weekday: "short", hour: "2-digit", minute: "2-digit" };
     clockEl.textContent = now.toLocaleString(undefined, opts);
   }
   if (clockEl) {
     updateClock();
-    setInterval(updateClock, 30_000);
+    setInterval(updateClock, 30000);
   }
 
-  // --- Theme switching + localStorage (from Settings) ---
+  // --- Theme switching ---
   function applyTheme(theme) {
-    body.classList.remove("theme-cloud", "theme-night", "theme-forest", "theme-jason");
+    body.classList.remove("theme-cloud", "theme-night", "theme-forest", "theme-jason", "theme-sebastian");
     body.classList.add(`theme-${theme}`);
     localStorage.setItem("jasonos_theme", theme);
   }
@@ -66,10 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
   applyTheme(savedTheme);
 
   document.querySelectorAll(".settings-theme-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const theme = btn.dataset.theme;
-      applyTheme(theme);
-    });
+    btn.addEventListener("click", () => applyTheme(btn.dataset.theme));
   });
 
   // --- Global admin message ---
@@ -85,12 +66,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   renderGlobalMessage();
 
-  // --- Notification helper ---
+  // --- Notification system ---
   const notificationEl = document.getElementById("notification-banner");
   const notificationTextEl = document.getElementById("notification-text");
 
   function showNotification(text, timeout = 3500) {
-    if (!notificationEl || !notificationTextEl) return;
     notificationTextEl.textContent = text;
     notificationEl.classList.remove("hidden");
     notificationEl.classList.add("show");
@@ -101,46 +81,30 @@ document.addEventListener("DOMContentLoaded", () => {
     }, timeout);
   }
 
-  // --- Control Center toggle ---
+  // --- Control Center ---
   const controlCenterEl = document.getElementById("control-center");
-  const ccDndToggle = document.getElementById("cc-dnd-toggle");
-  const ccDarkToggle = document.getElementById("cc-dark-toggle");
-
   const topbarPills = document.querySelectorAll(".topbar-pill-item");
-  const ccTrigger = topbarPills[2]; // Desktop, Apps, Control Center
+  const ccTrigger = topbarPills[2];
 
-  if (ccTrigger && controlCenterEl) {
+  if (ccTrigger) {
     ccTrigger.addEventListener("click", () => {
       controlCenterEl.classList.toggle("hidden");
     });
   }
 
-  if (ccDndToggle) {
-    ccDndToggle.addEventListener("click", () => {
-      ccDndToggle.classList.toggle("cc-on");
-    });
-  }
-
-  if (ccDarkToggle) {
-    ccDarkToggle.addEventListener("click", () => {
-      ccDarkToggle.classList.toggle("cc-on");
-    });
-  }
-
-  // --- Window management ---
+  // --- Window manager ---
   const windows = Array.from(document.querySelectorAll("[data-app-window]"));
   const appSwitcher = document.getElementById("app-switcher");
   let zCounter = 50;
 
   function updateAppSwitcherActive(appId) {
-    if (!appSwitcher) return;
     appSwitcher.querySelectorAll(".app-switcher-btn").forEach((btn) => {
       btn.classList.toggle("active", btn.dataset.switchApp === appId);
     });
   }
 
   function bringToFront(win) {
-    zCounter += 1;
+    zCounter++;
     win.style.zIndex = zCounter;
     windows.forEach((w) => w.classList.remove("focused"));
     win.classList.add("focused");
@@ -148,27 +112,21 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function ensureAppInSwitcher(appId, win) {
-    if (!appSwitcher || !appId) return;
-
     let btn = appSwitcher.querySelector(`[data-switch-app="${appId}"]`);
     if (!btn) {
       btn = document.createElement("button");
       btn.className = "app-switcher-btn";
       btn.dataset.switchApp = appId;
-      const title = win.querySelector(".window-title")?.textContent || appId;
-      btn.textContent = title;
-      btn.addEventListener("click", () => {
-        openWindowById(appId);
-      });
+      btn.textContent = win.querySelector(".window-title")?.textContent || appId;
+      btn.addEventListener("click", () => openWindowById(appId));
       appSwitcher.appendChild(btn);
     }
     updateAppSwitcherActive(appId);
   }
 
   function removeAppFromSwitcher(appId) {
-    if (!appSwitcher || !appId) return;
     const btn = appSwitcher.querySelector(`[data-switch-app="${appId}"]`);
-    if (btn) appSwitcher.removeChild(btn);
+    if (btn) btn.remove();
   }
 
   function openWindowById(id) {
@@ -176,6 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!win) return;
 
     win.classList.remove("hidden", "minimized");
+
     if (!win.dataset.positioned) {
       const rect = win.getBoundingClientRect();
       win.style.left = `${(window.innerWidth - rect.width) / 2}px`;
@@ -203,7 +162,6 @@ document.addEventListener("DOMContentLoaded", () => {
     win.classList.add("minimized");
   }
 
-  // Fullscreen with restore
   function toggleFullscreen(win) {
     const isFs = win.classList.contains("fullscreen");
 
@@ -213,39 +171,27 @@ document.addEventListener("DOMContentLoaded", () => {
       win.dataset.prevTop = rect.top;
       win.dataset.prevWidth = rect.width;
       win.dataset.prevHeight = rect.height;
-
       win.classList.add("fullscreen");
-      win.dataset.fullscreen = "true";
     } else {
       win.classList.remove("fullscreen");
-      win.dataset.fullscreen = "false";
-
-      const prevLeft = parseFloat(win.dataset.prevLeft || "100");
-      const prevTop = parseFloat(win.dataset.prevTop || "100");
-      const prevWidth = parseFloat(win.dataset.prevWidth || "800");
-      const prevHeight = parseFloat(win.dataset.prevHeight || "500");
-
-      win.style.left = `${prevLeft}px`;
-      win.style.top = `${prevTop}px`;
-      win.style.width = `${prevWidth}px`;
-      win.style.height = `${prevHeight}px`;
+      win.style.left = `${win.dataset.prevLeft}px`;
+      win.style.top = `${win.dataset.prevTop}px`;
+      win.style.width = `${win.dataset.prevWidth}px`;
+      win.style.height = `${win.dataset.prevHeight}px`;
     }
   }
 
-  // Dragging
+  // --- Draggable windows ---
   function makeDraggable(win) {
     const handle = win.querySelector("[data-drag-handle]");
     if (!handle) return;
 
     let isDragging = false;
-    let startX = 0;
-    let startY = 0;
-    let startLeft = 0;
-    let startTop = 0;
+    let startX, startY, startLeft, startTop;
 
     handle.addEventListener("mousedown", (e) => {
-      if (e.button !== 0) return;
-      if (win.classList.contains("fullscreen")) return;
+      if (e.button !== 0 || win.classList.contains("fullscreen")) return;
+
       isDragging = true;
       bringToFront(win);
 
@@ -257,64 +203,48 @@ document.addEventListener("DOMContentLoaded", () => {
 
       win.style.transform = "none";
 
-      document.addEventListener("mousemove", onMouseMove);
-      document.addEventListener("mouseup", onMouseUp);
+      document.addEventListener("mousemove", onMove);
+      document.addEventListener("mouseup", onUp);
     });
 
-    function onMouseMove(e) {
+    function onMove(e) {
       if (!isDragging) return;
-      const dx = e.clientX - startX;
-      const dy = e.clientY - startY;
-      win.style.left = `${startLeft + dx}px`;
-      win.style.top = `${startTop + dy}px`;
+      win.style.left = `${startLeft + (e.clientX - startX)}px`;
+      win.style.top = `${startTop + (e.clientY - startY)}px`;
     }
 
-    function onMouseUp() {
+    function onUp() {
       isDragging = false;
-      document.removeEventListener("mousemove", onMouseMove);
-      document.removeEventListener("mouseup", onMouseUp);
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseup", onUp);
     }
   }
 
   windows.forEach((win) => {
     makeDraggable(win);
 
-    const closeBtn = win.querySelector(".win-close");
-    const minBtn = win.querySelector(".win-minimize");
-    const fullBtn = win.querySelector(".win-fullscreen");
-
-    if (closeBtn) {
-      closeBtn.addEventListener("click", () => closeWindow(win));
-    }
-    if (minBtn) {
-      minBtn.addEventListener("click", () => minimizeWindow(win));
-    }
-    if (fullBtn) {
-      fullBtn.addEventListener("click", () => toggleFullscreen(win));
-    }
+    win.querySelector(".win-close")?.addEventListener("click", () => closeWindow(win));
+    win.querySelector(".win-minimize")?.addEventListener("click", () => minimizeWindow(win));
+    win.querySelector(".win-fullscreen")?.addEventListener("click", () => toggleFullscreen(win));
 
     win.addEventListener("mousedown", () => bringToFront(win));
   });
 
-  // --- App launcher (dock) ---
+  // --- Dock launcher ---
   function handleLaunch(appId) {
     if (appId === "logout") {
       localStorage.removeItem("jasonos_user");
       window.location.href = "boot/boot.html";
       return;
     }
-
     openWindowById(appId);
   }
 
   document.querySelectorAll("[data-app]").forEach((el) => {
-    el.addEventListener("click", () => {
-      const app = el.dataset.app;
-      handleLaunch(app);
-    });
+    el.addEventListener("click", () => handleLaunch(el.dataset.app));
   });
 
-  // --- Dock magnification (horizontal, ultra-clean) ---
+  // --- Dock magnification ---
   const dock = document.getElementById("dock");
   const dockInner = document.getElementById("dock-inner");
   let dockItems = Array.from(document.querySelectorAll(".dock-item"));
@@ -331,39 +261,26 @@ document.addEventListener("DOMContentLoaded", () => {
       const distance = Math.abs(mouseX - centerX);
 
       let scale = 1;
-
       if (distance < influenceRadius) {
         const t = 1 - distance / influenceRadius;
-        scale =
-          t > 0.66 ? maxScale :
-          t > 0.33 ? midScale :
-          lowScale;
+        scale = t > 0.66 ? maxScale : t > 0.33 ? midScale : lowScale;
       }
 
       item.style.transform = `scale(${scale})`;
     });
   }
 
-  if (dock) {
-    dock.addEventListener("mousemove", (e) => {
-      updateDockMagnification(e.clientX);
-    });
+  dock.addEventListener("mousemove", (e) => updateDockMagnification(e.clientX));
+  dock.addEventListener("mouseleave", () => {
+    dockItems.forEach((item) => (item.style.transform = "scale(1)"));
+  });
 
-    dock.addEventListener("mouseleave", () => {
-      dockItems.forEach((item) => {
-        item.style.transform = "scale(1)";
-      });
-    });
-  }
-
-  // --- Dock drag & drop reordering ---
+  // --- Dock drag & drop ---
   const DOCK_ORDER_KEY = "jasonos_dock_order";
 
   function loadDockOrder() {
-    const raw = localStorage.getItem(DOCK_ORDER_KEY);
-    if (!raw) return null;
     try {
-      return JSON.parse(raw);
+      return JSON.parse(localStorage.getItem(DOCK_ORDER_KEY));
     } catch {
       return null;
     }
@@ -375,12 +292,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function applyDockOrder() {
     const order = loadDockOrder();
-    if (!order || !dockInner) return;
+    if (!order) return;
 
     const map = new Map();
-    dockItems.forEach((item) => {
-      map.set(item.dataset.app, item);
-    });
+    dockItems.forEach((item) => map.set(item.dataset.app, item));
 
     dockInner.innerHTML = "";
     order.forEach((appId) => {
@@ -392,8 +307,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (!loadDockOrder()) {
-    const initialOrder = dockItems.map((item) => item.dataset.app);
-    saveDockOrder(initialOrder);
+    saveDockOrder(dockItems.map((i) => i.dataset.app));
   } else {
     applyDockOrder();
   }
@@ -409,7 +323,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function handleDragOver(e) {
     e.preventDefault();
-    e.dataTransfer.dropEffect = "move";
     return false;
   }
 
@@ -417,18 +330,18 @@ document.addEventListener("DOMContentLoaded", () => {
     e.stopPropagation();
     const srcApp = e.dataTransfer.getData("text/plain");
     const targetApp = this.dataset.app;
-    if (!srcApp || !targetApp || srcApp === targetApp) return false;
 
-    const order = loadDockOrder() || dockItems.map((i) => i.dataset.app);
+    if (!srcApp || srcApp === targetApp) return false;
+
+    const order = loadDockOrder();
     const srcIndex = order.indexOf(srcApp);
     const targetIndex = order.indexOf(targetApp);
-    if (srcIndex === -1 || targetIndex === -1) return false;
 
     order.splice(srcIndex, 1);
     order.splice(targetIndex, 0, srcApp);
+
     saveDockOrder(order);
     applyDockOrder();
-
     return false;
   }
 
@@ -447,15 +360,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   wireDockDragAndDrop();
 
-  const observer = new MutationObserver(() => {
+  new MutationObserver(() => {
     dockItems = Array.from(document.querySelectorAll(".dock-item"));
     wireDockDragAndDrop();
-  });
-  if (dockInner) {
-    observer.observe(dockInner, { childList: true });
-  }
+  }).observe(dockInner, { childList: true });
 
-  // --- Mission Control (simple overview) ---
+  // --- Mission Control (F9) ---
   let missionControlActive = false;
   const windowOriginalStates = new Map();
 
@@ -502,6 +412,7 @@ document.addEventListener("DOMContentLoaded", () => {
     windows.forEach((win) => {
       const state = windowOriginalStates.get(win);
       if (!state) return;
+
       win.style.left = `${state.left}px`;
       win.style.top = `${state.top}px`;
       win.style.width = `${state.width}px`;
@@ -515,15 +426,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "F9") {
-      if (missionControlActive) {
-        exitMissionControl();
-      } else {
-        enterMissionControl();
-      }
+      missionControlActive ? exitMissionControl() : enterMissionControl();
     }
   });
 
-  // --- Admin console wiring ---
+  // --- Admin console ---
   const adminPanel = document.getElementById("admin-panel");
   const adminLocked = document.getElementById("admin-locked");
   const adminInput = document.getElementById("admin-message-input");
@@ -536,13 +443,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const removeAdminBtn = document.getElementById("admin-remove-admin-btn");
 
   if (adminPanel && adminLocked) {
-    if (isAdmin) {
-      adminPanel.classList.remove("hidden");
-      adminLocked.classList.add("hidden");
-    } else {
-      adminPanel.classList.add("hidden");
-      adminLocked.classList.remove("hidden");
-    }
+    adminPanel.classList.toggle("hidden", !isAdmin);
+    adminLocked.classList.toggle("hidden", isAdmin);
   }
 
   if (isAdmin && adminBtn && adminInput) {
@@ -555,8 +457,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function getBannedNames() {
-    const raw = localStorage.getItem("jasonos_banned_names");
-    return raw ? JSON.parse(raw) : [];
+    return JSON.parse(localStorage.getItem("jasonos_banned_names") || "[]");
   }
 
   function setBannedNames(list) {
@@ -564,8 +465,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function getAdminNames() {
-    const raw = localStorage.getItem("jasonos_admin_names");
-    return raw ? JSON.parse(raw) : [];
+    return JSON.parse(localStorage.getItem("jasonos_admin_names") || "[]");
   }
 
   function setAdminNames(list) {
@@ -573,12 +473,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function normalizeNameInput() {
-    const val = targetNameInput.value.trim();
-    return val.toLowerCase();
+    return targetNameInput.value.trim().toLowerCase();
   }
 
-  if (isAdmin && targetNameInput && banBtn && unbanBtn && makeAdminBtn && removeAdminBtn) {
-    banBtn.addEventListener("click", () => {
+  if (isAdmin) {
+    banBtn?.addEventListener("click", () => {
       const n = normalizeNameInput();
       if (!n) return;
       const list = getBannedNames();
@@ -587,16 +486,14 @@ document.addEventListener("DOMContentLoaded", () => {
       alert(`Banned: ${n}`);
     });
 
-    unbanBtn.addEventListener("click", () => {
+    unbanBtn?.addEventListener("click", () => {
       const n = normalizeNameInput();
       if (!n) return;
-      let list = getBannedNames();
-      list = list.filter((x) => x !== n);
-      setBannedNames(list);
+      setBannedNames(getBannedNames().filter((x) => x !== n));
       alert(`Unbanned: ${n}`);
     });
 
-    makeAdminBtn.addEventListener("click", () => {
+    makeAdminBtn?.addEventListener("click", () => {
       const n = normalizeNameInput();
       if (!n) return;
       const list = getAdminNames();
@@ -605,30 +502,28 @@ document.addEventListener("DOMContentLoaded", () => {
       alert(`Made admin: ${n}`);
     });
 
-    removeAdminBtn.addEventListener("click", () => {
+    removeAdminBtn?.addEventListener("click", () => {
       const n = normalizeNameInput();
       if (!n) return;
-      let list = getAdminNames();
-      list = list.filter((x) => x !== n);
-      setAdminNames(list);
+      setAdminNames(getAdminNames().filter((x) => x !== n));
       alert(`Removed admin: ${n}`);
     });
   }
 
-  // Welcome notification
+  // --- ABOUT APP SECRET SEBASTIAN THEME ---
+  let aboutClickCount = 0;
+  const aboutWindow = document.getElementById("window-about");
+
+  if (aboutWindow) {
+    aboutWindow.addEventListener("click", () => {
+      aboutClickCount++;
+      if (aboutClickCount >= 10) {
+        applyTheme("sebastian");
+        showNotification("Sebastian Mode Activated");
+      }
+    });
+  }
+
+  // --- Welcome notification ---
   showNotification(`Welcome, ${user.name}`);
 });
-
-let aboutClickCount = 0;
-
-const aboutWindow = document.getElementById("window-about");
-if (aboutWindow) {
-  aboutWindow.addEventListener("click", () => {
-    aboutClickCount++;
-    if (aboutClickCount >= 10) {
-      applyTheme("sebastian");
-      localStorage.setItem("jasonos_theme", "sebastian");
-      showNotification("Sebastian Mode Activated");
-    }
-  });
-}
