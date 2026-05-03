@@ -245,7 +245,7 @@ document.addEventListener("DOMContentLoaded", () => {
           : "https://yourcdn/default.png";
 
       const url =
-        `https://immlad.github.io/liquid-aura/#/app` +
+        `https://immlad.github.io/liquid-aura/#/app/` +
         `?user=${encodeURIComponent(user.name)}` +
         `&admin=${user.isAdmin}` +
         `&theme=${encodeURIComponent(theme)}` +

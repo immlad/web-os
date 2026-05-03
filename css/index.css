@@ -1,572 +1,132 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
-
+/* Root defaults */
 :root {
-  --font-main: "Montserrat", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  --color-fg: #f5f5f7;
-  --color-fg-soft: #c7c7cc;
-  --color-accent: #4da3ff;
-  --glass-bg: rgba(15, 15, 30, 0.55);
-  --glass-border: rgba(255, 255, 255, 0.28);
-  --glass-shadow: 0 18px 45px rgba(0, 0, 0, 0.65);
-  --topbar-height: 32px;
+  --accent: #4da3ff;
+  --bg: #0b0f1a;
+  --text: #ffffff;
+  --radius: 10px;
+  --header-height: 60px;
 }
 
-* {
-  box-sizing: border-box;
-  font-family: var(--font-main);
+/* Theme: Jason */
+body.theme-jason {
+  --accent: #4da3ff;
+  --bg: #0b0f1a;
+  --text: #ffffff;
+  background: var(--bg);
+  color: var(--text);
 }
 
-body {
-  margin: 0;
-  padding: 0;
-  color: var(--color-fg);
-  overflow: hidden;
+/* Theme: Cloud */
+body.theme-cloud {
+  --accent: #ffffff;
+  --bg: #e8eef7;
+  --text: #000000;
+  background: var(--bg);
+  color: var(--text);
 }
 
-/* Wallpapers */
-.desktop-wallpaper {
-  position: fixed;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  z-index: -2;
+/* Theme: Night */
+body.theme-night {
+  --accent: #0a0a0a;
+  --bg: #000000;
+  --text: #ffffff;
+  background: var(--bg);
+  color: var(--text);
 }
 
-body.theme-cloud .desktop-wallpaper {
-  background-image: url("../assets/wallpaper-cloud.png");
+/* Theme: Forest */
+body.theme-forest {
+  --accent: #0f3d0f;
+  --bg: #0b1f0b;
+  --text: #d6ffd6;
+  background: var(--bg);
+  color: var(--text);
 }
 
-body.theme-night .desktop-wallpaper {
-  background-image: url("../assets/wallpaper-night.png");
+/* Theme: Sebastian */
+body.theme-sebastian {
+  --accent: #ff66cc;
+  --bg: #1a0010;
+  --text: #ffe6f7;
+  background: var(--bg);
+  color: var(--text);
 }
 
-body.theme-forest .desktop-wallpaper {
-  background-image: url("../assets/wallpaper-forest.png");
-}
-
-body.theme-jason .desktop-wallpaper {
-  background-image: url("../assets/jason.png");
-}
-
-body.theme-sebastian .desktop-wallpaper {
-  background-image: url("../assets/sebastian.png");
-}
-
-/* Icon overrides */
-body.theme-jason img {
-  content: url("../assets/jason.png");
-}
-
-body.theme-sebastian img {
-  content: url("../assets/sebastian.png");
-}
-
-/* Boot */
-.boot-body {
-  margin: 0;
-  padding: 0;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-size: cover;
-  background-position: center;
-}
-
-.boot-overlay {
+/* App root */
+.app-root {
+  min-height: 100vh;
+  width: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: min(420px, 90vw);
-  padding: 32px 28px 26px;
 }
 
-.boot-logo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.boot-logo img {
-  width: 72px;
-  height: 72px;
-  border-radius: 24px;
-  margin-bottom: 10px;
-}
-
-.boot-title {
-  margin: 0;
-  font-size: 28px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-
-.boot-subtitle {
-  margin: 4px 0 0;
-  font-size: 13px;
-  color: var(--color-fg-soft);
-}
-
-.boot-form {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.boot-fields {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.boot-fields input {
-  width: 100%;
-  padding: 8px 10px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(0, 0, 0, 0.35);
-  color: var(--color-fg);
-  font-size: 13px;
-}
-
-.boot-submit {
-  margin-top: 4px;
-  width: 100%;
-  padding: 8px 0;
-  border-radius: 999px;
-  border: none;
-  background: linear-gradient(135deg, #4da3ff, #9b6bff);
-  color: #fff;
-  font-weight: 600;
-  font-size: 13px;
-  cursor: pointer;
-}
-
-/* Glass */
-.glass {
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
-  background: radial-gradient(circle at top left,
-      rgba(255, 255, 255, 0.22),
-      rgba(10, 10, 25, 0.82));
-  border: 1px solid var(--glass-border);
-  box-shadow:
-    0 22px 55px rgba(0, 0, 0, 0.75),
-    0 0 0 0.5px rgba(255, 255, 255, 0.32) inset;
-  border-radius: 20px;
-}
-
-/* Top bar */
-.topbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: var(--topbar-height);
-  padding: 0 20px;
+/* Header */
+.la-header {
+  height: var(--header-height);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  z-index: 40;
-  backdrop-filter: blur(40px) saturate(180%);
-  background: rgba(255, 255, 255, 0.18);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
-}
-
-.topbar-left,
-.topbar-center,
-.topbar-right {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.topbar-center {
-  flex: 1;
-  justify-content: center;
-}
-
-.topbar-pill {
-  padding: 2px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.topbar-pill-item {
-  padding: 3px 10px;
-  border-radius: 999px;
-  font-size: 11px;
-  color: var(--color-fg-soft);
-}
-
-.topbar-pill-item.active {
-  background: rgba(255, 255, 255, 0.22);
-  color: var(--color-fg);
-}
-
-/* Desktop */
-.desktop {
-  position: fixed;
-  inset: 0;
-  padding-top: calc(var(--topbar-height) + 20px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.desktop-title {
-  font-size: 64px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-
-.desktop-subtitle {
-  margin-top: 10px;
-  font-size: 16px;
-  color: var(--color-fg-soft);
-}
-
-/* Dock */
-.dock {
-  position: fixed;
-  bottom: 14px;
-  left: 50%;
-  transform: translateX(-50%);
-  height: 76px;
-  padding: 10px 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 30;
-  border-radius: 26px;
-  background: radial-gradient(circle at top,
-      rgba(255, 255, 255, 0.22),
-      rgba(10, 10, 25, 0.88));
-}
-
-.dock-inner {
-  display: flex;
-  flex-direction: row;
   gap: 12px;
-  align-items: flex-end;
-}
-
-.dock-item {
-  position: relative;
-  background: transparent;
-  border: none;
-  padding: 0;
-  cursor: grab;
-  width: 52px;
-  height: 52px;
-  border-radius: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.12s ease;
-}
-
-.dock-icon {
-  width: 52px;
-  height: 52px;
-  border-radius: 18px;
-}
-
-/* Dock label pill */
-.dock-label {
-  position: absolute;
-  bottom: 60px;
-  background: rgba(0,0,0,0.75);
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  opacity: 0;
-  transform: translateY(6px);
-  transition: 0.15s ease;
-  pointer-events: none;
-  color: white;
-  white-space: nowrap;
-}
-
-.dock-item:hover .dock-label {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Windows */
-.window {
-  position: fixed;
-  top: 90px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(960px, 80vw);
-  height: min(560px, 65vh);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  z-index: 20;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.16s ease, transform 0.16s ease;
-  border-radius: 18px;
-}
-
-.window.active {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.window-titlebar {
-  height: 32px;
-  display: flex;
-  align-items: center;
-  padding: 0 12px;
-  gap: 10px;
-}
-
-.window-controls {
-  display: flex;
-  gap: 6px;
-}
-
-.win-btn {
-  width: 12px;
-  height: 12px;
-  border-radius: 999px;
-  border: none;
-}
-
-.win-close { background: #ff5f57; }
-.win-minimize { background: #febc2e; }
-.win-fullscreen { background: #28c840; }
-
-.about-body {
-  text-align: center;
-  padding: 40px;
-}
-
-.about-logo {
-  width: 120px;
-  height: 120px;
-  border-radius: 28px;
-  margin-bottom: 20px;
-}
-
-/* Global message + notification basic layout */
-.global-message {
-  position: fixed;
-  top: calc(var(--topbar-height) + 10px);
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 6px 14px;
-  font-size: 12px;
-}
-
-.notification-banner {
-  position: fixed;
-  top: calc(var(--topbar-height) + 50px);
-  right: 20px;
-  width: 260px;
-  padding: 10px 14px;
-  font-size: 13px;
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: 0.18s ease;
-}
-
-.notification-banner.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.hidden {
-  display: none !important;
-}
-
-body.theme-jason {
-  --accent: #4da3ff;
-  background: #0b0f1a;
-}
-
-body.theme-cloud {
-  --accent: #ffffff;
-  background: #e8eef7;
-}
-
-body.theme-night {
-  --accent: #0a0a0a;
-  background: #000000;
-}
-
-body.theme-forest {
-  --accent: #0f3d0f;
-  background: #0b1f0b;
-}
-
-body.theme-sebastian {
-  --accent: #ff66cc;
-  background: #1a0010;
-}
-
-.sync-banner {
-  padding: 12px;
-  background: var(--accent);
-  color: white;
-  border-radius: 8px;
-  margin: 12px;
-}
-
-body.theme-jason {
-  --accent: #4da3ff;
-  background: #0b0f1a;
-}
-
-body.theme-cloud {
-  --accent: #ffffff;
-  background: #e8eef7;
-}
-
-body.theme-night {
-  --accent: #0a0a0a;
-  background: #000000;
-}
-
-body.theme-forest {
-  --accent: #0f3d0f;
-  background: #0b1f0b;
-}
-
-body.theme-sebastian {
-  --accent: #ff66cc;
-  background: #1a0010;
-}
-
-.app-root {
-  min-height: 100vh;
-  color: #fff;
-}
-
-.sync-banner {
-  padding: 12px;
-  background: var(--accent);
-  color: #fff;
-  border-radius: 8px;
-  margin: 12px;
-  font-size: 14px;
-}
-
-.la-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px;
+  padding: 0 16px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .la-avatar {
-  width: 32px;
-  height: 32px;
+  width: 38px;
+  height: 38px;
   border-radius: 999px;
   object-fit: cover;
+  border: 2px solid var(--accent);
 }
 
 .la-header-text {
   display: flex;
   flex-direction: column;
+  line-height: 1.1;
 }
 
 .la-header-name {
+  font-size: 16px;
   font-weight: 600;
 }
 
 .la-admin-pill {
+  margin-top: 2px;
   font-size: 11px;
-  padding: 2px 6px;
+  padding: 2px 8px;
   border-radius: 999px;
   background: var(--accent);
   color: #fff;
   display: inline-block;
-  margin-top: 2px;
 }
 
-.app-content {
-  padding: 16px;
-}
-
-body.theme-jason {
-  --accent: #4da3ff;
-  background: #0b0f1a;
-}
-
-body.theme-cloud {
-  --accent: #ffffff;
-  background: #e8eef7;
-}
-
-body.theme-night {
-  --accent: #0a0a0a;
-  background: #000000;
-}
-
-body.theme-forest {
-  --accent: #0f3d0f;
-  background: #0b1f0b;
-}
-
-body.theme-sebastian {
-  --accent: #ff66cc;
-  background: #1a0010;
-}
-
-.app-root {
-  min-height: 100vh;
-  color: #fff;
-}
-
+/* Sync banner */
 .sync-banner {
-  padding: 12px;
+  margin: 16px;
+  padding: 14px;
+  border-radius: var(--radius);
   background: var(--accent);
   color: #fff;
-  border-radius: 8px;
-  margin: 12px;
   font-size: 14px;
+  line-height: 1.4;
 }
 
-.la-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px;
-}
-
-.la-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 999px;
-  object-fit: cover;
-}
-
-.la-header-text {
-  display: flex;
-  flex-direction: column;
-}
-
-.la-header-name {
-  font-weight: 600;
-}
-
-.la-admin-pill {
-  font-size: 11px;
-  padding: 2px 6px;
-  border-radius: 999px;
-  background: var(--accent);
-  color: #fff;
-  display: inline-block;
-  margin-top: 2px;
-}
-
+/* Main content */
 .app-content {
-  padding: 16px;
+  padding: 20px;
+}
+
+.app-content h1 {
+  margin: 0 0 10px 0;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.app-content p {
+  font-size: 16px;
+  opacity: 0.9;
 }
