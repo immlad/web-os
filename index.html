@@ -254,7 +254,23 @@
       <button class="dock-item dock-logout" draggable="true" data-app="logout">
         <img src="assets/icons/logout.png" class="dock-icon" alt="Logout" />
       </button>
+      <button class="dock-item" draggable="true" data-app="about">
+        <img src="assets/icons/about.png" class="dock-icon" />
+      </button>
     </div>
-  </nav>
-</body>
-</html>
+    <div class="window glass hidden" id="window-about" data-app-window data-app-id="about">
+  <div class="window-titlebar" data-drag-handle>
+    <div class="window-controls">
+      <button class="win-btn win-close"></button>
+      <button class="win-btn win-minimize"></button>
+      <button class="win-btn win-fullscreen"></button>
+    </div>
+    <span class="window-title">About JASON OS</span>
+  </div>
+  <div class="window-body about-body">
+    <img src="assets/jason.png" class="about-logo" />
+    <h1>JASON OS</h1>
+    <p>Created by Minh</p>
+    <p class="about-version">Version 1.0 (Tahoe)</p>
+  </div>
+</div>

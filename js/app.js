@@ -618,3 +618,17 @@ document.addEventListener("DOMContentLoaded", () => {
   // Welcome notification
   showNotification(`Welcome, ${user.name}`);
 });
+
+let aboutClickCount = 0;
+
+const aboutWindow = document.getElementById("window-about");
+if (aboutWindow) {
+  aboutWindow.addEventListener("click", () => {
+    aboutClickCount++;
+    if (aboutClickCount >= 10) {
+      applyTheme("sebastian");
+      localStorage.setItem("jasonos_theme", "sebastian");
+      showNotification("Sebastian Mode Activated");
+    }
+  });
+}
