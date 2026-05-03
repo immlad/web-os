@@ -225,8 +225,9 @@ document.addEventListener("DOMContentLoaded", () => {
     win.addEventListener("mousedown", () => bringToFront(win));
   });
 
-  // Dock launcher + Liquid Aura sync
+  // ⭐ FIXED: Dock launcher + Liquid Aura sync
   function handleLaunch(appId) {
+
     if (appId === "logout") {
       localStorage.removeItem("jasonos_user");
       window.location.href = "boot/boot.html";
@@ -236,11 +237,21 @@ document.addEventListener("DOMContentLoaded", () => {
     if (appId === "chat") {
       const frame = document.getElementById("liquid-aura-frame");
       const theme = localStorage.getItem("jasonos_theme") || "cloud";
+
+      const avatar =
+        user.name.toLowerCase() === "minh"
+          ? "https://yourcdn/minh.png"
+          : user.name.toLowerCase() === "jason"
+          ? "https://yourcdn/jason.png"
+          : "https://yourcdn/default.png";
+
       const url =
         `https://immlad.github.io/liquid-aura/#/app` +
         `?user=${encodeURIComponent(user.name)}` +
         `&admin=${user.isAdmin}` +
-        `&theme=${encodeURIComponent(theme)}`;
+        `&theme=${encodeURIComponent(theme)}` +
+        `&avatar=${encodeURIComponent(avatar)}`;
+
       frame.src = url;
     }
 
@@ -506,37 +517,4 @@ document.addEventListener("DOMContentLoaded", () => {
         alert("This user is already a true admin.");
         return;
       }
-      const list = getAdminNames();
-      if (!list.includes(n)) list.push(n);
-      setAdminNames(list);
-      alert(`Made admin: ${n}`);
-    });
-
-    removeAdminBtn?.addEventListener("click", () => {
-      const n = normalizeNameInput();
-      if (!n) return;
-      if (isTrueAdminName(n)) {
-        alert("You cannot remove admin from a true admin.");
-        return;
-      }
-      setAdminNames(getAdminNames().filter((x) => x !== n));
-      alert(`Removed admin: ${n}`);
-    });
-  }
-
-  // About secret Sebastian theme
-  let aboutClickCount = 0;
-  const aboutWindow = document.getElementById("window-about");
-  if (aboutWindow) {
-    aboutWindow.addEventListener("click", () => {
-      aboutClickCount++;
-      if (aboutClickCount >= 10) {
-        applyTheme("sebastian");
-        showNotification("Sebastian Mode Activated");
-      }
-    });
-  }
-
-  // Welcome
-  showNotification(`Welcome, ${user.name}`);
-});
+      const list = getAdmin
