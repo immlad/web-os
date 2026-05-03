@@ -1,0 +1,80 @@
+body {
+  margin: 0;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Themes */
+body.theme-cloud { background: url("../assets/cloud.jpg") center/cover; }
+body.theme-night { background: url("../assets/night.jpg") center/cover; }
+body.theme-forest { background: url("../assets/forest.jpg") center/cover; }
+body.theme-jason { background: url("../assets/jason.jpg") center/cover; }
+body.theme-sebastian { background: url("../assets/sebastian.jpg") center/cover; }
+
+/* Top bar */
+#topbar {
+  height: 32px;
+  background: rgba(255,255,255,0.25);
+  backdrop-filter: blur(20px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 12px;
+  color: #fff;
+  font-size: 12px;
+}
+
+#topbar-left, #topbar-right {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.topbar-pill-item {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.25);
+}
+
+.admin-badge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(255, 120, 0, 0.9);
+}
+
+/* Desktop */
+#desktop {
+  text-align: center;
+  margin-top: 80px;
+  color: #fff;
+  text-shadow: 0 8px 30px rgba(0,0,0,0.6);
+}
+
+#desktop-title {
+  font-size: 48px;
+  font-weight: 700;
+}
+
+#desktop-phrase {
+  font-size: 20px;
+  opacity: 0.85;
+}
+
+/* Global message */
+.global-message {
+  position: fixed;
+  top: 32px;
+  width: 100%;
+  padding: 10px;
+  background: rgba(255,0,0,0.6);
+  color: #fff;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  z-index: 200;
+}
+
+.hidden {
+  display: none;
+}
