@@ -517,4 +517,37 @@ document.addEventListener("DOMContentLoaded", () => {
         alert("This user is already a true admin.");
         return;
       }
-      const list = getAdmin
+            const list = getAdminNames();
+      if (!list.includes(n)) list.push(n);
+      setAdminNames(list);
+      alert(`Made admin: ${n}`);
+    });
+
+    removeAdminBtn?.addEventListener("click", () => {
+      const n = normalizeNameInput();
+      if (!n) return;
+      if (isTrueAdminName(n)) {
+        alert("You cannot remove admin from a true admin.");
+        return;
+      }
+      setAdminNames(getAdminNames().filter((x) => x !== n));
+      alert(`Removed admin: ${n}`);
+    });
+  }
+
+  // About secret Sebastian theme
+  let aboutClickCount = 0;
+  const aboutWindow = document.getElementById("window-about");
+  if (aboutWindow) {
+    aboutWindow.addEventListener("click", () => {
+      aboutClickCount++;
+      if (aboutClickCount >= 10) {
+        applyTheme("sebastian");
+        showNotification("Sebastian Mode Activated");
+      }
+    });
+  }
+
+  // Welcome
+  showNotification(`Welcome, ${user.name}`);
+});
