@@ -11,10 +11,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const signupForm = document.getElementById("signup-form");
   const loginForm = document.getElementById("login-form");
 
-  // Load accounts list
-  let accounts = JSON.parse(localStorage.getItem("jasonos_accounts") || "[]");
+  // Load accounts list (ALWAYS fresh)
+  function loadAccounts() {
+    return JSON.parse(localStorage.getItem("jasonos_accounts") || "[]");
+  }
 
-  // If ANY account exists → show login
+  function saveAccounts(list) {
+    localStorage.setItem("jasonos_accounts", JSON.stringify(list));
+  }
+
+  let accounts = loadAccounts();
+
+  // Show correct screen
   if (accounts.length > 0) {
     loginScreen.classList.remove("hidden");
   } else {
@@ -42,6 +50,8 @@ document.addEventListener("DOMContentLoaded", () => {
   signupForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
+    accounts = loadAccounts(); // refresh
+
     const name = document.getElementById("signup-name").value.trim();
     const password = document.getElementById("signup-password").value;
 
@@ -59,11 +69,10 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     accounts.push(newUser);
-    localStorage.setItem("jasonos_accounts", JSON.stringify(accounts));
+    saveAccounts(accounts);
 
     alert("Account created! Please log in.");
 
-    // Redirect to login
     signupScreen.classList.add("hidden");
     loginScreen.classList.remove("hidden");
   });
@@ -71,6 +80,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // LOGIN
   loginForm.addEventListener("submit", (e) => {
     e.preventDefault();
+
+    accounts = loadAccounts(); // refresh
 
     const name = document.getElementById("login-name").value.trim();
     const password = document.getElementById("login-password").value;
@@ -90,7 +101,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // Restore admin status
     account.isAdmin = isTrueAdmin(name);
 
-    // Save active user
     localStorage.setItem("jasonos_user", JSON.stringify(account));
 
     window.location.href = "../index.html";
