@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <title>JASON OS – Tahoe Desktop</title>
-  <link rel="icon" href="assets/favicon.ico" />
   <link rel="stylesheet" href="css/index.css" />
   <link rel="stylesheet" href="css/app.css" />
   <script defer src="js/app.js"></script>
@@ -15,7 +14,7 @@
   <header class="topbar glass">
     <div class="topbar-left">
       <span class="topbar-logo"></span>
-      <span class="topbar-title">JASON OS Tahoe</span>
+      <span class="topbar-title">JASON OS TAHOE</span>
     </div>
 
     <div class="topbar-center topbar-pill">
@@ -35,50 +34,13 @@
   <!-- Global admin message -->
   <div id="global-message" class="global-message glass hidden"></div>
 
-  <!-- Control Center -->
-  <div id="control-center" class="control-center glass hidden">
-    <div class="cc-row">
-      <div class="cc-tile cc-tile-large">
-        <div class="cc-tile-header">
-          <span>Wi‑Fi</span>
-          <span class="cc-pill cc-pill-on">On</span>
-        </div>
-        <div class="cc-tile-body">JASON‑NET</div>
-      </div>
-
-      <div class="cc-tile cc-tile-large">
-        <div class="cc-tile-header">
-          <span>Bluetooth</span>
-          <span class="cc-pill cc-pill-off">Off</span>
-        </div>
-        <div class="cc-tile-body">Not Connected</div>
-      </div>
-    </div>
-
-    <div class="cc-row">
-      <div class="cc-tile">
-        <div class="cc-tile-header">
-          <span>Do Not Disturb</span>
-        </div>
-        <div class="cc-toggle" id="cc-dnd-toggle"></div>
-      </div>
-
-      <div class="cc-tile">
-        <div class="cc-tile-header">
-          <span>Dark Mode</span>
-        </div>
-        <div class="cc-toggle" id="cc-dark-toggle"></div>
-      </div>
-    </div>
-  </div>
-
   <!-- Notification banner -->
   <div id="notification-banner" class="notification-banner glass hidden">
     <div class="nb-title">Notification</div>
     <div class="nb-body" id="notification-text"></div>
   </div>
 
-  <!-- Desktop layout -->
+  <!-- Desktop -->
   <main class="desktop">
     <section class="desktop-hero">
       <h1 class="desktop-title">JASON OS</h1>
@@ -86,191 +48,70 @@
     </section>
   </main>
 
-  <!-- Nebulo -->
-  <div class="window glass hidden" id="window-nebulo" data-app-window data-app-id="nebulo">
+  <!-- About App -->
+  <div class="window glass hidden" id="window-about" data-app-window data-app-id="about">
     <div class="window-titlebar" data-drag-handle>
       <div class="window-controls">
-        <button class="win-btn win-close">&nbsp;</button>
-        <button class="win-btn win-minimize">&nbsp;</button>
-        <button class="win-btn win-fullscreen">&nbsp;</button>
+        <button class="win-btn win-close"></button>
+        <button class="win-btn win-minimize"></button>
+        <button class="win-btn win-fullscreen"></button>
       </div>
-      <span class="window-title">Nebulo</span>
+      <span class="window-title">About JASON OS</span>
     </div>
-    <div class="window-body">
-      <iframe
-        src="https://nebulo.bostoncareercounselor.com"
-        title="Nebulo"
-        class="window-iframe"
-      ></iframe>
+
+    <div class="window-body about-body">
+      <img src="assets/jason.png" class="about-logo" />
+      <h1>JASON OS</h1>
+      <p>Created by Minh</p>
+      <p class="about-version">Version 1.0 (Tahoe)</p>
     </div>
   </div>
 
-  <!-- Liquid Aura Chat -->
-  <div class="window glass hidden" id="window-chat" data-app-window data-app-id="chat">
-    <div class="window-titlebar" data-drag-handle>
-      <div class="window-controls">
-        <button class="win-btn win-close">&nbsp;</button>
-        <button class="win-btn win-minimize">&nbsp;</button>
-        <button class="win-btn win-fullscreen">&nbsp;</button>
-      </div>
-      <span class="window-title">Liquid Aura Chat</span>
-    </div>
-    <div class="window-body">
-      <iframe
-        src="https://immlad.github.io/liquid-aura/#/app"
-        title="Liquid Aura Chat"
-        class="window-iframe"
-      ></iframe>
-    </div>
-  </div>
-
-  <!-- Ideas -->
-  <div class="window glass hidden" id="window-ideas" data-app-window data-app-id="ideas">
-    <div class="window-titlebar" data-drag-handle>
-      <div class="window-controls">
-        <button class="win-btn win-close">&nbsp;</button>
-        <button class="win-btn win-minimize">&nbsp;</button>
-        <button class="win-btn win-fullscreen">&nbsp;</button>
-      </div>
-      <span class="window-title">Ideas</span>
-    </div>
-    <div class="window-body window-body-placeholder">
-      <p>Capture your ideas here soon.</p>
-    </div>
-  </div>
-
-  <!-- Music -->
-  <div class="window glass hidden" id="window-music" data-app-window data-app-id="music">
-    <div class="window-titlebar" data-drag-handle>
-      <div class="window-controls">
-        <button class="win-btn win-close">&nbsp;</button>
-        <button class="win-btn win-minimize">&nbsp;</button>
-        <button class="win-btn win-fullscreen">&nbsp;</button>
-      </div>
-      <span class="window-title">Music</span>
-    </div>
-    <div class="window-body">
-      <iframe
-        src="https://vapor.onl/page/music"
-        title="Music"
-        class="window-iframe"
-      ></iframe>
-    </div>
-  </div>
-
-  <!-- Settings -->
-  <div class="window glass hidden" id="window-settings" data-app-window data-app-id="settings">
-    <div class="window-titlebar" data-drag-handle>
-      <div class="window-controls">
-        <button class="win-btn win-close">&nbsp;</button>
-        <button class="win-btn win-minimize">&nbsp;</button>
-        <button class="win-btn win-fullscreen">&nbsp;</button>
-      </div>
-      <span class="window-title">Settings</span>
-    </div>
-    <div class="window-body settings-body">
-      <h2>Appearance</h2>
-      <p class="settings-caption">Choose your theme:</p>
-      <div class="settings-theme-row">
-        <button class="settings-theme-btn" data-theme="cloud">Cloud</button>
-        <button class="settings-theme-btn" data-theme="night">Night</button>
-        <button class="settings-theme-btn" data-theme="forest">Forest</button>
-        <button class="settings-theme-btn" data-theme="jason">JASON</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Admin -->
-  <div class="window glass hidden" id="window-admin" data-app-window data-app-id="admin">
-    <div class="window-titlebar" data-drag-handle>
-      <div class="window-controls">
-        <button class="win-btn win-close">&nbsp;</button>
-        <button class="win-btn win-minimize">&nbsp;</button>
-        <button class="win-btn win-fullscreen">&nbsp;</button>
-      </div>
-      <span class="window-title">Admin Console</span>
-    </div>
-    <div class="window-body admin-body">
-      <div id="admin-locked" class="admin-locked hidden">
-        <p>You are not an admin. Only Minh or Jason or promoted admins can use this.</p>
-      </div>
-
-      <div id="admin-panel" class="admin-panel hidden">
-        <h2>Global Message</h2>
-        <p class="admin-caption">
-          Broadcast a message to all users. It will appear as <strong>Admin: message</strong> at the top of the OS.
-        </p>
-        <textarea id="admin-message-input" placeholder="Type your message here"></textarea>
-        <button id="admin-broadcast-btn">Send Global Message</button>
-
-        <hr style="margin: 16px 0; border: none; border-top: 1px solid rgba(255,255,255,0.12);" />
-
-        <h2>User Control</h2>
-        <p class="admin-caption">
-          Manage names that are banned or promoted to admin. This is local to this browser.
-        </p>
-        <input
-          type="text"
-          id="admin-target-name"
-          placeholder="Name to manage (case-insensitive)"
-        />
-        <div class="admin-actions-row">
-          <button id="admin-ban-btn">Ban</button>
-          <button id="admin-unban-btn">Unban</button>
-          <button id="admin-make-admin-btn">Make Admin</button>
-          <button id="admin-remove-admin-btn">Remove Admin</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Bottom floating Big Sur dock (ultra-clean) -->
+  <!-- Dock -->
   <nav class="dock glass" id="dock">
     <div class="dock-inner" id="dock-inner">
+
       <button class="dock-item" draggable="true" data-app="nebulo">
-        <img src="assets/icons/nebulo.png" class="dock-icon" alt="Nebulo" />
+        <img src="assets/icons/nebulo.png" class="dock-icon" />
+        <div class="dock-label">Nebulo</div>
       </button>
 
       <button class="dock-item" draggable="true" data-app="chat">
-        <img src="assets/icons/liquid-aura.png" class="dock-icon" alt="Liquid Aura" />
+        <img src="assets/icons/liquid-aura.png" class="dock-icon" />
+        <div class="dock-label">Liquid Aura</div>
       </button>
 
       <button class="dock-item" draggable="true" data-app="ideas">
-        <img src="assets/icons/ideas.png" class="dock-icon" alt="Ideas" />
+        <img src="assets/icons/ideas.png" class="dock-icon" />
+        <div class="dock-label">Ideas</div>
       </button>
 
       <button class="dock-item" draggable="true" data-app="music">
-        <img src="assets/icons/music.png" class="dock-icon" alt="Music" />
+        <img src="assets/icons/music.png" class="dock-icon" />
+        <div class="dock-label">Music</div>
       </button>
 
       <button class="dock-item" draggable="true" data-app="settings">
-        <img src="assets/icons/settings.png" class="dock-icon" alt="Settings" />
+        <img src="assets/icons/settings.png" class="dock-icon" />
+        <div class="dock-label">Settings</div>
       </button>
 
       <button class="dock-item" draggable="true" data-app="admin">
-        <img src="assets/icons/admin.png" class="dock-icon" alt="Admin" />
+        <img src="assets/icons/admin.png" class="dock-icon" />
+        <div class="dock-label">Admin</div>
+      </button>
+
+      <button class="dock-item" draggable="true" data-app="about">
+        <img src="assets/icons/about.png" class="dock-icon" />
+        <div class="dock-label">About</div>
       </button>
 
       <button class="dock-item dock-logout" draggable="true" data-app="logout">
-        <img src="assets/icons/logout.png" class="dock-icon" alt="Logout" />
+        <img src="assets/icons/logout.png" class="dock-icon" />
+        <div class="dock-label">Logout</div>
       </button>
-      <button class="dock-item" draggable="true" data-app="about">
-        <img src="assets/icons/about.png" class="dock-icon" />
-      </button>
+
     </div>
-    <div class="window glass hidden" id="window-about" data-app-window data-app-id="about">
-  <div class="window-titlebar" data-drag-handle>
-    <div class="window-controls">
-      <button class="win-btn win-close"></button>
-      <button class="win-btn win-minimize"></button>
-      <button class="win-btn win-fullscreen"></button>
-    </div>
-    <span class="window-title">About JASON OS</span>
-  </div>
-  <div class="window-body about-body">
-    <img src="assets/jason.png" class="about-logo" />
-    <h1>JASON OS</h1>
-    <p>Created by Minh</p>
-    <p class="about-version">Version 1.0 (Tahoe)</p>
-  </div>
-</div>
+  </nav>
+</body>
+</html>

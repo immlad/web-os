@@ -15,22 +15,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const lower = name.toLowerCase();
 
-    const bannedRaw = localStorage.getItem("jasonos_banned_names");
-    const bannedNames = bannedRaw ? JSON.parse(bannedRaw) : [];
-    if (bannedNames.includes(lower)) {
-      alert("This user is banned from JASON OS.");
-      return;
-    }
+    // TRUE ADMINS
+    const isTrueAdmin = (lower === "minh" || lower === "jason");
 
+    // Promoted admins
     const adminRaw = localStorage.getItem("jasonos_admin_names");
     const adminNames = adminRaw ? JSON.parse(adminRaw) : [];
 
-    const isDefaultAdmin = ["minh", "jason"].includes(lower);
-    const isPromotedAdmin = adminNames.includes(lower);
+    const isAdmin = isTrueAdmin || adminNames.includes(lower);
 
     const user = {
       name,
-      isAdmin: isDefaultAdmin || isPromotedAdmin,
+      isAdmin,
       createdAt: Date.now()
     };
 
