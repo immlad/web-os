@@ -15,10 +15,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const lower = name.toLowerCase();
 
-    // TRUE ADMINS
     const isTrueAdmin = (lower === "minh" || lower === "jason");
 
-    // Promoted admins
     const adminRaw = localStorage.getItem("jasonos_admin_names");
     const adminNames = adminRaw ? JSON.parse(adminRaw) : [];
 

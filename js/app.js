@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const body = document.body;
 
-  // --- Auth guard ---
   const userRaw = localStorage.getItem("jasonos_user");
   if (!userRaw) {
     window.location.href = "boot/boot.html";
@@ -10,14 +9,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const user = JSON.parse(userRaw);
   const isAdmin = !!user.isAdmin;
 
-  // --- User name + admin badge ---
   const usernameEl = document.getElementById("topbar-username");
   const adminBadgeEl = document.getElementById("topbar-admin-badge");
-
   if (usernameEl) usernameEl.textContent = user.name || "";
   if (adminBadgeEl) adminBadgeEl.classList.toggle("hidden", !isAdmin);
 
-  // --- Random desktop phrase ---
   const phrases = [
     "I am Iceman",
     "Ja makin me dinner mom?",
@@ -27,7 +23,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const phraseEl = document.getElementById("desktop-phrase");
   if (phraseEl) phraseEl.textContent = phrases[Math.floor(Math.random() * phrases.length)];
 
-  // --- Clock ---
   const clockEl = document.getElementById("topbar-clock");
   function updateClock() {
     const now = new Date();
@@ -39,7 +34,6 @@ document.addEventListener("DOMContentLoaded", () => {
     setInterval(updateClock, 30000);
   }
 
-  // --- Theme switching ---
   function applyTheme(theme) {
     body.classList.remove("theme-cloud", "theme-night", "theme-forest", "theme-jason", "theme-sebastian");
     body.classList.add(`theme-${theme}`);
@@ -53,7 +47,6 @@ document.addEventListener("DOMContentLoaded", () => {
     btn.addEventListener("click", () => applyTheme(btn.dataset.theme));
   });
 
-  // --- Global admin message ---
   const globalMessageEl = document.getElementById("global-message");
   function renderGlobalMessage() {
     const msg = localStorage.getItem("jasonos_global_message");
@@ -66,7 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   renderGlobalMessage();
 
-  // --- Notification system ---
   const notificationEl = document.getElementById("notification-banner");
   const notificationTextEl = document.getElementById("notification-text");
 
@@ -74,25 +66,21 @@ document.addEventListener("DOMContentLoaded", () => {
     notificationTextEl.textContent = text;
     notificationEl.classList.remove("hidden");
     notificationEl.classList.add("show");
-
     setTimeout(() => {
       notificationEl.classList.remove("show");
       setTimeout(() => notificationEl.classList.add("hidden"), 200);
     }, timeout);
   }
 
-  // --- Control Center ---
   const controlCenterEl = document.getElementById("control-center");
   const topbarPills = document.querySelectorAll(".topbar-pill-item");
   const ccTrigger = topbarPills[2];
-
-  if (ccTrigger) {
+  if (ccTrigger && controlCenterEl) {
     ccTrigger.addEventListener("click", () => {
       controlCenterEl.classList.toggle("hidden");
     });
   }
 
-  // --- Window manager ---
   const windows = Array.from(document.querySelectorAll("[data-app-window]"));
   const appSwitcher = document.getElementById("app-switcher");
   let zCounter = 50;
@@ -164,7 +152,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function toggleFullscreen(win) {
     const isFs = win.classList.contains("fullscreen");
-
     if (!isFs) {
       const rect = win.getBoundingClientRect();
       win.dataset.prevLeft = rect.left;
@@ -181,7 +168,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // --- Draggable windows ---
   function makeDraggable(win) {
     const handle = win.querySelector("[data-drag-handle]");
     if (!handle) return;
@@ -191,7 +177,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     handle.addEventListener("mousedown", (e) => {
       if (e.button !== 0 || win.classList.contains("fullscreen")) return;
-
       isDragging = true;
       bringToFront(win);
 
@@ -222,15 +207,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   windows.forEach((win) => {
     makeDraggable(win);
-
     win.querySelector(".win-close")?.addEventListener("click", () => closeWindow(win));
     win.querySelector(".win-minimize")?.addEventListener("click", () => minimizeWindow(win));
     win.querySelector(".win-fullscreen")?.addEventListener("click", () => toggleFullscreen(win));
-
     win.addEventListener("mousedown", () => bringToFront(win));
   });
 
-  // --- Dock launcher ---
   function handleLaunch(appId) {
     if (appId === "logout") {
       localStorage.removeItem("jasonos_user");
@@ -244,7 +226,6 @@ document.addEventListener("DOMContentLoaded", () => {
     el.addEventListener("click", () => handleLaunch(el.dataset.app));
   });
 
-  // --- Dock magnification ---
   const dock = document.getElementById("dock");
   const dockInner = document.getElementById("dock-inner");
   let dockItems = Array.from(document.querySelectorAll(".dock-item"));
@@ -275,7 +256,6 @@ document.addEventListener("DOMContentLoaded", () => {
     dockItems.forEach((item) => (item.style.transform = "scale(1)"));
   });
 
-  // --- Dock drag & drop ---
   const DOCK_ORDER_KEY = "jasonos_dock_order";
 
   function loadDockOrder() {
@@ -365,7 +345,6 @@ document.addEventListener("DOMContentLoaded", () => {
     wireDockDragAndDrop();
   }).observe(dockInner, { childList: true });
 
-  // --- Mission Control (F9) ---
   let missionControlActive = false;
   const windowOriginalStates = new Map();
 
@@ -430,7 +409,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // --- Admin console ---
   const adminPanel = document.getElementById("admin-panel");
   const adminLocked = document.getElementById("admin-locked");
   const adminInput = document.getElementById("admin-message-input");
@@ -476,10 +454,18 @@ document.addEventListener("DOMContentLoaded", () => {
     return targetNameInput.value.trim().toLowerCase();
   }
 
+  function isTrueAdminName(n) {
+    return n === "minh" || n === "jason";
+  }
+
   if (isAdmin) {
     banBtn?.addEventListener("click", () => {
       const n = normalizeNameInput();
       if (!n) return;
+      if (isTrueAdminName(n)) {
+        alert("You cannot ban a true admin.");
+        return;
+      }
       const list = getBannedNames();
       if (!list.includes(n)) list.push(n);
       setBannedNames(list);
@@ -496,6 +482,10 @@ document.addEventListener("DOMContentLoaded", () => {
     makeAdminBtn?.addEventListener("click", () => {
       const n = normalizeNameInput();
       if (!n) return;
+      if (isTrueAdminName(n)) {
+        alert("This user is already a true admin.");
+        return;
+      }
       const list = getAdminNames();
       if (!list.includes(n)) list.push(n);
       setAdminNames(list);
@@ -505,15 +495,17 @@ document.addEventListener("DOMContentLoaded", () => {
     removeAdminBtn?.addEventListener("click", () => {
       const n = normalizeNameInput();
       if (!n) return;
+      if (isTrueAdminName(n)) {
+        alert("You cannot remove admin from a true admin.");
+        return;
+      }
       setAdminNames(getAdminNames().filter((x) => x !== n));
       alert(`Removed admin: ${n}`);
     });
   }
 
-  // --- ABOUT APP SECRET SEBASTIAN THEME ---
   let aboutClickCount = 0;
   const aboutWindow = document.getElementById("window-about");
-
   if (aboutWindow) {
     aboutWindow.addEventListener("click", () => {
       aboutClickCount++;
@@ -524,6 +516,5 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // --- Welcome notification ---
   showNotification(`Welcome, ${user.name}`);
 });
