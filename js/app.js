@@ -87,7 +87,6 @@ document.addEventListener("DOMContentLoaded", () => {
     ccTrigger.addEventListener("click", () => {
       controlCenterEl.classList.toggle("hidden");
       if (!controlCenterEl.classList.contains("hidden")) {
-        // ensure it's treated like a window
         openWindowById("control-center");
       }
     });
@@ -226,13 +225,25 @@ document.addEventListener("DOMContentLoaded", () => {
     win.addEventListener("mousedown", () => bringToFront(win));
   });
 
-  // Dock launcher
+  // Dock launcher + Liquid Aura sync
   function handleLaunch(appId) {
     if (appId === "logout") {
       localStorage.removeItem("jasonos_user");
       window.location.href = "boot/boot.html";
       return;
     }
+
+    if (appId === "chat") {
+      const frame = document.getElementById("liquid-aura-frame");
+      const theme = localStorage.getItem("jasonos_theme") || "cloud";
+      const url =
+        `https://immlad.github.io/liquid-aura/#/app` +
+        `?user=${encodeURIComponent(user.name)}` +
+        `&admin=${user.isAdmin}` +
+        `&theme=${encodeURIComponent(theme)}`;
+      frame.src = url;
+    }
+
     openWindowById(appId);
   }
 
@@ -441,15 +452,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if (adminPanel && adminLocked) {
     adminPanel.classList.toggle("hidden", !isAdmin);
     adminLocked.classList.toggle("hidden", isAdmin);
-  }
-
-  if (isAdmin && adminBtn && adminInput) {
-    adminBtn.addEventListener("click", () => {
-      const msg = adminInput.value.trim();
-      localStorage.setItem("jasonos_global_message", msg);
-      renderGlobalMessage();
-      if (msg) showNotification("Global message updated");
-    });
   }
 
   function getBannedNames() {

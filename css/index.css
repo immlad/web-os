@@ -385,3 +385,36 @@ body.theme-sebastian img {
 .hidden {
   display: none !important;
 }
+
+body.theme-jason {
+  --accent: #4da3ff;
+  background: #0b0f1a;
+}
+
+body.theme-cloud {
+  --accent: #ffffff;
+  background: #e8eef7;
+}
+
+body.theme-night {
+  --accent: #0a0a0a;
+  background: #000000;
+}
+
+body.theme-forest {
+  --accent: #0f3d0f;
+  background: #0b1f0b;
+}
+
+body.theme-sebastian {
+  --accent: #ff66cc;
+  background: #1a0010;
+}
+
+.sync-banner {
+  padding: 12px;
+  background: var(--accent);
+  color: white;
+  border-radius: 8px;
+  margin: 12px;
+}

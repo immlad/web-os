@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const signupForm = document.getElementById("signup-form");
   const loginForm = document.getElementById("login-form");
 
-  // Load accounts list (ALWAYS fresh)
+  // Load accounts list
   function loadAccounts() {
     return JSON.parse(localStorage.getItem("jasonos_accounts") || "[]");
   }
@@ -50,12 +50,11 @@ document.addEventListener("DOMContentLoaded", () => {
   signupForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    accounts = loadAccounts(); // refresh
+    accounts = loadAccounts();
 
     const name = document.getElementById("signup-name").value.trim();
     const password = document.getElementById("signup-password").value;
 
-    // Check if username exists
     if (accounts.some(acc => acc.name.toLowerCase() === name.toLowerCase())) {
       alert("This username is already taken.");
       return;
@@ -81,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
   loginForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    accounts = loadAccounts(); // refresh
+    accounts = loadAccounts();
 
     const name = document.getElementById("login-name").value.trim();
     const password = document.getElementById("login-password").value;
@@ -98,7 +97,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Restore admin status
     account.isAdmin = isTrueAdmin(name);
 
     localStorage.setItem("jasonos_user", JSON.stringify(account));
