@@ -10,6 +10,7 @@
 <body>
   <div class="desktop-wallpaper"></div>
 
+  <!-- Top bar -->
   <header class="topbar glass">
     <div class="topbar-left">
       <span class="topbar-logo"></span>
@@ -30,13 +31,16 @@
     </div>
   </header>
 
+  <!-- Global admin message -->
   <div id="global-message" class="global-message glass hidden"></div>
 
+  <!-- Notification banner -->
   <div id="notification-banner" class="notification-banner glass hidden">
     <div class="nb-title">Notification</div>
     <div class="nb-body" id="notification-text"></div>
   </div>
 
+  <!-- Desktop -->
   <main class="desktop">
     <section class="desktop-hero">
       <h1 class="desktop-title">JASON OS</h1>
@@ -44,6 +48,163 @@
     </section>
   </main>
 
+  <!-- Control Center (simple placeholder) -->
+  <div id="control-center" class="window glass hidden" data-app-window data-app-id="control-center">
+    <div class="window-titlebar" data-drag-handle>
+      <div class="window-controls">
+        <button class="win-btn win-close"></button>
+        <button class="win-btn win-minimize"></button>
+        <button class="win-btn win-fullscreen"></button>
+      </div>
+      <span class="window-title">Control Center</span>
+    </div>
+    <div class="window-body" style="padding:16px;font-size:13px;">
+      <p>Quick toggles and controls will live here.</p>
+    </div>
+  </div>
+
+  <!-- Nebulo (external site in iframe) -->
+  <div class="window glass hidden" id="window-nebulo" data-app-window data-app-id="nebulo">
+    <div class="window-titlebar" data-drag-handle>
+      <div class="window-controls">
+        <button class="win-btn win-close"></button>
+        <button class="win-btn win-minimize"></button>
+        <button class="win-btn win-fullscreen"></button>
+      </div>
+      <span class="window-title">Nebulo</span>
+    </div>
+    <div class="window-body" style="flex:1;display:flex;">
+      <iframe
+        src="https://ap-exam.triatlonpacense.es"
+        style="border:none;width:100%;height:100%;border-radius:0;"
+      ></iframe>
+    </div>
+  </div>
+
+  <!-- Liquid Aura (external app) -->
+  <div class="window glass hidden" id="window-chat" data-app-window data-app-id="chat">
+    <div class="window-titlebar" data-drag-handle>
+      <div class="window-controls">
+        <button class="win-btn win-close"></button>
+        <button class="win-btn win-minimize"></button>
+        <button class="win-btn win-fullscreen"></button>
+      </div>
+      <span class="window-title">Liquid Aura</span>
+    </div>
+    <div class="window-body" style="flex:1;display:flex;">
+      <iframe
+        src="https://immlad.github.io/liquid-aura/#/app"
+        style="border:none;width:100%;height:100%;border-radius:0;"
+      ></iframe>
+    </div>
+  </div>
+
+  <!-- Ideas (simple notes placeholder) -->
+  <div class="window glass hidden" id="window-ideas" data-app-window data-app-id="ideas">
+    <div class="window-titlebar" data-drag-handle>
+      <div class="window-controls">
+        <button class="win-btn win-close"></button>
+        <button class="win-btn win-minimize"></button>
+        <button class="win-btn win-fullscreen"></button>
+      </div>
+      <span class="window-title">Ideas</span>
+    </div>
+    <div class="window-body" style="padding:16px;">
+      <h2>Ideas</h2>
+      <p>Capture your thoughts here.</p>
+      <textarea
+        style="width:100%;height:70%;border-radius:12px;border:none;padding:10px;background:rgba(0,0,0,0.35);color:white;font-size:13px;resize:none;"
+        placeholder="Write your ideas..."
+      ></textarea>
+    </div>
+  </div>
+
+  <!-- Music (external player) -->
+  <div class="window glass hidden" id="window-music" data-app-window data-app-id="music">
+    <div class="window-titlebar" data-drag-handle>
+      <div class="window-controls">
+        <button class="win-btn win-close"></button>
+        <button class="win-btn win-minimize"></button>
+        <button class="win-btn win-fullscreen"></button>
+      </div>
+      <span class="window-title">Music</span>
+    </div>
+    <div class="window-body" style="flex:1;display:flex;">
+      <iframe
+        src="https://vapor.onl/page/music"
+        style="border:none;width:100%;height:100%;border-radius:0;"
+      ></iframe>
+    </div>
+  </div>
+
+  <!-- Settings (theme buttons wired to JS) -->
+  <div class="window glass hidden" id="window-settings" data-app-window data-app-id="settings">
+    <div class="window-titlebar" data-drag-handle>
+      <div class="window-controls">
+        <button class="win-btn win-close"></button>
+        <button class="win-btn win-minimize"></button>
+        <button class="win-btn win-fullscreen"></button>
+      </div>
+      <span class="window-title">Settings</span>
+    </div>
+    <div class="window-body" style="padding:16px;font-size:13px;">
+      <h2>Appearance</h2>
+      <p>Choose a theme:</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="settings-theme-btn" data-theme="cloud">Cloud</button>
+        <button class="settings-theme-btn" data-theme="night">Night</button>
+        <button class="settings-theme-btn" data-theme="forest">Forest</button>
+        <button class="settings-theme-btn" data-theme="jason">JASON</button>
+        <button class="settings-theme-btn" data-theme="sebastian">Sebastian</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin -->
+  <div class="window glass hidden" id="window-admin" data-app-window data-app-id="admin">
+    <div class="window-titlebar" data-drag-handle>
+      <div class="window-controls">
+        <button class="win-btn win-close"></button>
+        <button class="win-btn win-minimize"></button>
+        <button class="win-btn win-fullscreen"></button>
+      </div>
+      <span class="window-title">Admin Console</span>
+    </div>
+    <div class="window-body" style="padding:16px;font-size:13px;">
+      <div id="admin-locked">
+        <p>You are not an admin.</p>
+      </div>
+
+      <div id="admin-panel" class="hidden">
+        <h2>Global Message</h2>
+        <input
+          id="admin-message-input"
+          type="text"
+          placeholder="Set global message"
+          style="width:100%;margin-bottom:8px;border-radius:8px;border:none;padding:6px;background:rgba(0,0,0,0.35);color:white;"
+        />
+        <button id="admin-broadcast-btn">Update Message</button>
+
+        <hr style="margin:14px 0;border:none;border-top:1px solid rgba(255,255,255,0.12);" />
+
+        <h2>User Controls</h2>
+        <input
+          id="admin-target-name"
+          type="text"
+          placeholder="Target username"
+          style="width:100%;margin-bottom:8px;border-radius:8px;border:none;padding:6px;background:rgba(0,0,0,0.35);color:white;"
+        />
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <button id="admin-ban-btn">Ban</button>
+          <button id="admin-unban-btn">Unban</button>
+          <button id="admin-make-admin-btn">Make Admin</button>
+          <button id="admin-remove-admin-btn">Remove Admin</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- About App -->
   <div class="window glass hidden" id="window-about" data-app-window data-app-id="about">
     <div class="window-titlebar" data-drag-handle>
       <div class="window-controls">
@@ -62,6 +223,7 @@
     </div>
   </div>
 
+  <!-- Dock -->
   <nav class="dock glass" id="dock">
     <div class="dock-inner" id="dock-inner">
       <button class="dock-item" draggable="true" data-app="nebulo">
