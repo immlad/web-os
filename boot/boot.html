@@ -3,42 +3,43 @@
 <head>
   <meta charset="UTF-8" />
   <title>JASON OS – Login</title>
-  <link rel="stylesheet" href="../css/style.css" />
-  <link rel="stylesheet" href="boot.css" />
+  <link rel="stylesheet" href="../css/app.css" />
 </head>
-<body class="theme-cloud">
-  <div id="boot-overlay"></div>
+<body class="boot-wallpaper">
 
   <div id="boot-container">
-    <div id="boot-glass">
-      <h1>JASON OS</h1>
-      <p class="boot-subtitle">Tahoe Account Edition</p>
+    <div id="boot-card">
 
-      <div id="boot-tabs">
-        <button class="boot-tab active" data-mode="login">Login</button>
-        <button class="boot-tab" data-mode="signup">Create Account</button>
+      <h1>JASON OS</h1>
+      <p class="subtitle">Account Edition</p>
+
+      <div id="tabs">
+        <button class="tab active" data-mode="login">Login</button>
+        <button class="tab" data-mode="signup">Create Account</button>
       </div>
 
       <form id="boot-form">
-        <div class="boot-field">
+        <div class="field">
           <label>Username</label>
-          <input id="boot-username" autocomplete="off" />
-        </div>
-        <div class="boot-field">
-          <label>Password</label>
-          <input id="boot-password" type="password" />
+          <input id="username" autocomplete="off" />
         </div>
 
-        <div class="boot-field boot-admin-toggle hidden" id="boot-admin-toggle">
+        <div class="field">
+          <label>Password</label>
+          <input id="password" type="password" />
+        </div>
+
+        <div id="admin-toggle" class="field hidden">
           <label>
-            <input type="checkbox" id="boot-admin-checkbox" />
+            <input type="checkbox" id="admin-checkbox" />
             Make this user admin
           </label>
         </div>
 
-        <button type="submit" id="boot-submit-btn">Login</button>
-        <p id="boot-error" class="boot-error hidden"></p>
+        <button id="submit-btn" type="submit">Login</button>
+        <p id="error" class="error hidden"></p>
       </form>
+
     </div>
   </div>
 

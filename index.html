@@ -3,137 +3,40 @@
 <head>
   <meta charset="UTF-8" />
   <title>JASON OS – Tahoe Desktop</title>
-  <link rel="stylesheet" href="css/style.css" />
-  <link rel="stylesheet" href="css/window.css" />
-  <link rel="stylesheet" href="css/dock.css" />
-  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/index.css" />
+  <link rel="stylesheet" href="css/app.css" />
 </head>
-<body class="theme-cloud">
-  <div id="global-message" class="global-message hidden"></div>
+<body>
+
+  <div id="global-message" class="hidden"></div>
 
   <div id="topbar">
     <div id="topbar-left">
-      <span class="topbar-pill-item">Pages</span>
-      <span class="topbar-pill-item">JASON OS – Tahoe Desktop</span>
+      <span class="pill">Pages</span>
+      <span class="pill">JASON OS</span>
     </div>
     <div id="topbar-center">
-      <span id="topbar-clock"></span>
+      <span id="clock"></span>
     </div>
     <div id="topbar-right">
-      <span id="topbar-username"></span>
-      <span id="topbar-admin-badge" class="admin-badge hidden">Admin</span>
+      <span id="username"></span>
+      <span id="admin-badge" class="admin hidden">Admin</span>
     </div>
   </div>
 
   <div id="desktop">
-    <h1 id="desktop-title">JASON OS</h1>
-    <p id="desktop-phrase"></p>
+    <h1>JASON OS</h1>
+    <p id="phrase"></p>
   </div>
 
-  <div id="windows-container">
-    <!-- Liquid Aura -->
-    <div id="window-chat" class="window hidden" data-app-window data-app-id="chat">
-      <div class="window-header" data-drag-handle>
-        <span class="window-title">Liquid Aura</span>
-        <div class="window-controls">
-          <button class="win-close"></button>
-          <button class="win-minimize"></button>
-          <button class="win-fullscreen"></button>
-        </div>
-      </div>
-      <div class="window-body">
-        <iframe id="liquid-aura-frame"></iframe>
-      </div>
-    </div>
-
-    <!-- Settings -->
-    <div id="window-settings" class="window hidden" data-app-window data-app-id="settings">
-      <div class="window-header" data-drag-handle>
-        <span class="window-title">Settings</span>
-        <div class="window-controls">
-          <button class="win-close"></button>
-          <button class="win-minimize"></button>
-          <button class="win-fullscreen"></button>
-        </div>
-      </div>
-      <div class="window-body settings-body">
-        <h2>Appearance</h2>
-        <div class="settings-row">
-          <div>
-            <h3>Theme</h3>
-            <button class="settings-theme-btn" data-theme="cloud">Cloud</button>
-            <button class="settings-theme-btn" data-theme="night">Night</button>
-            <button class="settings-theme-btn" data-theme="forest">Forest</button>
-            <button class="settings-theme-btn" data-theme="jason">JASON</button>
-            <button class="settings-theme-btn" data-theme="sebastian">Sebastian</button>
-          </div>
-          <div>
-            <h3>Wallpaper</h3>
-            <button class="settings-wallpaper-btn" data-wallpaper="cloud">Cloud</button>
-            <button class="settings-wallpaper-btn" data-wallpaper="night">Night</button>
-            <button class="settings-wallpaper-btn" data-wallpaper="forest">Forest</button>
-            <button class="settings-wallpaper-btn" data-wallpaper="jason">JASON</button>
-            <button class="settings-wallpaper-btn" data-wallpaper="sebastian">Sebastian</button>
-          </div>
-        </div>
-
-        <h2>System</h2>
-        <button id="settings-cloak-btn">Cloak Desktop</button>
-        <button id="settings-reload-btn">Reload OS</button>
-      </div>
-    </div>
-
-    <!-- About -->
-    <div id="window-about" class="window hidden" data-app-window data-app-id="about">
-      <div class="window-header" data-drag-handle>
-        <span class="window-title">About JASON OS</span>
-        <div class="window-controls">
-          <button class="win-close"></button>
-          <button class="win-minimize"></button>
-          <button class="win-fullscreen"></button>
-        </div>
-      </div>
-      <div class="window-body about-body">
-        <h2>JASON OS – Tahoe</h2>
-        <p>Custom web OS by Minh.</p>
-        <p>Liquid glass, snapping, dock, and more.</p>
-      </div>
-    </div>
-
-    <!-- Admin -->
-    <div id="window-admin" class="window hidden" data-app-window data-app-id="admin">
-      <div class="window-header" data-drag-handle>
-        <span class="window-title">Admin Panel</span>
-        <div class="window-controls">
-          <button class="win-close"></button>
-          <button class="win-minimize"></button>
-          <button class="win-fullscreen"></button>
-        </div>
-      </div>
-      <div class="window-body admin-body">
-        <div id="admin-locked">You are not an admin.</div>
-        <div id="admin-panel" class="hidden">
-          <h2>Broadcast Message</h2>
-          <input id="admin-message-input" placeholder="Message" />
-          <button id="admin-broadcast-btn">Send</button>
-
-          <h2>Ban / Unban User</h2>
-          <input id="admin-target-name" placeholder="Username" />
-          <button id="admin-ban-btn">Ban</button>
-          <button id="admin-unban-btn">Unban</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div id="windows"></div>
 
   <div id="dock">
-    <div id="dock-inner">
-      <div class="dock-item" data-app="chat" data-app-indicator>💬</div>
-      <div class="dock-item" data-app="settings" data-app-indicator>⚙️</div>
-      <div class="dock-item" data-app="admin" data-app-indicator>🛠️</div>
-      <div class="dock-item" data-app="about" data-app-indicator>❓</div>
-      <div class="dock-item" data-app="logout">⏻</div>
-    </div>
+    <div class="dock-item" data-app="chat">💬</div>
+    <div class="dock-item" data-app="settings">⚙️</div>
+    <div class="dock-item" data-app="admin">🛠️</div>
+    <div class="dock-item" data-app="about">❓</div>
+    <div class="dock-item" data-app="logout">⏻</div>
   </div>
 
   <script src="js/app.js"></script>

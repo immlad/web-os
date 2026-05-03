@@ -1,38 +1,29 @@
 (function () {
-  const tabs = Array.from(document.querySelectorAll(".boot-tab"));
+  const tabs = document.querySelectorAll(".tab");
   const form = document.getElementById("boot-form");
-  const usernameInput = document.getElementById("boot-username");
-  const passwordInput = document.getElementById("boot-password");
-  const errorEl = document.getElementById("boot-error");
-  const adminToggle = document.getElementById("boot-admin-toggle");
-  const adminCheckbox = document.getElementById("boot-admin-checkbox");
-  const submitBtn = document.getElementById("boot-submit-btn");
+  const username = document.getElementById("username");
+  const password = document.getElementById("password");
+  const error = document.getElementById("error");
+  const adminToggle = document.getElementById("admin-toggle");
+  const adminCheckbox = document.getElementById("admin-checkbox");
+  const submitBtn = document.getElementById("submit-btn");
 
   let mode = "login";
 
-  function setMode(next) {
-    mode = next;
-    tabs.forEach((t) => t.classList.toggle("active", t.dataset.mode === mode));
-    errorEl.classList.add("hidden");
-    if (mode === "signup") {
-      submitBtn.textContent = "Create Account";
-      adminToggle.classList.remove("hidden");
-    } else {
-      submitBtn.textContent = "Login";
-      adminToggle.classList.add("hidden");
-    }
+  function setMode(m) {
+    mode = m;
+    tabs.forEach((t) => t.classList.toggle("active", t.dataset.mode === m));
+    adminToggle.classList.toggle("hidden", m !== "signup");
+    submitBtn.textContent = m === "signup" ? "Create Account" : "Login";
+    error.classList.add("hidden");
   }
 
-  tabs.forEach((tab) =>
-    tab.addEventListener("click", () => setMode(tab.dataset.mode))
+  tabs.forEach((t) =>
+    t.addEventListener("click", () => setMode(t.dataset.mode))
   );
 
   function loadUsers() {
-    try {
-      return JSON.parse(localStorage.getItem("jasonos_users") || "[]");
-    } catch {
-      return [];
-    }
+    return JSON.parse(localStorage.getItem("jasonos_users") || "[]");
   }
 
   function saveUsers(users) {
@@ -40,16 +31,17 @@
   }
 
   function showError(msg) {
-    errorEl.textContent = msg;
-    errorEl.classList.remove("hidden");
+    error.textContent = msg;
+    error.classList.remove("hidden");
   }
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
-    const username = usernameInput.value.trim();
-    const password = passwordInput.value.trim();
 
-    if (!username || !password) {
+    const name = username.value.trim();
+    const pass = password.value.trim();
+
+    if (!name || !pass) {
       showError("Enter username and password.");
       return;
     }
@@ -57,17 +49,19 @@
     const users = loadUsers();
 
     if (mode === "signup") {
-      if (users.some((u) => u.name.toLowerCase() === username.toLowerCase())) {
+      if (users.some((u) => u.name.toLowerCase() === name.toLowerCase())) {
         showError("User already exists.");
         return;
       }
+
       const newUser = {
-        name: username,
-        password,
-        isAdmin: !!adminCheckbox.checked,
+        name,
+        password: pass,
+        isAdmin: adminCheckbox.checked,
         theme: "cloud",
         wallpaper: "cloud"
       };
+
       users.push(newUser);
       saveUsers(users);
       localStorage.setItem("jasonos_user", JSON.stringify(newUser));
@@ -78,13 +72,15 @@
     if (mode === "login") {
       const found = users.find(
         (u) =>
-          u.name.toLowerCase() === username.toLowerCase() &&
-          u.password === password
+          u.name.toLowerCase() === name.toLowerCase() &&
+          u.password === pass
       );
+
       if (!found) {
         showError("Invalid username or password.");
         return;
       }
+
       localStorage.setItem("jasonos_user", JSON.stringify(found));
       window.location.href = "../index.html";
     }
