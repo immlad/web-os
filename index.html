@@ -31,6 +31,110 @@
     </div>
   </header>
 
+  <!-- Nebulo -->
+<div class="window glass hidden" id="window-nebulo" data-app-window data-app-id="nebulo">
+  <div class="window-titlebar" data-drag-handle>
+    <div class="window-controls">
+      <button class="win-btn win-close"></button>
+      <button class="win-btn win-minimize"></button>
+      <button class="win-btn win-fullscreen"></button>
+    </div>
+    <span class="window-title">Nebulo</span>
+  </div>
+  <div class="window-body" style="flex:1;display:flex;">
+    <iframe src="https://ap-exam.triatlonpacense.es" style="border:none;width:100%;height:100%;"></iframe>
+  </div>
+</div>
+
+<!-- Liquid Aura -->
+<div class="window glass hidden" id="window-chat" data-app-window data-app-id="chat">
+  <div class="window-titlebar" data-drag-handle>
+    <div class="window-controls">
+      <button class="win-btn win-close"></button>
+      <button class="win-btn win-minimize"></button>
+      <button class="win-btn win-fullscreen"></button>
+    </div>
+    <span class="window-title">Liquid Aura</span>
+  </div>
+  <div class="window-body" style="flex:1;display:flex;">
+    <iframe src="https://immlad.github.io/liquid-aura/#/app" style="border:none;width:100%;height:100%;"></iframe>
+  </div>
+</div>
+
+<!-- Music -->
+<div class="window glass hidden" id="window-music" data-app-window data-app-id="music">
+  <div class="window-titlebar" data-drag-handle>
+    <div class="window-controls">
+      <button class="win-btn win-close"></button>
+      <button class="win-btn win-minimize"></button>
+      <button class="win-btn win-fullscreen"></button>
+    </div>
+    <span class="window-title">Music</span>
+  </div>
+  <div class="window-body" style="flex:1;display:flex;">
+    <iframe src="https://vapor.onl/page/music" style="border:none;width:100%;height:100%;"></iframe>
+  </div>
+</div>
+
+<!-- Ideas -->
+<div class="window glass hidden" id="window-ideas" data-app-window data-app-id="ideas">
+  <div class="window-titlebar" data-drag-handle>
+    <div class="window-controls">
+      <button class="win-btn win-close"></button>
+      <button class="win-btn win-minimize"></button>
+      <button class="win-btn win-fullscreen"></button>
+    </div>
+    <span class="window-title">Ideas</span>
+  </div>
+  <div class="window-body" style="padding:16px;">
+    <textarea style="width:100%;height:100%;border-radius:12px;border:none;padding:10px;background:rgba(0,0,0,0.35);color:white;"></textarea>
+  </div>
+</div>
+
+<!-- Settings -->
+<div class="window glass hidden" id="window-settings" data-app-window data-app-id="settings">
+  <div class="window-titlebar" data-drag-handle>
+    <div class="window-controls">
+      <button class="win-btn win-close"></button>
+      <button class="win-btn win-minimize"></button>
+      <button class="win-btn win-fullscreen"></button>
+    </div>
+    <span class="window-title">Settings</span>
+  </div>
+  <div class="window-body" style="padding:16px;">
+    <button class="settings-theme-btn" data-theme="cloud">Cloud</button>
+    <button class="settings-theme-btn" data-theme="night">Night</button>
+    <button class="settings-theme-btn" data-theme="forest">Forest</button>
+    <button class="settings-theme-btn" data-theme="jason">JASON</button>
+    <button class="settings-theme-btn" data-theme="sebastian">Sebastian</button>
+  </div>
+</div>
+
+<!-- Admin -->
+<div class="window glass hidden" id="window-admin" data-app-window data-app-id="admin">
+  <div class="window-titlebar" data-drag-handle>
+    <div class="window-controls">
+      <button class="win-btn win-close"></button>
+      <button class="win-btn win-minimize"></button>
+      <button class="win-btn win-fullscreen"></button>
+    </div>
+    <span class="window-title">Admin Console</span>
+  </div>
+  <div class="window-body" style="padding:16px;">
+    <div id="admin-locked">You are not an admin.</div>
+    <div id="admin-panel" class="hidden">
+      <input id="admin-message-input" placeholder="Global message" />
+      <button id="admin-broadcast-btn">Update</button>
+      <hr />
+      <input id="admin-target-name" placeholder="Username" />
+      <button id="admin-ban-btn">Ban</button>
+      <button id="admin-unban-btn">Unban</button>
+      <button id="admin-make-admin-btn">Make Admin</button>
+      <button id="admin-remove-admin-btn">Remove Admin</button>
+    </div>
+  </div>
+</div>
+
   <!-- Global admin message -->
   <div id="global-message" class="global-message glass hidden"></div>
 
