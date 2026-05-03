@@ -2,56 +2,46 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>JASON OS – Boot</title>
-  <link rel="stylesheet" href="../css/index.css" />
-  <link rel="stylesheet" href="../css/app.css" />
-  <script defer src="boot.js"></script>
+  <title>JASON OS – Login</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="boot.css" />
 </head>
-<body class="boot-body">
+<body class="theme-cloud">
+  <div id="boot-overlay"></div>
 
-  <!-- SIGNUP SCREEN -->
-  <div id="signup-screen" class="boot-overlay glass hidden">
-    <div class="boot-logo">
-      <img src="../assets/jason.png" />
-      <h1 class="boot-title">JASON OS</h1>
-      <p class="boot-subtitle">Create your account</p>
-    </div>
+  <div id="boot-container">
+    <div id="boot-glass">
+      <h1>JASON OS</h1>
+      <p class="boot-subtitle">Tahoe Account Edition</p>
 
-    <form id="signup-form" class="boot-form">
-      <div class="boot-fields">
-        <input type="text" id="signup-name" placeholder="Enter your name" required />
-        <input type="password" id="signup-password" placeholder="Password" required />
+      <div id="boot-tabs">
+        <button class="boot-tab active" data-mode="login">Login</button>
+        <button class="boot-tab" data-mode="signup">Create Account</button>
       </div>
-      <button type="submit" class="boot-submit">Create Account</button>
-    </form>
 
-    <p style="margin-top:10px;font-size:12px;color:#ccc;">
-      Already have an account?
-      <span id="go-login" style="cursor:pointer;color:#4da3ff;">Log in</span>
-    </p>
+      <form id="boot-form">
+        <div class="boot-field">
+          <label>Username</label>
+          <input id="boot-username" autocomplete="off" />
+        </div>
+        <div class="boot-field">
+          <label>Password</label>
+          <input id="boot-password" type="password" />
+        </div>
+
+        <div class="boot-field boot-admin-toggle hidden" id="boot-admin-toggle">
+          <label>
+            <input type="checkbox" id="boot-admin-checkbox" />
+            Make this user admin
+          </label>
+        </div>
+
+        <button type="submit" id="boot-submit-btn">Login</button>
+        <p id="boot-error" class="boot-error hidden"></p>
+      </form>
+    </div>
   </div>
 
-  <!-- LOGIN SCREEN -->
-  <div id="login-screen" class="boot-overlay glass hidden">
-    <div class="boot-logo">
-      <img src="../assets/jason.png" />
-      <h1 class="boot-title">JASON OS</h1>
-      <p class="boot-subtitle">Log in to continue</p>
-    </div>
-
-    <form id="login-form" class="boot-form">
-      <div class="boot-fields">
-        <input type="text" id="login-name" placeholder="Enter your name" required />
-        <input type="password" id="login-password" placeholder="Password" required />
-      </div>
-      <button type="submit" class="boot-submit">Log In</button>
-    </form>
-
-    <p style="margin-top:10px;font-size:12px;color:#ccc;">
-      No account?
-      <span id="go-signup" style="cursor:pointer;color:#4da3ff;">Create one</span>
-    </p>
-  </div>
-
+  <script src="boot.js"></script>
 </body>
 </html>

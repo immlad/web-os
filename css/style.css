@@ -6,12 +6,19 @@ body {
   background-position: center;
 }
 
-/* Themes */
-body.theme-cloud { background: url("../assets/cloud.jpg") center/cover; }
-body.theme-night { background: url("../assets/night.jpg") center/cover; }
-body.theme-forest { background: url("../assets/forest.jpg") center/cover; }
-body.theme-jason { background: url("../assets/jason.jpg") center/cover; }
-body.theme-sebastian { background: url("../assets/sebastian.jpg") center/cover; }
+/* Wallpapers */
+body.wallpaper-cloud { background-image: url("../assets/cloud.jpg"); }
+body.wallpaper-night { background-image: url("../assets/night.jpg"); }
+body.wallpaper-forest { background-image: url("../assets/forest.jpg"); }
+body.wallpaper-jason { background-image: url("../assets/jason.jpg"); }
+body.wallpaper-sebastian { background-image: url("../assets/sebastian.jpg"); }
+
+/* Themes (for topbar / text tint) */
+body.theme-cloud { color: #fff; }
+body.theme-night { color: #fff; }
+body.theme-forest { color: #d6ffd6; }
+body.theme-jason { color: #fff; }
+body.theme-sebastian { color: #ffe6f7; }
 
 /* Top bar */
 #topbar {

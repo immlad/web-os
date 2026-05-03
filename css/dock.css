@@ -21,4 +21,24 @@
   cursor: pointer;
   transition: transform 0.15s ease;
   user-select: none;
+  position: relative;
+}
+
+/* Indicator dot */
+.dock-item[data-app-indicator]::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.9);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.dock-item[data-app-indicator].active::after {
+  opacity: 1;
 }

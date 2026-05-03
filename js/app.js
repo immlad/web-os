@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const body = document.body;
 
+  // AUTH
   const userRaw = localStorage.getItem("jasonos_user");
   if (!userRaw) {
     window.location.href = "boot/boot.html";
@@ -9,11 +10,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const user = JSON.parse(userRaw);
   const isAdmin = !!user.isAdmin;
 
+  // TOPBAR
   const usernameEl = document.getElementById("topbar-username");
   const adminBadgeEl = document.getElementById("topbar-admin-badge");
   if (usernameEl) usernameEl.textContent = user.name || "";
   if (adminBadgeEl) adminBadgeEl.classList.toggle("hidden", !isAdmin);
 
+  // DESKTOP PHRASE
   const phrases = [
     "I am Iceman",
     "Ja makin me dinner mom?",
@@ -23,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const phraseEl = document.getElementById("desktop-phrase");
   if (phraseEl) phraseEl.textContent = phrases[Math.floor(Math.random() * phrases.length)];
 
+  // CLOCK
   const clockEl = document.getElementById("topbar-clock");
   function updateClock() {
     const now = new Date();
@@ -34,19 +38,33 @@ document.addEventListener("DOMContentLoaded", () => {
     setInterval(updateClock, 30000);
   }
 
+  // THEME + WALLPAPER
   function applyTheme(theme) {
     body.classList.remove("theme-cloud", "theme-night", "theme-forest", "theme-jason", "theme-sebastian");
     body.classList.add(`theme-${theme}`);
-    localStorage.setItem("jasonos_theme", theme);
+    user.theme = theme;
+    localStorage.setItem("jasonos_user", JSON.stringify(user));
   }
 
-  const savedTheme = localStorage.getItem("jasonos_theme") || "cloud";
-  applyTheme(savedTheme);
+  function applyWallpaper(wallpaper) {
+    body.classList.remove("wallpaper-cloud", "wallpaper-night", "wallpaper-forest", "wallpaper-jason", "wallpaper-sebastian");
+    body.classList.add(`wallpaper-${wallpaper}`);
+    user.wallpaper = wallpaper;
+    localStorage.setItem("jasonos_user", JSON.stringify(user));
+  }
+
+  applyTheme(user.theme || "cloud");
+  applyWallpaper(user.wallpaper || "cloud");
 
   document.querySelectorAll(".settings-theme-btn").forEach((btn) => {
     btn.addEventListener("click", () => applyTheme(btn.dataset.theme));
   });
 
+  document.querySelectorAll(".settings-wallpaper-btn").forEach((btn) => {
+    btn.addEventListener("click", () => applyWallpaper(btn.dataset.wallpaper));
+  });
+
+  // GLOBAL MESSAGE
   const globalMessageEl = document.getElementById("global-message");
   function renderGlobalMessage() {
     const msg = localStorage.getItem("jasonos_global_message");
@@ -59,6 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   renderGlobalMessage();
 
+  // WINDOWS
   const windows = Array.from(document.querySelectorAll("[data-app-window]"));
   let zCounter = 50;
 
@@ -86,11 +105,18 @@ document.addEventListener("DOMContentLoaded", () => {
       win.classList.add("active");
       bringToFront(win);
     });
+
+    const dockItem = document.querySelector(`.dock-item[data-app="${id}"][data-app-indicator]`);
+    if (dockItem) dockItem.classList.add("active");
   }
 
   function closeWindow(win) {
     win.classList.remove("active", "fullscreen", "minimized");
     setTimeout(() => win.classList.add("hidden"), 160);
+
+    const appId = win.dataset.appId;
+    const dockItem = document.querySelector(`.dock-item[data-app="${appId}"][data-app-indicator]`);
+    if (dockItem) dockItem.classList.remove("active");
   }
 
   function minimizeWindow(win) {
@@ -115,6 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // DRAG
   function makeDraggable(win) {
     const handle = win.querySelector("[data-drag-handle]");
     if (!handle) return;
@@ -158,6 +185,7 @@ document.addEventListener("DOMContentLoaded", () => {
     win.addEventListener("mousedown", () => bringToFront(win));
   });
 
+  // DOCK + LIQUID AURA SYNC
   function handleLaunch(appId) {
     if (appId === "logout") {
       localStorage.removeItem("jasonos_user");
@@ -167,7 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (appId === "chat") {
       const frame = document.getElementById("liquid-aura-frame");
-      const theme = localStorage.getItem("jasonos_theme") || "cloud";
+      const theme = user.theme || "cloud";
 
       const avatar =
         user.name.toLowerCase() === "minh"
@@ -193,6 +221,7 @@ document.addEventListener("DOMContentLoaded", () => {
     el.addEventListener("click", () => handleLaunch(el.dataset.app));
   });
 
+  // DOCK MAGNIFICATION
   const dock = document.getElementById("dock");
   const dockItems = Array.from(document.querySelectorAll(".dock-item"));
 
@@ -210,6 +239,19 @@ document.addEventListener("DOMContentLoaded", () => {
     dockItems.forEach((item) => (item.style.transform = "scale(1)"));
   });
 
+  // SETTINGS: CLOAK + RELOAD
+  const cloakBtn = document.getElementById("settings-cloak-btn");
+  const reloadBtn = document.getElementById("settings-reload-btn");
+
+  cloakBtn?.addEventListener("click", () => {
+    body.classList.toggle("cloaked");
+  });
+
+  reloadBtn?.addEventListener("click", () => {
+    window.location.reload();
+  });
+
+  // ADMIN PANEL
   const adminPanel = document.getElementById("admin-panel");
   const adminLocked = document.getElementById("admin-locked");
 
@@ -226,10 +268,4 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("jasonos_global_message", msg);
     renderGlobalMessage();
   });
-
-  function showNotification(text, timeout = 3500) {
-    console.log(text);
-  }
-
-  showNotification(`Welcome, ${user.name}`);
 });

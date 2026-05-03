@@ -1,106 +1,92 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const savedTheme = localStorage.getItem("jasonos_theme") || "cloud";
-  document.body.classList.add(`theme-${savedTheme}`);
+(function () {
+  const tabs = Array.from(document.querySelectorAll(".boot-tab"));
+  const form = document.getElementById("boot-form");
+  const usernameInput = document.getElementById("boot-username");
+  const passwordInput = document.getElementById("boot-password");
+  const errorEl = document.getElementById("boot-error");
+  const adminToggle = document.getElementById("boot-admin-toggle");
+  const adminCheckbox = document.getElementById("boot-admin-checkbox");
+  const submitBtn = document.getElementById("boot-submit-btn");
 
-  const signupScreen = document.getElementById("signup-screen");
-  const loginScreen = document.getElementById("login-screen");
+  let mode = "login";
 
-  const goLogin = document.getElementById("go-login");
-  const goSignup = document.getElementById("go-signup");
-
-  const signupForm = document.getElementById("signup-form");
-  const loginForm = document.getElementById("login-form");
-
-  // Load accounts list
-  function loadAccounts() {
-    return JSON.parse(localStorage.getItem("jasonos_accounts") || "[]");
+  function setMode(next) {
+    mode = next;
+    tabs.forEach((t) => t.classList.toggle("active", t.dataset.mode === mode));
+    errorEl.classList.add("hidden");
+    if (mode === "signup") {
+      submitBtn.textContent = "Create Account";
+      adminToggle.classList.remove("hidden");
+    } else {
+      submitBtn.textContent = "Login";
+      adminToggle.classList.add("hidden");
+    }
   }
 
-  function saveAccounts(list) {
-    localStorage.setItem("jasonos_accounts", JSON.stringify(list));
+  tabs.forEach((tab) =>
+    tab.addEventListener("click", () => setMode(tab.dataset.mode))
+  );
+
+  function loadUsers() {
+    try {
+      return JSON.parse(localStorage.getItem("jasonos_users") || "[]");
+    } catch {
+      return [];
+    }
   }
 
-  let accounts = loadAccounts();
-
-  // Show correct screen
-  if (accounts.length > 0) {
-    loginScreen.classList.remove("hidden");
-  } else {
-    signupScreen.classList.remove("hidden");
+  function saveUsers(users) {
+    localStorage.setItem("jasonos_users", JSON.stringify(users));
   }
 
-  // Switch screens
-  goLogin?.addEventListener("click", () => {
-    signupScreen.classList.add("hidden");
-    loginScreen.classList.remove("hidden");
-  });
-
-  goSignup?.addEventListener("click", () => {
-    loginScreen.classList.add("hidden");
-    signupScreen.classList.remove("hidden");
-  });
-
-  // TRUE ADMINS
-  function isTrueAdmin(name) {
-    const lower = name.toLowerCase();
-    return lower === "minh" || lower === "jason";
+  function showError(msg) {
+    errorEl.textContent = msg;
+    errorEl.classList.remove("hidden");
   }
 
-  // SIGNUP
-  signupForm.addEventListener("submit", (e) => {
+  form.addEventListener("submit", (e) => {
     e.preventDefault();
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value.trim();
 
-    accounts = loadAccounts();
-
-    const name = document.getElementById("signup-name").value.trim();
-    const password = document.getElementById("signup-password").value;
-
-    if (accounts.some(acc => acc.name.toLowerCase() === name.toLowerCase())) {
-      alert("This username is already taken.");
+    if (!username || !password) {
+      showError("Enter username and password.");
       return;
     }
 
-    const newUser = {
-      name,
-      password,
-      isAdmin: isTrueAdmin(name),
-      createdAt: Date.now()
-    };
+    const users = loadUsers();
 
-    accounts.push(newUser);
-    saveAccounts(accounts);
+    if (mode === "signup") {
+      if (users.some((u) => u.name.toLowerCase() === username.toLowerCase())) {
+        showError("User already exists.");
+        return;
+      }
+      const newUser = {
+        name: username,
+        password,
+        isAdmin: !!adminCheckbox.checked,
+        theme: "cloud",
+        wallpaper: "cloud"
+      };
+      users.push(newUser);
+      saveUsers(users);
+      localStorage.setItem("jasonos_user", JSON.stringify(newUser));
+      window.location.href = "../index.html";
+      return;
+    }
 
-    alert("Account created! Please log in.");
-
-    signupScreen.classList.add("hidden");
-    loginScreen.classList.remove("hidden");
+    if (mode === "login") {
+      const found = users.find(
+        (u) =>
+          u.name.toLowerCase() === username.toLowerCase() &&
+          u.password === password
+      );
+      if (!found) {
+        showError("Invalid username or password.");
+        return;
+      }
+      localStorage.setItem("jasonos_user", JSON.stringify(found));
+      window.location.href = "../index.html";
+    }
   });
-
-  // LOGIN
-  loginForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    accounts = loadAccounts();
-
-    const name = document.getElementById("login-name").value.trim();
-    const password = document.getElementById("login-password").value;
-
-    const account = accounts.find(acc => acc.name.toLowerCase() === name.toLowerCase());
-
-    if (!account) {
-      alert("No account exists with that name.");
-      return;
-    }
-
-    if (account.password !== password) {
-      alert("Incorrect name or password.");
-      return;
-    }
-
-    account.isAdmin = isTrueAdmin(name);
-
-    localStorage.setItem("jasonos_user", JSON.stringify(account));
-
-    window.location.href = "../index.html";
-  });
-});
+})();

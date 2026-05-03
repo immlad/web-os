@@ -1,0 +1,14 @@
+.window {
+  animation: window-pop 0.18s ease-out;
+}
+
+@keyframes window-pop {
+  from {
+    transform: scale(0.96);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

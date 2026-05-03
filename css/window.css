@@ -7,7 +7,7 @@
   border-radius: 14px;
   overflow: hidden;
   transform: scale(1);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
   box-shadow: 0 24px 60px rgba(0,0,0,0.45);
 }
 
@@ -79,4 +79,36 @@
   width: 100vw !important;
   height: calc(100vh - 32px) !important;
   border-radius: 0;
+}
+
+/* Settings body */
+.settings-body {
+  padding: 16px;
+  font-size: 13px;
+}
+
+.settings-row {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 16px;
+}
+
+.settings-theme-btn,
+.settings-wallpaper-btn,
+#settings-cloak-btn,
+#settings-reload-btn {
+  margin: 4px 4px 0 0;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: none;
+  font-size: 12px;
+  cursor: pointer;
+  background: rgba(255,255,255,0.7);
+}
+
+/* About / Admin bodies */
+.about-body,
+.admin-body {
+  padding: 16px;
+  font-size: 13px;
 }
